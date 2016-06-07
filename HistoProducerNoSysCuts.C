@@ -546,7 +546,7 @@ void HistoProducerNoSysCuts()
 //                     ZTrackStart[TrkID] < (1036.8-ZFVCutValue) && ZTrackStart[TrkID] > ZFVCutValue && ZTrackEnd[TrkID] < (1036.8-ZFVCutValue) && ZTrackEnd[TrkID] > ZFVCutValue &&
 //                     FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut )
 //             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID]))
-            if((Run < 5750 && Run > 5650) || file_no > 1)
+            if(!(Run < 5750 && Run > 5650) || file_no > 1)
 //             if(true)
             {
                 if(file_no == 0)
