@@ -480,7 +480,7 @@ void HistoProducerNoSys()
         ChainVec.at(file_no) -> SetBranchAddress(("trkendx_"+TrackProdName).c_str(),XTrackEnd);
         ChainVec.at(file_no) -> SetBranchAddress(("trkendy_"+TrackProdName).c_str(),YTrackEnd);
         ChainVec.at(file_no) -> SetBranchAddress(("trkendz_"+TrackProdName).c_str(),ZTrackEnd);
-
+        
         if(VertexProdName != "nuvtx")
         {
             ChainVec.at(file_no) -> SetBranchAddress(("vtxx_"+VertexProdName).c_str(), XVertexPosition);
@@ -509,6 +509,8 @@ void HistoProducerNoSys()
 
         unsigned int negPhi = 0;
         unsigned int posPhi = 0;
+        
+        bool Signal;
 
         float XFVCutValue = 10; //10
         float YFVCutValue = 20; //20
@@ -540,12 +542,8 @@ void HistoProducerNoSys()
 //             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID]))
             if(true)
             {
-                if(file_no == 0)
-                {
-                    DataToLookAt << Run << " " << Subrun << " " << Event << "\n";
-                }
-
                 Signal++;
+                Signal = true;
 
                 RangeVsPE.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),FlashMax);
 
@@ -597,6 +595,7 @@ void HistoProducerNoSys()
                 {
                     if(MCTrkID > -1 && PDGTruth[MCTrkID] == -13)
                     {
+                        Signal = false;
                         nubar++;
                         BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                         BgrTheta.at(0)->Fill(TrackTheta[TrkID]);
@@ -616,6 +615,7 @@ void HistoProducerNoSys()
                     }
                     else if(MCTrkID > -1 && abs(PDGTruth[MCTrkID]) == 11)
                     {
+                        Signal = false;
                         nue++;
                         BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                         BgrTheta.at(1)->Fill(TrackTheta[TrkID]);
@@ -635,6 +635,7 @@ void HistoProducerNoSys()
                     }
                     else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
                     {
+                        Signal = false;
                         outFV++;
                         BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                         BgrTheta.at(2)->Fill(TrackTheta[TrkID]);
@@ -671,6 +672,7 @@ void HistoProducerNoSys()
                 }
                 else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
+                    Signal = false;
                     NCnu++;
                     BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                     BgrTheta.at(3)->Fill(TrackTheta[TrkID]);
@@ -690,6 +692,7 @@ void HistoProducerNoSys()
                 }
                 else if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1)
                 {
+                    Signal = false;
                     Cosmic++;
                     BgrTrackRange.at(4)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                     BgrTheta.at(4)->Fill(TrackTheta[TrkID]);
@@ -711,6 +714,13 @@ void HistoProducerNoSys()
                     {
                         UnknownOrigin++;
                     }
+                }
+                
+                if(file_no == 2)
+                {
+                    DataToLookAt << Run << " " << Subrun << " " << Event << " " <<
+                    XVertexPosition[VtxID] << " " << YVertexPosition[VtxID] << " " << ZVertexPosition[VtxID] <<
+                    Signal << " " << (bool)1 << "\n";
                 }
             }
 
