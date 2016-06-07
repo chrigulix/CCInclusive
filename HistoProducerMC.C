@@ -145,7 +145,7 @@ void HistoProducerMC()
     std::vector<unsigned int> ColorMap = {28,42,30,38};
 
     ChainVec.push_back ( new TChain ( "anatree" ) );
-    ChainVec.back() -> Add ( "/lheppc46/data/uBData/anatrees/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root" );
+    ChainVec.back() -> Add ( "/lheppc46/data/uBData/anatrees/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_1.root" );
 
     ChainVec.push_back ( new TChain ( "anatree" ) );
     ChainVec.back() -> Add ( ( "/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root" ).c_str() );
@@ -292,72 +292,6 @@ void HistoProducerMC()
     {
         beammin = 3.55;
         beammax = 5.15;
-
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "run", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "subrun", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "event", 1 );
-// 
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "TrackCand", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "VertexCand", 1 );
-// 
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "flash_pe", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "no_flashes", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "flash_time", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "flash_zcenter", 1 );
-// 
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkorigin_"+TrackProdName ).c_str(), 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkpidbestplane_"+TrackProdName ).c_str(), 1 );
-// 
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkke_"+TrackProdName ).c_str(), 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkmomrange_"+TrackProdName ).c_str(), 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trktheta_"+TrackProdName ).c_str(), 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkphi_"+TrackProdName ).c_str(), 1 );
-// 
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkstartx_"+TrackProdName ).c_str(),1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkstarty_"+TrackProdName ).c_str(),1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkstartz_"+TrackProdName ).c_str(),1 );
-// 
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkendx_"+TrackProdName ).c_str(),1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkendy_"+TrackProdName ).c_str(),1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( ( "trkendz_"+TrackProdName ).c_str(),1 );
-// 
-//         if ( VertexProdName != "nuvtx" )
-//         {
-//             ChainVec.at ( file_no ) -> SetBranchStatus ( ( "vtxx_"+VertexProdName ).c_str(), 1 );
-//             ChainVec.at ( file_no ) -> SetBranchStatus ( ( "vtxy_"+VertexProdName ).c_str(), 1 );
-//             ChainVec.at ( file_no ) -> SetBranchStatus ( ( "vtxz_"+VertexProdName ).c_str(), 1 );
-//         }
-//         else
-//         {
-//             ChainVec.at ( file_no ) -> SetBranchStatus ( "nuvtxx", 1 );
-//             ChainVec.at ( file_no ) -> SetBranchStatus ( "nuvtxy", 1 );
-//             ChainVec.at ( file_no ) -> SetBranchStatus ( "nuvtxz", 1 );
-//         }
-// 
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "MCTrackCand", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "ccnc_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "mode_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "pdg", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "enu_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "lep_mom_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "mcevts_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "nuvtxx_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "nuvtxy_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "nuvtxz_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "nuPDG_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "geant_list_size", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "StartPointx", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "StartPointy", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "StartPointz", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "EndPointx", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "EndPointy", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "EndPointz", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "theta", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "enu_truth", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "phi", 1 );
-//         ChainVec.at ( file_no ) -> SetBranchStatus ( "Eng", 1 );
-
-        //------------------------------------------------------------------------------------------
 
         ChainVec.at ( file_no ) -> SetBranchAddress ( "run", &Run );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "subrun", &Subrun );
