@@ -241,7 +241,7 @@ int CCInclusiveEventCounter(std::string GeneratorName, unsigned int ThreadNumber
         for(const auto& VertexingName : VertexProdNameVec)
         {
             // Open output file
-            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+"_Old.root").c_str(),"RECREATE");
+//             TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+"_Old.root").c_str(),"RECREATE");
 
             treenc -> SetBranchAddress("run", &run);
             treenc -> SetBranchAddress("event", &event);
@@ -339,7 +339,7 @@ int CCInclusiveEventCounter(std::string GeneratorName, unsigned int ThreadNumber
                 
             }//loop over all events
 
-            OutputFile->cd();
+//             OutputFile->cd();
 
             std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
             std::cout << std::endl;
@@ -349,7 +349,7 @@ int CCInclusiveEventCounter(std::string GeneratorName, unsigned int ThreadNumber
             std::cout << std::endl;
             std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
 
-            OutputFile->Close();
+//             OutputFile->Close();
 
             // Erase all branch addresses for the next iteration
             treenc -> ResetBranchAddresses();

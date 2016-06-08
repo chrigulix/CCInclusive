@@ -145,7 +145,7 @@ void HistoProducerMC()
     std::vector<unsigned int> ColorMap = {28,42,30,38};
 
     ChainVec.push_back ( new TChain ( "anatree" ) );
-    ChainVec.back() -> Add ( "/lheppc46/data/uBData/anatrees/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_1.root" );
+    ChainVec.back() -> Add ( "/lheppc46/data/uBData/anatrees/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root" );
 
     ChainVec.push_back ( new TChain ( "anatree" ) );
     ChainVec.back() -> Add ( ( "/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root" ).c_str() );
@@ -381,15 +381,20 @@ void HistoProducerMC()
 
         for ( unsigned int tree_index = 0; tree_index < ChainVec.at ( file_no )->GetEntries(); tree_index++ )
         {
-            if ( ! ( tree_index % 100 ) )
+            if ( ! ( tree_index % 1000 ) )
             {
                 std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at ( file_no )->GetEntries() << std::endl;
             }
 
             ChainVec.at ( file_no )->GetEntry ( tree_index );
             
-//             std::cout << MCTrkID << " " << inFV( XMCTrackStart[TrkID],YMCTrackStart[TrkID],ZMCTrackStart[TrkID] ) << " " << XMCTrackStart[TrkID] << " " << YMCTrackStart[TrkID] << " " << ZMCTrackStart[TrkID] << std::endl;
-            if(MCTrkID > NumberOfMCTracks) std::cout << MCTrkID << " " << NumberOfMCTracks << std::endl;
+//             if(tree_index < 100)
+//             {
+//                 std::cout << tree_index << " " << MCTrkID << " " << inFV( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) <<  " " << XMCTrackStart[MCTrkID] << " " << YMCTrackStart[MCTrkID] << " " << ZMCTrackStart[MCTrkID] << std::endl;
+//             }
+            
+//             std::cout << MCTrkID << " " << inFV( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) << " " << XMCTrackStart[MCTrkID] << " " << YMCTrackStart[MCTrkID] << " " << ZMCTrackStart[MCTrkID] << std::endl;
+//             if(MCTrkID > NumberOfMCTracks) std::cout << MCTrkID << " " << NumberOfMCTracks << std::endl;
 
             if ( file_no == 0 && MCTrkID > -1 && PDGTruth[MCTrkID] == 13 )
             {
@@ -411,7 +416,7 @@ void HistoProducerMC()
                 SelZVtxPosition.at ( 0 )->Fill ( ZnuVtxTruth[0] );
                 
 
-                if ( inFV( XMCTrackStart[TrkID],YMCTrackStart[TrkID],ZMCTrackStart[TrkID] ) && inFV( XMCTrackEnd[TrkID],YMCTrackEnd[TrkID],ZMCTrackEnd[TrkID] ) )
+                if ( inFV( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
                 {
                     ContainedTracks++;
 
@@ -906,14 +911,8 @@ void AdjustSysError ( std::vector<TH1F*>& HistVector )
     }
 }
 
-bool inFV ( double x, double y, double z )
+bool inFV(double x, double y, double z) 
 {
-    if ( x < ( FVx - borderx ) && ( x > borderx ) && ( y < ( FVy/2. - bordery ) ) && ( y > ( -FVy/2. + bordery ) ) && ( z < ( FVz - borderz ) ) && ( z > borderz ) )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    if(x < (FVx - borderx) && (x > borderx) && (y < (FVy/2. - bordery)) && (y > (-FVy/2. + bordery)) && (z < (FVz - borderz)) && (z > borderz)) return true;
+    else return false;
 }
