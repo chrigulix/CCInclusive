@@ -210,7 +210,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
         {
             if(NumberOfSignalTruth<100)
             {
-                std::cout << NumberOfSignalTruth << " " << XMCTrackStart[MCTrackCandidate] << " " << YMCTrackStart[MCTrackCandidate] << " " << ZMCTrackStart[MCTrackCandidate] << std::endl;
+                std::cout << NumberOfSignalTruth << " " << MCTrackCandidate << " " << XMCTrackStart[MCTrackCandidate] << " " << YMCTrackStart[MCTrackCandidate] << " " << ZMCTrackStart[MCTrackCandidate] << std::endl;
             }
             NumberOfSignalTruth++;
             SelectionTree->Fill();
