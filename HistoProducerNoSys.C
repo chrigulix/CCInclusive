@@ -54,12 +54,12 @@ void HistoProducerNoSys()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-    std::string SelectionLabel = "_Old";
-//     std::string SelectionLabel = "_Mod";
+//     std::string SelectionLabel = "_Old";
+    std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
-    std::string FileType = "png";
-//     std::string FileType = "pdf";
+//     std::string FileType = "png";
+    std::string FileType = "pdf";
     
     std::vector<TChain*> ChainVec;
 
@@ -169,6 +169,7 @@ void HistoProducerNoSys()
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_3"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1"+ SelectionLabel +".root").c_str());
@@ -430,7 +431,7 @@ void HistoProducerNoSys()
     double beammin;
     double beammax;
 
-    std::ofstream DataToLookAt("SelectedData.txt",std::ios::trunc);
+    std::ofstream DataToLookAt("SelectedData"+SelectionLabel+".txt",std::ios::trunc);
 
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
@@ -510,7 +511,7 @@ void HistoProducerNoSys()
         unsigned int negPhi = 0;
         unsigned int posPhi = 0;
         
-        bool Signal;
+        bool SignalFlag;
 
         float XFVCutValue = 10; //10
         float YFVCutValue = 20; //20
@@ -543,7 +544,7 @@ void HistoProducerNoSys()
             if(true)
             {
                 Signal++;
-                Signal = true;
+                SignalFlag = true;
 
                 RangeVsPE.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),FlashMax);
 
@@ -595,7 +596,7 @@ void HistoProducerNoSys()
                 {
                     if(MCTrkID > -1 && PDGTruth[MCTrkID] == -13)
                     {
-                        Signal = false;
+                        SignalFlag = false;
                         nubar++;
                         BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                         BgrTheta.at(0)->Fill(TrackTheta[TrkID]);
@@ -615,7 +616,7 @@ void HistoProducerNoSys()
                     }
                     else if(MCTrkID > -1 && abs(PDGTruth[MCTrkID]) == 11)
                     {
-                        Signal = false;
+                        SignalFlag = false;
                         nue++;
                         BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                         BgrTheta.at(1)->Fill(TrackTheta[TrkID]);
@@ -635,7 +636,7 @@ void HistoProducerNoSys()
                     }
                     else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
                     {
-                        Signal = false;
+                        SignalFlag = false;
                         outFV++;
                         BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                         BgrTheta.at(2)->Fill(TrackTheta[TrkID]);
@@ -672,7 +673,7 @@ void HistoProducerNoSys()
                 }
                 else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    Signal = false;
+                    SignalFlag = false;
                     NCnu++;
                     BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                     BgrTheta.at(3)->Fill(TrackTheta[TrkID]);
@@ -692,7 +693,7 @@ void HistoProducerNoSys()
                 }
                 else if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1)
                 {
-                    Signal = false;
+                    SignalFlag = false;
                     Cosmic++;
                     BgrTrackRange.at(4)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                     BgrTheta.at(4)->Fill(TrackTheta[TrkID]);
@@ -719,8 +720,8 @@ void HistoProducerNoSys()
                 if(file_no == 2)
                 {
                     DataToLookAt << Run << " " << Subrun << " " << Event << " " <<
-                    XVertexPosition[VtxID] << " " << YVertexPosition[VtxID] << " " << ZVertexPosition[VtxID] <<
-                    Signal << " " << (bool)1 << "\n";
+                    XVertexPosition[VtxID] << " " << YVertexPosition[VtxID] << " " << ZVertexPosition[VtxID] << " " <<
+                    SignalFlag << " " << 1 << "\n";
                 }
             }
 

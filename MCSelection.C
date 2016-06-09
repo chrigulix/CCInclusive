@@ -208,10 +208,10 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
         // Count up the number of contained mc-tracks if there are mc candidates
         if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && PDG_truth[MCTrackCandidate] == 13)
         {
-            if(NumberOfSignalTruth<100)
-            {
-                std::cout << NumberOfSignalTruth << " " << MCTrackCandidate << " " << XMCTrackStart[MCTrackCandidate] << " " << YMCTrackStart[MCTrackCandidate] << " " << ZMCTrackStart[MCTrackCandidate] << std::endl;
-            }
+//             if(NumberOfSignalTruth<100)
+//             {
+//                 std::cout << NumberOfSignalTruth << " " << MCTrackCandidate << " " << XMCTrackStart[MCTrackCandidate] << " " << YMCTrackStart[MCTrackCandidate] << " " << ZMCTrackStart[MCTrackCandidate] << std::endl;
+//             }
             NumberOfSignalTruth++;
             SelectionTree->Fill();
         }

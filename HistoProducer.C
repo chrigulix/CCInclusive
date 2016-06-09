@@ -55,8 +55,8 @@ void HistoProducer()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-    std::string SelectionLabel = "_Old";
-//     std::string SelectionLabel = "_Mod";
+//     std::string SelectionLabel = "_Old";
+    std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
 //     std::string FileType = "png";
@@ -172,6 +172,7 @@ void HistoProducer()
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_3"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1"+ SelectionLabel +".root").c_str());
