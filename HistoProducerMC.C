@@ -12,6 +12,7 @@
 #include <TEfficiency.h>
 #include <TFile.h>
 #include <TGraph.h>
+#include <TMultiGraph.h>
 #include <TH1.h>
 #include <TH2.h>
 #include <THStack.h>
@@ -148,7 +149,7 @@ void HistoProducerMC()
 
     for ( const auto& Label : GenLabel )
     {
-        SelectionTrackRange.push_back ( new TH1F ( ( "Track Range"+Label ).c_str(),"Track Range of Selected Track",NumberOfBins,0,1036.8 ) );
+        SelectionTrackRange.push_back ( new TH1F ( ( "Track Range"+Label ).c_str(),"Track Range of Selected Track",NumberOfBins,0,1000 ) );
         SelectionTrackRange.back()->SetStats ( 0 );
         SelectionTrackRange.back()->GetXaxis()->SetTitle ( "Track Range [cm]" );
         SelectionTrackRange.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dx}" );
@@ -546,11 +547,11 @@ void HistoProducerMC()
     for ( unsigned int eff_no = 0; eff_no < EfficiencyLabel.size(); eff_no++ )
     {
         EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 2 ),*SelectionTrackRange.at ( eff_no ) ) );
-        EffEnergy.push_back ( new TEfficiency ( *SelectionTheta.at ( 2 ),*SelectionTheta.at ( eff_no ) ) );
-        EffMomentum.push_back ( new TEfficiency ( *SelectionCosTheta.at ( 2 ),*SelectionCosTheta.at ( eff_no ) ) );
-        EffTheta.push_back ( new TEfficiency ( *SelectionPhi.at ( 2 ),*SelectionPhi.at ( eff_no ) ) );
-        EffCosTheta.push_back ( new TEfficiency ( *SelectionEnergy.at ( 2 ),*SelectionEnergy.at ( eff_no ) ) );
-        EffPhi.push_back ( new TEfficiency ( *SelectionMomentum.at ( 2 ),*SelectionMomentum.at ( eff_no ) ) );
+        EffEnergy.push_back ( new TEfficiency ( *SelectionEnergy.at ( 2 ),*SelectionEnergy.at ( eff_no ) ) );
+        EffMomentum.push_back ( new TEfficiency ( *SelectionMomentum.at ( 2 ),*SelectionMomentum.at ( eff_no ) ) );
+        EffTheta.push_back ( new TEfficiency ( *SelectionTheta.at ( 2 ),*SelectionTheta.at ( eff_no ) ) );
+        EffCosTheta.push_back ( new TEfficiency ( *SelectionCosTheta.at ( 2 ),*SelectionCosTheta.at ( eff_no ) ) );
+        EffPhi.push_back ( new TEfficiency ( *SelectionPhi.at ( 2 ),*SelectionPhi.at ( eff_no ) ) );
 
         EffXTrackStartEnd.push_back ( new TEfficiency ( *SelXTrackStartEnd.at ( 2 ),*SelXTrackStartEnd.at ( eff_no ) ) );
         EffYTrackStartEnd.push_back ( new TEfficiency ( *SelYTrackStartEnd.at ( 2 ),*SelYTrackStartEnd.at ( eff_no ) ) );
@@ -562,135 +563,189 @@ void HistoProducerMC()
     }
 
     TCanvas *Canvas1 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Track Range", "Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
+    TMultiGraph *MGTrackRange = new TMultiGraph();
+    EffTrackRange.at ( 0 )->SetLineWidth ( 2 );
+    EffTrackRange.at ( 0 )->SetLineColor ( 31 );
+    EffTrackRange.at ( 1 )->SetLineWidth ( 2 );
+    EffTrackRange.at ( 1 )->SetLineColor ( 40 );
+    MGTrackRange->Add(EffTrackRange.at(0)->CreateGraph());
+    MGTrackRange->Add(EffTrackRange.at(1)->CreateGraph());
     Canvas1->cd();
+    MGTrackRange->Draw("AP");
 //     EffTrackRange.at ( 1 )->SetMaximum ( 1.1*GetMaximum(EffTrackRange) );
 //     EffTrackRange.at ( 1 )->SetMinimum ( 0.0 );
-    EffTrackRange.at ( 1 )->SetFillColor ( 40 );
-    EffTrackRange.at ( 1 )->Draw ( "A2" );
-    EffTrackRange.at ( 0 )->SetFillColor ( 31 );
-    EffTrackRange.at ( 0 )->Draw ( "2SAME" );
+//     EffTrackRange.at ( 1 )->SetLineColor ( 40 );
+//     EffTrackRange.at ( 1 )->Draw ( "A" );
+//     EffTrackRange.at ( 0 )->SetLineColor ( 31 );
+//     EffTrackRange.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas1->SaveAs ( ( "EffMCRange"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Theta-Angle", "Efficiency OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
+    TMultiGraph *MGTheta = new TMultiGraph();
+    EffTheta.at ( 0 )->SetLineWidth ( 2 );
+    EffTheta.at ( 0 )->SetLineColor ( 31 );
+    EffTheta.at ( 1 )->SetLineWidth ( 2 );
+    EffTheta.at ( 1 )->SetLineColor ( 40 );
+    MGTheta->Add(EffTheta.at(0)->CreateGraph());
+    MGTheta->Add(EffTheta.at(1)->CreateGraph());
     Canvas2->cd();
+    MGTheta->Draw("AP");
 //     EffTheta.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffTheta) );
 //     EffTheta.at ( 1 )->SetMinimum ( 0.0 );
     
-    EffTheta.at ( 1 )->SetFillColor ( 40 );
-    EffTheta.at ( 1 )->Draw ( "A2" );
-    EffTheta.at ( 0 )->SetFillColor ( 31 );
-    EffTheta.at ( 0 )->Draw ( "2SAME" );
+//     EffTheta.at ( 1 )->SetLineColor ( 40 );
+//     EffTheta.at ( 1 )->Draw ( "A" );
+//     EffTheta.at ( 0 )->SetLineColor ( 31 );
+//     EffTheta.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas2->SaveAs ( ( "EffMCTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2b = new TCanvas ( "Efficiency OnBeam Minus OffBeam Cos Theta-Angle", "Efficiency OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
+    TMultiGraph *MGCosTheta = new TMultiGraph();
+    EffCosTheta.at ( 0 )->SetLineWidth ( 2 );
+    EffCosTheta.at ( 0 )->SetLineColor ( 31 );
+    EffCosTheta.at ( 1 )->SetLineWidth ( 2 );
+    EffCosTheta.at ( 1 )->SetLineColor ( 40 );
+    MGCosTheta->Add(EffCosTheta.at(0)->CreateGraph());
+    MGCosTheta->Add(EffCosTheta.at(1)->CreateGraph());
     Canvas2b->cd();
+    MGCosTheta->Draw("AP");
 //     EffCosTheta.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffTheta) );
 //     EffCosTheta.at ( 1 )->SetMinimum ( 0.0 );
-    EffCosTheta.at ( 1 )->SetFillColor ( 40 );
-    EffCosTheta.at ( 1 )->Draw ( "A2" );
-    EffCosTheta.at ( 0 )->SetFillColor ( 31 );
-    EffCosTheta.at ( 0 )->Draw ( "2SAME" );
+//     EffCosTheta.at ( 1 )->SetLineColor ( 40 );
+//     EffCosTheta.at ( 1 )->Draw ( "A" );
+//     EffCosTheta.at ( 0 )->SetLineColor ( 31 );
+//     EffCosTheta.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas2b->SaveAs ( ( "EffMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas3 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Phi-Angle", "Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
+    TMultiGraph *MGPhi = new TMultiGraph();
+    EffPhi.at ( 0 )->SetLineWidth ( 2 );
+    EffPhi.at ( 0 )->SetLineColor ( 31 );
+    EffPhi.at ( 1 )->SetLineWidth ( 2 );
+    EffPhi.at ( 1 )->SetLineColor ( 40 );
+    MGPhi->Add(EffPhi.at(0)->CreateGraph());
+    MGPhi->Add(EffPhi.at(1)->CreateGraph());
     Canvas3->cd();
+    MGPhi->Draw("AP");
 //     EffPhi.at ( 1 )->SetMaximum ( 1.9*GetMaximum(EffPhi) );
 //     EffPhi.at ( 1 )->SetMinimum ( 0.0 );
-    EffPhi.at ( 1 )->SetFillColor ( 40 );
-    EffPhi.at ( 1 )->Draw ( "A2" );
-    EffPhi.at ( 0 )->SetFillColor ( 31 );
-    EffPhi.at ( 0 )->Draw ( "2SAME" );
+//     EffPhi.at ( 1 )->SetLineColor ( 40 );
+//     EffPhi.at ( 1 )->Draw ( "A" );
+//     EffPhi.at ( 0 )->SetLineColor ( 31 );
+//     EffPhi.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas3->SaveAs ( ( "EffMCPhi"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas4 = new TCanvas ( "Efficiency Energy", "Efficiency Energy", 1400, 1000 );
+    TMultiGraph *MGEnergy = new TMultiGraph();
+    EffEnergy.at ( 0 )->SetLineWidth ( 2 );
+    EffEnergy.at ( 0 )->SetLineColor ( 31 );
+    EffEnergy.at ( 1 )->SetLineWidth ( 2 );
+    EffEnergy.at ( 1 )->SetLineColor ( 40 );
+    MGEnergy->Add(EffEnergy.at(0)->CreateGraph());
+    MGEnergy->Add(EffEnergy.at(1)->CreateGraph());
     Canvas4->cd();
+    MGEnergy->Draw("AP");
 //     EffEnergy.at ( 1 )->SetMaximum ( 1.2*GetMaximum(EffEnergy) );
 //     EffEnergy.at ( 1 )->SetMinimum ( 0.0 );
-    EffEnergy.at ( 1 )->SetFillColor ( 40 );
-    EffEnergy.at ( 1 )->Draw ( "A2" );
-    EffEnergy.at ( 0 )->SetFillColor ( 31 );
-    EffEnergy.at ( 0 )->Draw ( "2SAME" );
+//     EffEnergy.at ( 1 )->SetLineColor ( 40 );
+//     EffEnergy.at ( 1 )->Draw ( "A" );
+//     EffEnergy.at ( 0 )->SetLineColor ( 31 );
+//     EffEnergy.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas4->SaveAs ( ( "EffMCEnergy"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas4a = new TCanvas ( "Efficiency Momentum", "Efficiency Momentum", 1400, 1000 );
+    TMultiGraph *MGMomentum = new TMultiGraph();
+    EffMomentum.at ( 0 )->SetLineWidth ( 2 );
+    EffMomentum.at ( 0 )->SetLineColor ( 31 );
+    EffMomentum.at ( 1 )->SetLineWidth ( 2 );
+    EffMomentum.at ( 1 )->SetLineColor ( 40 );
+    MGMomentum->Add(EffMomentum.at(0)->CreateGraph());
+    MGMomentum->Add(EffMomentum.at(1)->CreateGraph());
     Canvas4a->cd();
+    MGMomentum->Draw("AP");
 //     EffMomentum.at ( 1 )->SetMaximum ( 1.2*GetMaximum(EffMomentum) );
 //     EffMomentum.at ( 1 )->SetMinimum ( 0.0 );
-    EffMomentum.at ( 1 )->SetFillColor ( 40 );
-    EffMomentum.at ( 1 )->Draw ( "A2" );
-    EffMomentum.at ( 0 )->SetFillColor ( 31 );
-    EffMomentum.at ( 0 )->Draw ( "2SAME" );
+//     EffMomentum.at ( 1 )->SetLineColor ( 40 );
+//     EffMomentum.at ( 1 )->Draw ( "A" );
+//     EffMomentum.at ( 0 )->SetLineColor ( 31 );
+//     EffMomentum.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas4a->SaveAs ( ( "EffMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas5 = new TCanvas ( "Efficiency OnBeam Minus OffBeam X Start & End Point ", "Efficiency OnBeam Minus OffBeam X Start & End Point ", 1400, 1000 );
+    TMultiGraph *MGXStart = new TMultiGraph();
     Canvas5->cd();
 //     EffXTrackStartEnd.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffXTrackStartEnd) );
 //     EffXTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    EffXTrackStartEnd.at ( 1 )->SetFillColor ( 40 );
-    EffXTrackStartEnd.at ( 1 )->Draw ( "A2" );
-    EffXTrackStartEnd.at ( 0 )->SetFillColor ( 31 );
-    EffXTrackStartEnd.at ( 0 )->Draw ( "2SAME" );
+    EffXTrackStartEnd.at ( 1 )->SetLineColor ( 40 );
+    EffXTrackStartEnd.at ( 1 )->Draw ( "A" );
+    EffXTrackStartEnd.at ( 0 )->SetLineColor ( 31 );
+    EffXTrackStartEnd.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas5->SaveAs ( ( "EffMCXTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas6 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Y Start & End Point ", "Efficiency OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000 );
+    TMultiGraph *MGYStart = new TMultiGraph();
     Canvas6->cd();
 //     EffYTrackStartEnd.at ( 1 )->SetMaximum ( 1.8*GetMaximum(EffYTrackStartEnd) );
 //     EffYTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    EffYTrackStartEnd.at ( 1 )->SetFillColor ( 40 );
-    EffYTrackStartEnd.at ( 1 )->Draw ( "A2" );
-    EffYTrackStartEnd.at ( 0 )->SetFillColor ( 31 );
-    EffYTrackStartEnd.at ( 0 )->Draw ( "2SAME" );
+    EffYTrackStartEnd.at ( 1 )->SetLineColor ( 40 );
+    EffYTrackStartEnd.at ( 1 )->Draw ( "A" );
+    EffYTrackStartEnd.at ( 0 )->SetLineColor ( 31 );
+    EffYTrackStartEnd.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas6->SaveAs ( ( "EffMCYTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas7 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Z Start & End Point ", "Efficiency OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000 );
+    TMultiGraph *MGZStart = new TMultiGraph();
     Canvas7->cd();
 //     EffZTrackStartEnd.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffZTrackStartEnd) );
 //     EffZTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    EffZTrackStartEnd.at ( 1 )->SetFillColor ( 40 );
-    EffZTrackStartEnd.at ( 1 )->Draw ( "A2" );
-    EffZTrackStartEnd.at ( 0 )->SetFillColor ( 31 );
-    EffZTrackStartEnd.at ( 0 )->Draw ( "2SAME" );
+    EffZTrackStartEnd.at ( 1 )->SetLineColor ( 40 );
+    EffZTrackStartEnd.at ( 1 )->Draw ( "A" );
+    EffZTrackStartEnd.at ( 0 )->SetLineColor ( 31 );
+    EffZTrackStartEnd.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas7->SaveAs ( ( "EffMCZTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas8 = new TCanvas ( "Efficiency OnBeam Minus OffBeam X Vertex Postion", "Efficiency OnBeam Minus OffBeam X Vertex Postion", 1400, 1000 );
+    TMultiGraph *MGXVertex = new TMultiGraph();
     Canvas8->cd();
 //     EffXVtxPosition.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffXVtxPosition) );
 //     EffXVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    EffXVtxPosition.at ( 1 )->SetFillColor ( 40 );
-    EffXVtxPosition.at ( 1 )->Draw ( "A2" );
-    EffXVtxPosition.at ( 0 )->SetFillColor ( 31 );
-    EffXVtxPosition.at ( 0 )->Draw ( "2SAME" );
+    EffXVtxPosition.at ( 1 )->SetLineColor ( 40 );
+    EffXVtxPosition.at ( 1 )->Draw ( "A" );
+    EffXVtxPosition.at ( 0 )->SetLineColor ( 31 );
+    EffXVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas8->SaveAs ( ( "EffMCXVertex"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas9 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Y Vertex Postion", "Efficiency OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000 );
+    TMultiGraph *MGYVertex = new TMultiGraph();
     Canvas9->cd();
 //     EffYVtxPosition.at ( 1 )->SetMaximum ( 1.8*GetMaximum(EffYVtxPosition) );
 //     EffYVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    EffYVtxPosition.at ( 1 )->SetFillColor ( 40 );
-    EffYVtxPosition.at ( 1 )->Draw ( "A2" );
-    EffYVtxPosition.at ( 0 )->SetFillColor ( 31 );
-    EffYVtxPosition.at ( 0 )->Draw ( "2SAME" );
+    EffYVtxPosition.at ( 1 )->SetLineColor ( 40 );
+    EffYVtxPosition.at ( 1 )->Draw ( "A" );
+    EffYVtxPosition.at ( 0 )->SetLineColor ( 31 );
+    EffYVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas9->SaveAs ( ( "EffMCYVertex"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas10 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Z Vertex Postion", "Efficiency OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000 );
+    TMultiGraph *MGZVertex = new TMultiGraph();
     Canvas10->cd();
 //     EffZVtxPosition.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffZVtxPosition) );
 //     EffZVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    EffZVtxPosition.at ( 1 )->SetFillColor ( 40 );
-    EffZVtxPosition.at ( 1 )->Draw ( "A2" );
-    EffZVtxPosition.at ( 0 )->SetFillColor ( 31 );
-    EffZVtxPosition.at ( 0 )->Draw ( "2SAME" );
+    EffZVtxPosition.at ( 1 )->SetLineColor ( 40 );
+    EffZVtxPosition.at ( 1 )->Draw ( "A" );
+    EffZVtxPosition.at ( 0 )->SetLineColor ( 31 );
+    EffZVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas10->SaveAs ( ( "EffMCZVertex"+SelectionLabel+"."+FileType ).c_str() );
 
