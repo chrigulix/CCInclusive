@@ -91,7 +91,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
     if(GeneratorName == "data_onbeam_bnb")
     {
 //         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-        std::ifstream FileNames("/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd/GOODBNB/filesana.list");
+        std::ifstream FileNames("/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd/GOODBNBBEAM/filesana.list");
 
         std::string FileName;
 
