@@ -120,6 +120,7 @@ void HistoProducerMC()
     EfficiencyLabel.push_back ( "Contained" );
 
     TLegend* LegendMC = new TLegend ( 0.6,0.72,0.9,0.9 );
+    LegendMC->SetLineColorAlpha(0,0);
 
     MCLabel.push_back ( "MC BNB+Cosmic Truth with Stat. Error" );
     MCLabel.push_back ( "MC BNB+Cosmic Truth Contained Stat. Error" );
@@ -543,7 +544,7 @@ void HistoProducerMC()
 
         ChainVec.at ( file_no )->ResetBranchAddresses();
     }
-
+    
     for ( unsigned int eff_no = 0; eff_no < EfficiencyLabel.size(); eff_no++ )
     {
         EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 2 ),*SelectionTrackRange.at ( eff_no ) ) );
