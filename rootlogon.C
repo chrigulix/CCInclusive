@@ -43,7 +43,7 @@ void rootlogon()
     gStyle->SetPadTickX(1);
     gStyle->SetPadTickY(1);
 
-    gStyle->SetMarkerStyle(20);
+    gStyle->SetMarkerStyle(1);
     gStyle->SetMarkerSize(1.2);
     gStyle->SetHistLineWidth(2.);
     gStyle->SetLineStyleString(2,"[12 12]");// postscript dashes
