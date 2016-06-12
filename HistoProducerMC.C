@@ -421,68 +421,7 @@ void HistoProducerMC()
                 SelYVtxPosition.at ( 0 )->Fill ( YnuVtxTruth[0] );
                 SelZVtxPosition.at ( 0 )->Fill ( ZnuVtxTruth[0] );
 
-                if ( MCTrkID > -1 && file_no == 2 && TruthMode[0] == 0 )
-                {
-                    nuQE++;
-                    SelectionTrackRange.at ( 3 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
-                    SelectionTheta.at ( 3 )->Fill ( MCTheta[MCTrkID] );
-                    SelectionCosTheta.at ( 3 )->Fill ( cos ( MCTheta[MCTrkID] ) );
-                    SelectionPhi.at ( 3 )->Fill ( MCPhi[MCTrkID] );
-                    SelectionEnergy.at ( 3 )->Fill ( MCEnergy[MCTrkID] );
-                    SelectionMomentum.at ( 3 )->Fill ( TrueLeptonMomentum[0] );
-
-                    SelXTrackStartEnd.at ( 3 )->Fill ( XMCTrackStart[MCTrkID] );
-                    SelXTrackStartEnd.at ( 3 )->Fill ( XMCTrackEnd[MCTrkID] );
-                    SelYTrackStartEnd.at ( 3 )->Fill ( YMCTrackStart[MCTrkID] );
-                    SelYTrackStartEnd.at ( 3 )->Fill ( YMCTrackEnd[MCTrkID] );
-                    SelZTrackStartEnd.at ( 3 )->Fill ( ZMCTrackStart[MCTrkID] );
-                    SelZTrackStartEnd.at ( 3 )->Fill ( ZMCTrackEnd[MCTrkID] );
-                    SelXVtxPosition.at ( 3 )->Fill ( XnuVtxTruth[0] );
-                    SelYVtxPosition.at ( 3 )->Fill ( YnuVtxTruth[0] );
-                    SelZVtxPosition.at ( 3 )->Fill ( ZnuVtxTruth[0] );
-
-                }
-                else if ( MCTrkID > -1 && file_no == 2 && TruthMode[0] == 1 )
-                {
-                    nuRES++;
-                    SelectionTrackRange.at ( 4 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
-                    SelectionTheta.at ( 4 )->Fill ( MCTheta[MCTrkID] );
-                    SelectionCosTheta.at ( 4 )->Fill ( cos ( MCTheta[MCTrkID] ) );
-                    SelectionPhi.at ( 4 )->Fill ( MCPhi[MCTrkID] );
-                    SelectionEnergy.at ( 4 )->Fill ( MCEnergy[MCTrkID] );
-                    SelectionMomentum.at ( 4 )->Fill ( TrueLeptonMomentum[0] );
-
-                    SelXTrackStartEnd.at ( 4 )->Fill ( XMCTrackStart[MCTrkID] );
-                    SelXTrackStartEnd.at ( 4 )->Fill ( XMCTrackEnd[MCTrkID] );
-                    SelYTrackStartEnd.at ( 4 )->Fill ( YMCTrackStart[MCTrkID] );
-                    SelYTrackStartEnd.at ( 4 )->Fill ( YMCTrackEnd[MCTrkID] );
-                    SelZTrackStartEnd.at ( 4 )->Fill ( ZMCTrackStart[MCTrkID] );
-                    SelZTrackStartEnd.at ( 4 )->Fill ( ZMCTrackEnd[MCTrkID] );
-                    SelXVtxPosition.at ( 4 )->Fill ( XnuVtxTruth[0] );
-                    SelYVtxPosition.at ( 4 )->Fill ( YnuVtxTruth[0] );
-                    SelZVtxPosition.at ( 4 )->Fill ( ZnuVtxTruth[0] );
-
-                }
-                else if ( MCTrkID > -1 && file_no == 2 && TruthMode[0] == 2 )
-                {
-                    nuDIS++;
-                    SelectionTrackRange.at ( 5 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
-                    SelectionTheta.at ( 5 )->Fill ( MCTheta[MCTrkID] );
-                    SelectionCosTheta.at ( 5 )->Fill ( cos ( MCTheta[MCTrkID] ) );
-                    SelectionPhi.at ( 5 )->Fill ( MCPhi[MCTrkID] );
-                    SelectionEnergy.at ( 5 )->Fill ( MCEnergy[MCTrkID] );
-                    SelectionMomentum.at ( 5 )->Fill ( TrueLeptonMomentum[0] );
-
-                    SelXTrackStartEnd.at ( 5 )->Fill ( XMCTrackStart[MCTrkID] );
-                    SelXTrackStartEnd.at ( 5 )->Fill ( XMCTrackEnd[MCTrkID] );
-                    SelYTrackStartEnd.at ( 5 )->Fill ( YMCTrackStart[MCTrkID] );
-                    SelYTrackStartEnd.at ( 5 )->Fill ( YMCTrackEnd[MCTrkID] );
-                    SelZTrackStartEnd.at ( 5 )->Fill ( ZMCTrackStart[MCTrkID] );
-                    SelZTrackStartEnd.at ( 5 )->Fill ( ZMCTrackEnd[MCTrkID] );
-                    SelXVtxPosition.at ( 5 )->Fill ( XnuVtxTruth[0] );
-                    SelYVtxPosition.at ( 5 )->Fill ( YnuVtxTruth[0] );
-                    SelZVtxPosition.at ( 5 )->Fill ( ZnuVtxTruth[0] );
-                }
+                
 
 
                 if ( inFV ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV ( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
@@ -525,6 +464,70 @@ void HistoProducerMC()
                 SelXVtxPosition.at ( 2 )->Fill ( XVertexPosition[VtxID] );
                 SelYVtxPosition.at ( 2 )->Fill ( YVertexPosition[VtxID] );
                 SelZVtxPosition.at ( 2 )->Fill ( ZVertexPosition[VtxID] );
+                
+                if ( TruthMode[0] == 0 )
+                {
+                    nuQE++;
+                    SelectionTrackRange.at ( 3 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
+                    SelectionTheta.at ( 3 )->Fill ( MCTheta[MCTrkID] );
+                    SelectionCosTheta.at ( 3 )->Fill ( cos ( MCTheta[MCTrkID] ) );
+                    SelectionPhi.at ( 3 )->Fill ( MCPhi[MCTrkID] );
+                    SelectionEnergy.at ( 3 )->Fill ( MCEnergy[MCTrkID] );
+                    SelectionMomentum.at ( 3 )->Fill ( TrueLeptonMomentum[0] );
+
+                    SelXTrackStartEnd.at ( 3 )->Fill ( XMCTrackStart[MCTrkID] );
+                    SelXTrackStartEnd.at ( 3 )->Fill ( XMCTrackEnd[MCTrkID] );
+                    SelYTrackStartEnd.at ( 3 )->Fill ( YMCTrackStart[MCTrkID] );
+                    SelYTrackStartEnd.at ( 3 )->Fill ( YMCTrackEnd[MCTrkID] );
+                    SelZTrackStartEnd.at ( 3 )->Fill ( ZMCTrackStart[MCTrkID] );
+                    SelZTrackStartEnd.at ( 3 )->Fill ( ZMCTrackEnd[MCTrkID] );
+                    SelXVtxPosition.at ( 3 )->Fill ( XnuVtxTruth[0] );
+                    SelYVtxPosition.at ( 3 )->Fill ( YnuVtxTruth[0] );
+                    SelZVtxPosition.at ( 3 )->Fill ( ZnuVtxTruth[0] );
+
+                }
+                else if ( TruthMode[0] == 1 )
+                {
+                    nuRES++;
+                    SelectionTrackRange.at ( 4 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
+                    SelectionTheta.at ( 4 )->Fill ( MCTheta[MCTrkID] );
+                    SelectionCosTheta.at ( 4 )->Fill ( cos ( MCTheta[MCTrkID] ) );
+                    SelectionPhi.at ( 4 )->Fill ( MCPhi[MCTrkID] );
+                    SelectionEnergy.at ( 4 )->Fill ( MCEnergy[MCTrkID] );
+                    SelectionMomentum.at ( 4 )->Fill ( TrueLeptonMomentum[0] );
+
+                    SelXTrackStartEnd.at ( 4 )->Fill ( XMCTrackStart[MCTrkID] );
+                    SelXTrackStartEnd.at ( 4 )->Fill ( XMCTrackEnd[MCTrkID] );
+                    SelYTrackStartEnd.at ( 4 )->Fill ( YMCTrackStart[MCTrkID] );
+                    SelYTrackStartEnd.at ( 4 )->Fill ( YMCTrackEnd[MCTrkID] );
+                    SelZTrackStartEnd.at ( 4 )->Fill ( ZMCTrackStart[MCTrkID] );
+                    SelZTrackStartEnd.at ( 4 )->Fill ( ZMCTrackEnd[MCTrkID] );
+                    SelXVtxPosition.at ( 4 )->Fill ( XnuVtxTruth[0] );
+                    SelYVtxPosition.at ( 4 )->Fill ( YnuVtxTruth[0] );
+                    SelZVtxPosition.at ( 4 )->Fill ( ZnuVtxTruth[0] );
+
+                }
+                else if ( TruthMode[0] == 2 )
+                {
+                    nuDIS++;
+                    SelectionTrackRange.at ( 5 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
+                    SelectionTheta.at ( 5 )->Fill ( MCTheta[MCTrkID] );
+                    SelectionCosTheta.at ( 5 )->Fill ( cos ( MCTheta[MCTrkID] ) );
+                    SelectionPhi.at ( 5 )->Fill ( MCPhi[MCTrkID] );
+                    SelectionEnergy.at ( 5 )->Fill ( MCEnergy[MCTrkID] );
+                    SelectionMomentum.at ( 5 )->Fill ( TrueLeptonMomentum[0] );
+
+                    SelXTrackStartEnd.at ( 5 )->Fill ( XMCTrackStart[MCTrkID] );
+                    SelXTrackStartEnd.at ( 5 )->Fill ( XMCTrackEnd[MCTrkID] );
+                    SelYTrackStartEnd.at ( 5 )->Fill ( YMCTrackStart[MCTrkID] );
+                    SelYTrackStartEnd.at ( 5 )->Fill ( YMCTrackEnd[MCTrkID] );
+                    SelZTrackStartEnd.at ( 5 )->Fill ( ZMCTrackStart[MCTrkID] );
+                    SelZTrackStartEnd.at ( 5 )->Fill ( ZMCTrackEnd[MCTrkID] );
+                    SelXVtxPosition.at ( 5 )->Fill ( XnuVtxTruth[0] );
+                    SelYVtxPosition.at ( 5 )->Fill ( YnuVtxTruth[0] );
+                    SelZVtxPosition.at ( 5 )->Fill ( ZnuVtxTruth[0] );
+                }
+                
 
                 // Fill systematic errors independet of CC or NC
                 SelectionTrackRange.back()->Fill ( CalcLength ( XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID] ),1+SystematicErrors.at ( 0 ).Eval ( NuEnergyTruth[0] ) );
@@ -649,12 +652,6 @@ void HistoProducerMC()
     MGMomentum->Add(EffMomentum.at(1)->CreateGraph());
     Canvas4a->cd();
     MGMomentum->Draw("AP");
-//     EffMomentum.at ( 1 )->SetMaximum ( 1.2*GetMaximum(EffMomentum) );
-//     EffMomentum.at ( 1 )->SetMinimum ( 0.0 );
-//     EffMomentum.at ( 1 )->SetLineColor ( 40 );
-//     EffMomentum.at ( 1 )->Draw ( "A" );
-//     EffMomentum.at ( 0 )->SetLineColor ( 31 );
-//     EffMomentum.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas4a->SaveAs ( ( "EffMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
 
