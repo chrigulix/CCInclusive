@@ -126,14 +126,14 @@ void HistoProducerMC()
     LegendMC->SetMargin(0.2);
     LegendMC->SetTextFont(43);
     LegendMC->SetTextSize(30);
-    
+
     std::cout << LegendMC->GetMargin() << " " << LegendMC->GetTextFont() << " " << LegendMC->GetTextSize() << std::endl;
-    
+
 
     MCLabel.push_back ( "True Track in FV" );
     MCLabel.push_back ( "True Contained Tracks" );
     MCLabel.push_back ( "Selection on MC BNB+Cosmic with Stat. Error" );
-    
+
 //     MCLabel.push_back ( "Selection MC BNB+Cosmic Sys. Error" );
 
     TLegend* FlashLabel = new TLegend ( 0.7,0.7,0.9,0.9 );
@@ -552,7 +552,7 @@ void HistoProducerMC()
 
         ChainVec.at ( file_no )->ResetBranchAddresses();
     }
-    
+
     for ( unsigned int eff_no = 0; eff_no < EfficiencyLabel.size(); eff_no++ )
     {
         EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 2 ),*SelectionTrackRange.at ( eff_no ) ) );
@@ -762,6 +762,20 @@ void HistoProducerMC()
     SelectionTrackRange.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas11->SaveAs ( ( "MCRange"+SelectionLabel+"."+FileType ).c_str() );
+
+    TCanvas *Canvas11Prop = new TCanvas ( "OnBeam Minus OffBeam Track Range Prop", "OnBeam Minus OffBeam Track Range Prop", 1400, 1000 );
+    Canvas11Prop->cd();
+    SelectionTrackRange.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionTrackRange ) );
+    SelectionTrackRange.at ( 3 )->SetMinimum ( 0.0 );
+    SelectionTrackRange.at ( 3 )->SetFillColor ( 3 );
+    SelectionTrackRange.at ( 3 )->Draw ( "E2" );
+    for(unsigned int iter = 4; iter < SelectionTrackRange.size()-1; iter++)
+    {
+        SelectionTrackRange.at(iter)->SetFillColor(iter);
+        SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
+    }
+//     LegendMC->Draw();
+    Canvas11Prop->SaveAs ( ( "MCRange"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas12 = new TCanvas ( "OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
     Canvas12->cd();
