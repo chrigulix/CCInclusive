@@ -119,13 +119,19 @@ void HistoProducerMC()
     EfficiencyLabel.push_back ( "Efficiency" );
     EfficiencyLabel.push_back ( "Contained" );
 
-    TLegend* LegendMC = new TLegend ( 0.6,0.72,0.9,0.9 );
-    LegendMC->SetLineColorAlpha(0,0);
-    LegendMC->SetFillColorAlpha(0,0);
-    LegendMC->SetMargin(0.95);
+    TLegend* LegendMC = new TLegend ( 0.6,0.72,0.89,0.89 );
+    LegendMC->SetLineColor(0);
+    LegendMC->SetLineStyle(0);
+    LegendMC->SetFillStyle(0);
+    LegendMC->SetMargin(0.2);
+    LegendMC->SetTextFont(43);
+    LegendMC->SetTextSize(30);
+    
+    std::cout << LegendMC->GetMargin() << " " << LegendMC->GetTextFont() << " " << LegendMC->GetTextSize() << std::endl;
+    
 
-    MCLabel.push_back ( "MC BNB+Cosmic Truth with Stat. Error" );
-    MCLabel.push_back ( "MC BNB+Cosmic Truth Contained Stat. Error" );
+    MCLabel.push_back ( "True Track in FV" );
+    MCLabel.push_back ( "True Contained Tracks" );
     MCLabel.push_back ( "Selection on MC BNB+Cosmic with Stat. Error" );
     
 //     MCLabel.push_back ( "Selection MC BNB+Cosmic Sys. Error" );
@@ -575,12 +581,6 @@ void HistoProducerMC()
     MGTrackRange->Add(EffTrackRange.at(1)->CreateGraph());
     Canvas1->cd();
     MGTrackRange->Draw("AP");
-//     EffTrackRange.at ( 1 )->SetMaximum ( 1.1*GetMaximum(EffTrackRange) );
-//     EffTrackRange.at ( 1 )->SetMinimum ( 0.0 );
-//     EffTrackRange.at ( 1 )->SetLineColor ( 40 );
-//     EffTrackRange.at ( 1 )->Draw ( "A" );
-//     EffTrackRange.at ( 0 )->SetLineColor ( 31 );
-//     EffTrackRange.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas1->SaveAs ( ( "EffMCRange"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -594,13 +594,6 @@ void HistoProducerMC()
     MGTheta->Add(EffTheta.at(1)->CreateGraph());
     Canvas2->cd();
     MGTheta->Draw("AP");
-//     EffTheta.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffTheta) );
-//     EffTheta.at ( 1 )->SetMinimum ( 0.0 );
-    
-//     EffTheta.at ( 1 )->SetLineColor ( 40 );
-//     EffTheta.at ( 1 )->Draw ( "A" );
-//     EffTheta.at ( 0 )->SetLineColor ( 31 );
-//     EffTheta.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas2->SaveAs ( ( "EffMCTheta"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -614,12 +607,6 @@ void HistoProducerMC()
     MGCosTheta->Add(EffCosTheta.at(1)->CreateGraph());
     Canvas2b->cd();
     MGCosTheta->Draw("AP");
-//     EffCosTheta.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffTheta) );
-//     EffCosTheta.at ( 1 )->SetMinimum ( 0.0 );
-//     EffCosTheta.at ( 1 )->SetLineColor ( 40 );
-//     EffCosTheta.at ( 1 )->Draw ( "A" );
-//     EffCosTheta.at ( 0 )->SetLineColor ( 31 );
-//     EffCosTheta.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas2b->SaveAs ( ( "EffMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -633,12 +620,6 @@ void HistoProducerMC()
     MGPhi->Add(EffPhi.at(1)->CreateGraph());
     Canvas3->cd();
     MGPhi->Draw("AP");
-//     EffPhi.at ( 1 )->SetMaximum ( 1.9*GetMaximum(EffPhi) );
-//     EffPhi.at ( 1 )->SetMinimum ( 0.0 );
-//     EffPhi.at ( 1 )->SetLineColor ( 40 );
-//     EffPhi.at ( 1 )->Draw ( "A" );
-//     EffPhi.at ( 0 )->SetLineColor ( 31 );
-//     EffPhi.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas3->SaveAs ( ( "EffMCPhi"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -652,12 +633,6 @@ void HistoProducerMC()
     MGEnergy->Add(EffEnergy.at(1)->CreateGraph());
     Canvas4->cd();
     MGEnergy->Draw("AP");
-//     EffEnergy.at ( 1 )->SetMaximum ( 1.2*GetMaximum(EffEnergy) );
-//     EffEnergy.at ( 1 )->SetMinimum ( 0.0 );
-//     EffEnergy.at ( 1 )->SetLineColor ( 40 );
-//     EffEnergy.at ( 1 )->Draw ( "A" );
-//     EffEnergy.at ( 0 )->SetLineColor ( 31 );
-//     EffEnergy.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas4->SaveAs ( ( "EffMCEnergy"+SelectionLabel+"."+FileType ).c_str() );
 
