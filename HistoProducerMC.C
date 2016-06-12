@@ -423,6 +423,7 @@ void HistoProducerMC()
 
                 if ( MCTrkID > -1 && file_no == 2 && TruthMode[0] == 0 )
                 {
+                    nuQE++;
                     SelectionTrackRange.at ( 3 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                     SelectionTheta.at ( 3 )->Fill ( MCTheta[MCTrkID] );
                     SelectionCosTheta.at ( 3 )->Fill ( cos ( MCTheta[MCTrkID] ) );
@@ -443,6 +444,7 @@ void HistoProducerMC()
                 }
                 else if ( MCTrkID > -1 && file_no == 2 && TruthMode[0] == 1 )
                 {
+                    nuRES++;
                     SelectionTrackRange.at ( 4 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                     SelectionTheta.at ( 4 )->Fill ( MCTheta[MCTrkID] );
                     SelectionCosTheta.at ( 4 )->Fill ( cos ( MCTheta[MCTrkID] ) );
@@ -463,6 +465,7 @@ void HistoProducerMC()
                 }
                 else if ( MCTrkID > -1 && file_no == 2 && TruthMode[0] == 2 )
                 {
+                    nuDIS++;
                     SelectionTrackRange.at ( 5 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                     SelectionTheta.at ( 5 )->Fill ( MCTheta[MCTrkID] );
                     SelectionCosTheta.at ( 5 )->Fill ( cos ( MCTheta[MCTrkID] ) );
@@ -763,8 +766,8 @@ void HistoProducerMC()
     LegendMC->Draw();
     Canvas11->SaveAs ( ( "MCRange"+SelectionLabel+"."+FileType ).c_str() );
 
-    TCanvas *Canvas11Prop = new TCanvas ( "OnBeam Minus OffBeam Track Range Prop", "OnBeam Minus OffBeam Track Range Prop", 1400, 1000 );
-    Canvas11Prop->cd();
+    TCanvas *Canvas11Int = new TCanvas ( "OnBeam Minus OffBeam Track Range Int", "OnBeam Minus OffBeam Track Range Int", 1400, 1000 );
+    Canvas11Int->cd();
     SelectionTrackRange.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionTrackRange ) );
     SelectionTrackRange.at ( 3 )->SetMinimum ( 0.0 );
     SelectionTrackRange.at ( 3 )->SetFillColor ( 3 );
@@ -775,7 +778,7 @@ void HistoProducerMC()
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
-    Canvas11Prop->SaveAs ( ( "MCRange"+SelectionLabel+"."+FileType ).c_str() );
+    Canvas11Int->SaveAs ( ( "MCRange_Int"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas12 = new TCanvas ( "OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
     Canvas12->cd();
