@@ -121,6 +121,8 @@ void HistoProducerMC()
 
     TLegend* LegendMC = new TLegend ( 0.6,0.72,0.9,0.9 );
     LegendMC->SetLineColorAlpha(0,0);
+    LegendMC->SetFillColorAlpha(0,0);
+    LegendMC->SetMargin(0.95);
 
     MCLabel.push_back ( "MC BNB+Cosmic Truth with Stat. Error" );
     MCLabel.push_back ( "MC BNB+Cosmic Truth Contained Stat. Error" );
