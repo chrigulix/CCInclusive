@@ -725,7 +725,7 @@ void HistoProducerMC()
 
     for ( unsigned int eff_no = 0; eff_no < EfficiencyLabel.size(); eff_no++ )
     {
-        std::cout << SelectionTrackRange.at(2)->GetNbinsX() << " " << SelectionTrackRange.at(2)->Integral() << " " << SelectionTrackRange.at(eff_no)->GetNbinsX() << " "<< SelectionTrackRange.at(eff_no)->Integral() << std::endl; 
+        std::cout << TEfficiency::CheckConsistency(SelectionTrackRange.at(2), SelectionTrackRange.at(eff_no),"w") << " " << TEfficiency::CheckBinning(SelectionTrackRange.at(2), SelectionTrackRange.at(eff_no)) << std::endl; 
         EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 2 ),*SelectionTrackRange.at ( eff_no ) ) );
         EffEnergy.push_back ( new TEfficiency ( *SelectionEnergy.at ( 2 ),*SelectionEnergy.at ( eff_no ) ) );
         EffMomentum.push_back ( new TEfficiency ( *SelectionMomentum.at ( 2 ),*SelectionMomentum.at ( eff_no ) ) );
@@ -775,8 +775,8 @@ void HistoProducerMC()
     EffTrackRange.at ( 1 )->SetLineColor (9);
     MGTrackRange->Add ( EffTrackRange.at ( 0 )->CreateGraph() );
     MGTrackRange->Add ( EffTrackRange.at ( 1 )->CreateGraph() );
-    MGTrackRange->GetXaxis()->SetTitle("Track Range [cm]");
-    MGTrackRange->GetYaxis()->SetTitle("Efficiency [ ]");
+//     MGTrackRange->GetXaxis()->SetTitle("Track Range [cm]");
+//     MGTrackRange->GetYaxis()->SetTitle("Efficiency [ ]");
     Canvas1->cd();
     MGTrackRange->Draw ( "AP" );
     LegendEfficiency->Draw();
