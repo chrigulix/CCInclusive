@@ -111,6 +111,8 @@ void HistoProducerMC()
     std::vector<TEfficiency*> EffXVtxPosition;
     std::vector<TEfficiency*> EffYVtxPosition;
     std::vector<TEfficiency*> EffZVtxPosition;
+    
+    std::vector<int> ColorVec(3,4,5);
 
     TF1* SinTheta = new TF1 ( "const","sin(x)",0,3.142 );
 
@@ -197,72 +199,72 @@ void HistoProducerMC()
         SelectionTrackRange.push_back ( new TH1F ( ( "Track Range"+Label ).c_str(),"Track Range of Selected Track",NumberOfBins,0,1000 ) );
         SelectionTrackRange.back()->SetStats ( 0 );
         SelectionTrackRange.back()->GetXaxis()->SetTitle ( "Track Range [cm]" );
-        SelectionTrackRange.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dx}" );
+        SelectionTrackRange.back()->GetYaxis()->SetTitle ( "# Events" );
 
         SelectionTheta.push_back ( new TH1F ( ( "#theta-Angle"+Label ).c_str(),"#theta-Angle of Selected Track",NumberOfBins,0,3.142 ) );
         SelectionTheta.back()->SetStats ( 0 );
         SelectionTheta.back()->GetXaxis()->SetTitle ( "#theta [rad]" );
-        SelectionTheta.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{d#theta}" );
+        SelectionTheta.back()->GetYaxis()->SetTitle ( "# Events" );
         SelectionTheta.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionCosTheta.push_back ( new TH1F ( ( "cos#theta-Angle"+Label ).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1 ) );
         SelectionCosTheta.back()->SetStats ( 0 );
         SelectionCosTheta.back()->GetXaxis()->SetTitle ( "cos#theta [ ]" );
-        SelectionCosTheta.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{d(cos#theta)}" );
+        SelectionCosTheta.back()->GetYaxis()->SetTitle ( "# Events}" );
         SelectionCosTheta.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionPhi.push_back ( new TH1F ( ( "#phi-Angle"+Label ).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142 ) );
         SelectionPhi.back()->SetStats ( 0 );
         SelectionPhi.back()->GetXaxis()->SetTitle ( "#phi angle [rad]" );
-        SelectionPhi.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{d#phi}" );
+        SelectionPhi.back()->GetYaxis()->SetTitle ( "# Events" );
         SelectionPhi.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionEnergy.push_back ( new TH1F ( ( "Energy"+Label ).c_str(),"Energy of Selected Track",NumberOfBins,0,3 ) );
         SelectionEnergy.back()->SetStats ( 0 );
         SelectionEnergy.back()->GetXaxis()->SetTitle ( "Muon Kinetic Energy [MeV]" );
-        SelectionEnergy.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dE}" );
+        SelectionEnergy.back()->GetYaxis()->SetTitle ( "# Events" );
         SelectionEnergy.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionMomentum.push_back ( new TH1F ( ( "Momentum"+Label ).c_str(),"Momentum of Selected Track",NumberOfBins,0,3 ) );
         SelectionMomentum.back()->SetStats ( 0 );
         SelectionMomentum.back()->GetXaxis()->SetTitle ( "Muon Momentum [GeV/c]" );
-        SelectionMomentum.back()->GetYaxis()->SetTitle ( "Weighted #frac{dn}{dp}" );
+        SelectionMomentum.back()->GetYaxis()->SetTitle ( "# Events" );
         SelectionMomentum.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelXTrackStartEnd.push_back ( new TH1F ( ( "XTrack"+Label ).c_str(),"X Track Start & End Positions",NumberOfBins,0,256 ) );
         SelXTrackStartEnd.back()->SetStats ( 0 );
         SelXTrackStartEnd.back()->GetXaxis()->SetTitle ( "x [cm]" );
-        SelXTrackStartEnd.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dx}" );
+        SelXTrackStartEnd.back()->GetYaxis()->SetTitle ( "# Events" );
         SelXTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelYTrackStartEnd.push_back ( new TH1F ( ( "YTrack"+Label ).c_str(),"Y Track Start & End Positions",NumberOfBins,-233/2,233/2 ) );
         SelYTrackStartEnd.back()->SetStats ( 0 );
         SelYTrackStartEnd.back()->GetXaxis()->SetTitle ( "y [cm]" );
-        SelYTrackStartEnd.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dy}" );
+        SelYTrackStartEnd.back()->GetYaxis()->SetTitle ( "# Events" );
         SelYTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelZTrackStartEnd.push_back ( new TH1F ( ( "ZTrack"+Label ).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8 ) );
         SelZTrackStartEnd.back()->SetStats ( 0 );
         SelZTrackStartEnd.back()->GetXaxis()->SetTitle ( "z [cm]" );
-        SelZTrackStartEnd.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dz}" );
+        SelZTrackStartEnd.back()->GetYaxis()->SetTitle ( "# Events" );
         SelZTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelXVtxPosition.push_back ( new TH1F ( ( "XVertex"+Label ).c_str(),"X Vertex Position",NumberOfBins,0,256 ) );
         SelXVtxPosition.back()->SetStats ( 0 );
         SelXVtxPosition.back()->GetXaxis()->SetTitle ( "x [cm]" );
-        SelXVtxPosition.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dx}" );
+        SelXVtxPosition.back()->GetYaxis()->SetTitle ( "# Events" );
         SelXVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelYVtxPosition.push_back ( new TH1F ( ( "YVertex"+Label ).c_str(),"Y Vertex Position",NumberOfBins,-233/2,233/2 ) );
         SelYVtxPosition.back()->SetStats ( 0 );
         SelYVtxPosition.back()->GetXaxis()->SetTitle ( "y [cm]" );
-        SelYVtxPosition.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dy}" );
+        SelYVtxPosition.back()->GetYaxis()->SetTitle ( "# Events" );
         SelYVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelZVtxPosition.push_back ( new TH1F ( ( "ZVertex"+Label ).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8 ) );
         SelZVtxPosition.back()->SetStats ( 0 );
         SelZVtxPosition.back()->GetXaxis()->SetTitle ( "z [cm]" );
-        SelZVtxPosition.back()->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{dz}" );
+        SelZVtxPosition.back()->GetYaxis()->SetTitle ( "# Events" );
         SelZVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
     }
 
@@ -825,7 +827,7 @@ void HistoProducerMC()
     MGCosTheta->Add ( EffCosTheta.at ( 1 )->CreateGraph() );
     Canvas2b->cd();
     MGCosTheta->Draw ( "AP" );
-    MGCosTheta->GetXaxis()->SetTitle("cos#theta [ ]");
+    MGCosTheta->GetXaxis()->SetTitle("cos #theta [ ]");
     MGCosTheta->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEfficiency->Draw();
     Canvas2b->SaveAs ( ( "EffMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
@@ -843,7 +845,7 @@ void HistoProducerMC()
     MGCosThetaInt->Add ( EffCosTheta.at ( 4 )->CreateGraph() );
     Canvas2bInt->cd();
     MGCosThetaInt->Draw ( "AP" );
-    MGCosThetaInt->GetXaxis()->SetTitle("cos#theta [ ]");
+    MGCosThetaInt->GetXaxis()->SetTitle("cos #theta [ ]");
     MGCosThetaInt->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEffInt->Draw();
     Canvas2bInt->SaveAs ( ( "EffIntMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
@@ -1049,13 +1051,13 @@ void HistoProducerMC()
 
     TCanvas *Canvas11Int = new TCanvas ( "OnBeam Minus OffBeam Track Range Int", "OnBeam Minus OffBeam Track Range Int", 1400, 1000 );
     Canvas11Int->cd();
-    SelectionTrackRange.at ( 9 )->SetMaximum ( 1.1*GetMaximum ( SelectionTrackRange ) );
+    SelectionTrackRange.at ( 9 )->SetMaximum ( 1.1*SelectionTrackRange.at(9)->GetBinContent(SelectionTrackRange.at(9)->GetMaximumBin()) );
     SelectionTrackRange.at ( 9 )->SetMinimum ( 0.0 );
-    SelectionTrackRange.at ( 9 )->SetFillColor ( 3 );
+    SelectionTrackRange.at ( 9 )->SetFillColor ( ColorVec.at(0) );
     SelectionTrackRange.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionTrackRange.size()-1; iter++ )
     {
-        SelectionTrackRange.at ( iter )->SetFillColor ( iter );
+        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-) );
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
@@ -1063,13 +1065,13 @@ void HistoProducerMC()
 
     TCanvas *Canvas11IntTrue = new TCanvas ( "OnBeam Minus OffBeam Track Range Int True", "OnBeam Minus OffBeam Track Range Int Ture", 1400, 1000 );
     Canvas11IntTrue->cd();
-    SelectionTrackRange.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionTrackRange ) );
+    SelectionTrackRange.at ( 3 )->SetMaximum ( 1.1*SelectionTrackRange.at(3)->GetBinContent(SelectionTrackRange.at(3)->GetMaximumBin()) );
     SelectionTrackRange.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionTrackRange.at ( 3 )->SetFillColor ( 3 );
+    SelectionTrackRange.at ( 3 )->SetFillColor ( ColorVec.at(0) );
     SelectionTrackRange.at ( 3 )->Draw ( "E2" );
     for ( unsigned int iter = 4; iter < 6; iter++ )
     {
-        SelectionTrackRange.at ( iter )->SetFillColor ( iter );
+        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-5) );
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
@@ -1095,7 +1097,7 @@ void HistoProducerMC()
     Canvas12a->cd();
     SelectionTheta.at ( 1 )->SetMaximum ( 1.2*GetMaximum ( SelectionTheta ) );
     SelectionTheta.at ( 1 )->SetMinimum ( 0.0 );
-    SelectionTheta.at ( 1 )->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{d#Omega}" );
+    SelectionTheta.at ( 1 )->GetYaxis()->SetTitle ( "# Events" );
     SelectionTheta.at ( 1 )->SetFillColor (9);
     SelectionTheta.at ( 1 )->Draw ( "E2" );
     SelectionTheta.at ( 0 )->SetFillColor ( 8 );
@@ -1121,13 +1123,13 @@ void HistoProducerMC()
 
     TCanvas *Canvas12bInt = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle Int", "OnBeam Minus OffBeam Cos Theta-Angle Int", 1400, 1000 );
     Canvas12bInt->cd();
-    SelectionCosTheta.at ( 9 )->SetMaximum ( 1.1*GetMaximum ( SelectionCosTheta ) );
+    SelectionCosTheta.at ( 9 )->SetMaximum ( 1.1*SelectionCosTheta.at(9)->GetBinContent(SelectionCosTheta.at(9)->GetMaximumBin()) );
     SelectionCosTheta.at ( 9 )->SetMinimum ( 0.0 );
-    SelectionCosTheta.at ( 9 )->SetFillColor ( 3 );
+    SelectionCosTheta.at ( 9 )->SetFillColor ( ColorVec.at(0) );
     SelectionCosTheta.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionCosTheta.size()-1; iter++ )
     {
-        SelectionCosTheta.at ( iter )->SetFillColor ( iter );
+        SelectionCosTheta.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
         SelectionCosTheta.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
@@ -1135,13 +1137,13 @@ void HistoProducerMC()
 
     TCanvas *Canvas12bIntTrue = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle Int Ture", "OnBeam Minus OffBeam Cos Theta-Angle Int Ture", 1400, 1000 );
     Canvas12bIntTrue->cd();
-    SelectionCosTheta.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionCosTheta ) );
+    SelectionCosTheta.at ( 3 )->SetMaximum ( 1.1*SelectionCosTheta.at(3)->GetBinContent(SelectionCosTheta.at(3)->GetMaximumBin()) );
     SelectionCosTheta.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionCosTheta.at ( 3 )->SetFillColor ( 3 );
+    SelectionCosTheta.at ( 3 )->SetFillColor ( ColorVec.at(0) );
     SelectionCosTheta.at ( 3 )->Draw ( "E2" );
     for ( unsigned int iter = 4; iter < 6; iter++ )
     {
-        SelectionCosTheta.at ( iter )->SetFillColor ( iter );
+        SelectionCosTheta.at ( iter )->SetFillColor ( ColorVec.at(iter-5) );
         SelectionCosTheta.at ( iter )->Draw ( "E2SAME" );
     }
     Canvas12bInt->SaveAs ( ( "MCCosTheta_Int_True"+SelectionLabel+"."+FileType ).c_str() );
@@ -1164,13 +1166,13 @@ void HistoProducerMC()
 
     TCanvas *Canvas13Int = new TCanvas ( "OnBeam Minus OffBeam Phi-Angle Int", "OnBeam Minus OffBeam Phi-Angle Int", 1400, 1000 );
     Canvas13Int->cd();
-    SelectionPhi.at ( 9 )->SetMaximum ( 1.1*GetMaximum ( SelectionPhi ) );
+    SelectionPhi.at ( 9 )->SetMaximum ( 1.1*SelectionPhi.at(9)->GetBinContent(SelectionPhi.at(9)->GetMaximumBin()) );
     SelectionPhi.at ( 9 )->SetMinimum ( 0.0 );
-    SelectionPhi.at ( 9 )->SetFillColor ( 3 );
+    SelectionPhi.at ( 9 )->SetFillColor ( ColorVec.at(0) );
     SelectionPhi.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionPhi.size()-1; iter++ )
     {
-        SelectionPhi.at ( iter )->SetFillColor ( iter );
+        SelectionPhi.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
         SelectionPhi.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
@@ -1178,13 +1180,13 @@ void HistoProducerMC()
 
     TCanvas *Canvas13IntTrue = new TCanvas ( "OnBeam Minus OffBeam Phi-Angle Int Ture", "OnBeam Minus OffBeam Phi-Angle Int Ture", 1400, 1000 );
     Canvas13IntTrue->cd();
-    SelectionPhi.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionPhi ) );
+    SelectionPhi.at ( 3 )->SetMaximum ( 1.1*SelectionPhi.at(3)->GetBinContent(SelectionPhi.at(3)->GetMaximumBin()) );
     SelectionPhi.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionPhi.at ( 3 )->SetFillColor ( 3 );
+    SelectionPhi.at ( 3 )->SetFillColor ( ColorVec.at(0) );
     SelectionPhi.at ( 3 )->Draw ( "E2" );
     for ( unsigned int iter = 4; iter < 6; iter++ )
     {
-        SelectionPhi.at ( iter )->SetFillColor ( iter );
+        SelectionPhi.at ( iter )->SetFillColor ( ColorVec.at(iter-5) );
         SelectionPhi.at ( iter )->Draw ( "E2SAME" );
     }
     Canvas13Int->SaveAs ( ( "MCPhi_Int_True"+SelectionLabel+"."+FileType ).c_str() );
@@ -1218,13 +1220,13 @@ void HistoProducerMC()
 
     TCanvas *Canvas14aInt = new TCanvas ( "Momentum Int", "Momentum Int", 1400, 1000 );
     Canvas14aInt->cd();
-    SelectionMomentum.at ( 9 )->SetMaximum ( 1.1*GetMaximum ( SelectionMomentum ) );
+    SelectionMomentum.at ( 9 )->SetMaximum ( 1.1*SelectionMomentum.at(9)->GetBinContent(SelectionMomentum.at(9)->GetMaximumBin()) );
     SelectionMomentum.at ( 9 )->SetMinimum ( 0.0 );
-    SelectionMomentum.at ( 9 )->SetFillColor ( 3 );
+    SelectionMomentum.at ( 9 )->SetFillColor ( ColorVec.at(0) );
     SelectionMomentum.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionMomentum.size()-1; iter++ )
     {
-        SelectionMomentum.at ( iter )->SetFillColor ( iter );
+        SelectionMomentum.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
         SelectionMomentum.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
@@ -1232,13 +1234,13 @@ void HistoProducerMC()
 
     TCanvas *Canvas14aIntTrue = new TCanvas ( "Momentum Int Ture", "Momentum Int Ture", 1400, 1000 );
     Canvas14aIntTrue->cd();
-    SelectionMomentum.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionMomentum ) );
+    SelectionMomentum.at ( 3 )->SetMaximum ( 1.1*SelectionMomentum.at(3)->GetBinContent(SelectionMomentum.at(3)->GetMaximumBin()) );
     SelectionMomentum.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionMomentum.at ( 3 )->SetFillColor ( 3 );
+    SelectionMomentum.at ( 3 )->SetFillColor ( ColorVec.at(0) );
     SelectionMomentum.at ( 3 )->Draw ( "E2" );
     for ( unsigned int iter = 4; iter < 6; iter++ )
     {
-        SelectionMomentum.at ( iter )->SetFillColor ( iter );
+        SelectionMomentum.at ( iter )->SetFillColor ( ColorVec.at(iter-5) );
         SelectionMomentum.at ( iter )->Draw ( "E2SAME" );
     }
     Canvas14aInt->SaveAs ( ( "MCPhi_Int_True"+SelectionLabel+"."+FileType ).c_str() );
