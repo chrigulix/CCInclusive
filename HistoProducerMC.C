@@ -1057,7 +1057,7 @@ void HistoProducerMC()
     SelectionTrackRange.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionTrackRange.size()-1; iter++ )
     {
-        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
+        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-11) );
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
@@ -1129,7 +1129,7 @@ void HistoProducerMC()
     SelectionCosTheta.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionCosTheta.size()-1; iter++ )
     {
-        SelectionCosTheta.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
+        SelectionCosTheta.at ( iter )->SetFillColor ( ColorVec.at(iter-11) );
         SelectionCosTheta.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
@@ -1172,7 +1172,7 @@ void HistoProducerMC()
     SelectionPhi.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionPhi.size()-1; iter++ )
     {
-        SelectionPhi.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
+        SelectionPhi.at ( iter )->SetFillColor ( ColorVec.at(iter-11) );
         SelectionPhi.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
@@ -1226,7 +1226,7 @@ void HistoProducerMC()
     SelectionMomentum.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionMomentum.size()-1; iter++ )
     {
-        SelectionMomentum.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
+        SelectionMomentum.at ( iter )->SetFillColor ( ColorVec.at(iter-11) );
         SelectionMomentum.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
