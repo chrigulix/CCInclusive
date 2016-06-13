@@ -725,6 +725,7 @@ void HistoProducerMC()
 
     for ( unsigned int eff_no = 0; eff_no < EfficiencyLabel.size(); eff_no++ )
     {
+        std::cout << SelectionTrackRange.at(2)->GetNbinsX() << " " << SelectionTrackRange.at(2)->Integral() << " " << SelectionTrackRange.at(eff_no)->GetNbinsX() << " "<< SelectionTrackRange.at(eff_no)->Integral() << std::endl; 
         EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 2 ),*SelectionTrackRange.at ( eff_no ) ) );
         EffEnergy.push_back ( new TEfficiency ( *SelectionEnergy.at ( 2 ),*SelectionEnergy.at ( eff_no ) ) );
         EffMomentum.push_back ( new TEfficiency ( *SelectionMomentum.at ( 2 ),*SelectionMomentum.at ( eff_no ) ) );
@@ -766,7 +767,7 @@ void HistoProducerMC()
     LegendEfficiency->AddEntry ( EffTrackRange.at ( 1 ), ( EfficiencyLabel.at ( 1 ) ).c_str(),"lep" );
     LegendEfficiency->AddEntry ( EffTrackRange.at ( 0 ), ( EfficiencyLabel.at ( 0 ) ).c_str(),"lep" );
 
-    TCanvas *Canvas1 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Track Range", "Efficiency OnBeam Minus OffBeam Track Range", 190, 1000 );
+    TCanvas *Canvas1 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Track Range", "Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
     TMultiGraph *MGTrackRange = new TMultiGraph();
     MGTrackRange->GetXaxis()->SetTitle("Track Range [cm]");
     MGTrackRange->GetYaxis()->SetTitle("Efficiency [ ]");
@@ -801,8 +802,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas2 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Theta-Angle", "Efficiency OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
     TMultiGraph *MGTheta = new TMultiGraph();
-    MGTrackRangeInt->GetXaxis()->SetTitle("Track Range [cm]");
-    MGTrackRangeInt->GetYaxis()->SetTitle("Efficiency [ ]");
+    MGTheta->GetXaxis()->SetTitle("#theta-Angle [rad]");
+    MGTheta->GetYaxis()->SetTitle("Efficiency [ ]");
     EffTheta.at ( 0 )->SetLineWidth ( 2 );
     EffTheta.at ( 0 )->SetLineColor ( 8 );
     EffTheta.at ( 1 )->SetLineWidth ( 2 );
@@ -831,8 +832,8 @@ void HistoProducerMC()
     
     TCanvas *Canvas2bInt = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Cos Theta-Angle", "Interaction Efficiency OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
     TMultiGraph *MGCosThetaInt = new TMultiGraph();
-    MGTrackRangeInt->GetXaxis()->SetTitle("#cos#theta [ ]");
-    MGTrackRangeInt->GetYaxis()->SetTitle("Efficiency [ ]");
+    MGCosThetaInt->GetXaxis()->SetTitle("#cos#theta [ ]");
+    MGCosThetaInt->GetYaxis()->SetTitle("Efficiency [ ]");
     EffCosTheta.at ( 2 )->SetLineWidth ( 2 );
     EffCosTheta.at ( 2 )->SetLineColor ( 46 );
     EffCosTheta.at ( 3 )->SetLineWidth ( 2 );
@@ -849,8 +850,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas4 = new TCanvas ( "Efficiency Energy", "Efficiency Energy", 1400, 1000 );
     TMultiGraph *MGEnergy = new TMultiGraph();
-    MGTrackRangeInt->GetXaxis()->SetTitle("Track Range [cm]");
-    MGTrackRangeInt->GetYaxis()->SetTitle("Efficiency [ ]");
+    MGEnergy->GetXaxis()->SetTitle("Muon Energy [GeV]");
+    MGEnergy->GetYaxis()->SetTitle("Efficiency [ ]");
     EffEnergy.at ( 0 )->SetLineWidth ( 2 );
     EffEnergy.at ( 0 )->SetLineColor ( 8 );
     EffEnergy.at ( 1 )->SetLineWidth ( 2 );
@@ -864,8 +865,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas4a = new TCanvas ( "Efficiency Momentum", "Efficiency Momentum", 1400, 1000 );
     TMultiGraph *MGMomentum = new TMultiGraph();
-    MGTrackRangeInt->GetXaxis()->SetTitle("Muon Momentum [GeV]");
-    MGTrackRangeInt->GetYaxis()->SetTitle("Efficiency [ ]");
+    MGMomentum->GetXaxis()->SetTitle("Muon Momentum [GeV/c]");
+    MGMomentum->GetYaxis()->SetTitle("Efficiency [ ]");
     EffMomentum.at ( 0 )->SetLineWidth ( 2 );
     EffMomentum.at ( 0 )->SetLineColor ( 8 );
     EffMomentum.at ( 1 )->SetLineWidth ( 2 );
@@ -879,7 +880,7 @@ void HistoProducerMC()
     
     TCanvas *Canvas4aInt = new TCanvas ( "Interaction Efficiency Momentum", "Interaction Efficiency Momentum", 1400, 1000 );
     TMultiGraph *MGMomentumInt = new TMultiGraph();
-    MGMomentumInt->GetXaxis()->SetTitle("Muon Momentum [GeV]");
+    MGMomentumInt->GetXaxis()->SetTitle("Muon Momentum [GeV/c]");
     MGMomentumInt->GetYaxis()->SetTitle("Efficiency [ ]");
     EffMomentum.at ( 2 )->SetLineWidth ( 2 );
     EffMomentum.at ( 2 )->SetLineColor ( 46 );
@@ -902,7 +903,7 @@ void HistoProducerMC()
 
     TCanvas *Canvas3 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Phi-Angle", "Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhi = new TMultiGraph();
-    MGPhi->GetXaxis()->SetTitle("#phi-Agle [rad]");
+    MGPhi->GetXaxis()->SetTitle("#phi-Angle [rad]");
     MGPhi->GetYaxis()->SetTitle("Efficiency [ ]");
     EffPhi.at ( 0 )->SetLineWidth ( 2 );
     EffPhi.at ( 0 )->SetLineColor ( 8 );
@@ -917,7 +918,7 @@ void HistoProducerMC()
     
     TCanvas *Canvas3Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhiInt = new TMultiGraph();
-    MGPhiInt->GetXaxis()->SetTitle("#phi-Agle [rad]");
+    MGPhiInt->GetXaxis()->SetTitle("#phi-Angle [rad]");
     MGPhiInt->GetYaxis()->SetTitle("Efficiency [ ]");
     EffPhi.at ( 2 )->SetLineWidth ( 2 );
     EffPhi.at ( 2 )->SetLineColor ( 46 );
