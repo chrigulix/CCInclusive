@@ -769,14 +769,14 @@ void HistoProducerMC()
 
     TCanvas *Canvas1 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Track Range", "Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
     TMultiGraph *MGTrackRange = new TMultiGraph();
-    MGTrackRange->GetXaxis()->SetTitle("Track Range [cm]");
-    MGTrackRange->GetYaxis()->SetTitle("Efficiency [ ]");
     EffTrackRange.at ( 0 )->SetLineWidth ( 2 );
     EffTrackRange.at ( 0 )->SetLineColor ( 8 );
     EffTrackRange.at ( 1 )->SetLineWidth ( 2 );
     EffTrackRange.at ( 1 )->SetLineColor (9);
     MGTrackRange->Add ( EffTrackRange.at ( 0 )->CreateGraph() );
     MGTrackRange->Add ( EffTrackRange.at ( 1 )->CreateGraph() );
+    MGTrackRange->GetXaxis()->SetTitle("Track Range [cm]");
+    MGTrackRange->GetYaxis()->SetTitle("Efficiency [ ]");
     Canvas1->cd();
     MGTrackRange->Draw ( "AP" );
     LegendEfficiency->Draw();
