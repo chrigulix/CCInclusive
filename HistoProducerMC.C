@@ -1057,7 +1057,7 @@ void HistoProducerMC()
     SelectionTrackRange.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionTrackRange.size()-1; iter++ )
     {
-        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-11) );
+        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-10) );
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
