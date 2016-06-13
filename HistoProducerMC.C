@@ -114,7 +114,7 @@ void HistoProducerMC()
 
     TF1* SinTheta = new TF1 ( "const","sin(x)",0,3.142 );
 
-    TLegend* LegendEfficiency = new TLegend ( 0.15,0.65,0.45,0.8 );
+    TLegend* LegendEfficiency = new TLegend ( 0.15,0.7,0.45,0.85 );
     LegendEfficiency->SetLineColorAlpha ( 0,0 );
     LegendEfficiency->SetLineStyle ( 0 );
     LegendEfficiency->SetFillStyle ( 0 );
@@ -149,7 +149,7 @@ void HistoProducerMC()
     IntLabel.push_back ( "RES Interactions" );
     IntLabel.push_back ( "DIS Interactions" );
 
-    TLegend* LegendEffInt = new TLegend ( 0.6,0.69,0.89,0.89 );
+    TLegend* LegendEffInt = new TLegend ( 0.65,0.65,0.85,0.85 );
     LegendEffInt->SetLineColorAlpha ( 0,0 );
     LegendEffInt->SetLineStyle ( 0 );
     LegendEffInt->SetFillStyle ( 0 );
@@ -169,7 +169,7 @@ void HistoProducerMC()
     TLegend* FlashLabel = new TLegend ( 0.7,0.7,0.9,0.9 );
 
     GenLabel.push_back ( "Truth BNB Nu Cosmic in FV" );
-    GenLabel.push_back ( "Truth BNB Nu Cosmic in FV & #mu contained " );
+    GenLabel.push_back ( "Truth BNB Nu Cosmic in FV Muon contained " );
     GenLabel.push_back ( "MC Prodgenie BNB Nu Cosmic" );
     GenLabel.push_back ( "QE Truth BNB Nu Cosmic in FV" );
     GenLabel.push_back ( "RES Truth BNB Nu Cosmic in FV" );
@@ -725,7 +725,7 @@ void HistoProducerMC()
 
     for ( unsigned int eff_no = 0; eff_no < EfficiencyLabel.size(); eff_no++ )
     {
-        std::cout << TEfficiency::CheckConsistency(*SelectionTrackRange.at(2), *SelectionTrackRange.at(eff_no),"w") << " " << TEfficiency::CheckBinning(*SelectionTrackRange.at(2), *SelectionTrackRange.at(eff_no)) << std::endl; 
+        std::cout << TEfficiency::CheckConsistency(*SelectionEnergy.at(2), *SelectionEnergy.at(eff_no),"w") << " " << TEfficiency::CheckBinning(*SelectionEnergy.at(2), *SelectionEnergy.at(eff_no)) << std::endl; 
         EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 2 ),*SelectionTrackRange.at ( eff_no ) ) );
         EffEnergy.push_back ( new TEfficiency ( *SelectionEnergy.at ( 2 ),*SelectionEnergy.at ( eff_no ) ) );
         EffMomentum.push_back ( new TEfficiency ( *SelectionMomentum.at ( 2 ),*SelectionMomentum.at ( eff_no ) ) );
@@ -825,7 +825,7 @@ void HistoProducerMC()
     MGCosTheta->Add ( EffCosTheta.at ( 1 )->CreateGraph() );
     Canvas2b->cd();
     MGCosTheta->Draw ( "AP" );
-    MGCosTheta->GetXaxis()->SetTitle("#cos#theta [ ]");
+    MGCosTheta->GetXaxis()->SetTitle("cos#theta [ ]");
     MGCosTheta->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEfficiency->Draw();
     Canvas2b->SaveAs ( ( "EffMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
@@ -843,7 +843,7 @@ void HistoProducerMC()
     MGCosThetaInt->Add ( EffCosTheta.at ( 4 )->CreateGraph() );
     Canvas2bInt->cd();
     MGCosThetaInt->Draw ( "AP" );
-    MGCosThetaInt->GetXaxis()->SetTitle("#cos#theta [ ]");
+    MGCosThetaInt->GetXaxis()->SetTitle("cos#theta [ ]");
     MGCosThetaInt->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEffInt->Draw();
     Canvas2bInt->SaveAs ( ( "EffIntMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
@@ -896,10 +896,10 @@ void HistoProducerMC()
     LegendEffInt->Draw();
     Canvas4aInt->SaveAs ( ( "EffIntMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
 
-    LegendEfficiency->SetX1NDC ( 0.5 );
-    LegendEfficiency->SetY1NDC ( 0.4 );
-    LegendEfficiency->SetX2NDC ( 0.8 );
-    LegendEfficiency->SetY2NDC ( 0.6 );
+    LegendEfficiency->SetX1NDC ( 0.55 );
+    LegendEfficiency->SetY1NDC ( 0.35 );
+    LegendEfficiency->SetX2NDC ( 0.85 );
+    LegendEfficiency->SetY2NDC ( 0.55 );
 
     TCanvas *Canvas3 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Phi-Angle", "Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhi = new TMultiGraph();
@@ -915,6 +915,11 @@ void HistoProducerMC()
     MGPhi->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEfficiency->Draw();
     Canvas3->SaveAs ( ( "EffMCPhi"+SelectionLabel+"."+FileType ).c_str() );
+    
+    LegendEffInt->SetX1NDC ( 0.65 );
+    LegendEffInt->SetY1NDC ( 0.35 );
+    LegendEffInt->SetX2NDC ( 0.85 );
+    LegendEffInt->SetY2NDC ( 0.55 );
     
     TCanvas *Canvas3Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhiInt = new TMultiGraph();
