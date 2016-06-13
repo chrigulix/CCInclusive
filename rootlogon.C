@@ -28,7 +28,7 @@ void rootlogon()
     gStyle->SetLabelSize(tsize,"z");
     gStyle->SetTitleSize(tsize,"z");
 
-//     gStyle->SetOptTitle(0);
+    gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);
 
     int icol = 0; // WHITE
@@ -46,5 +46,6 @@ void rootlogon()
     gStyle->SetMarkerStyle(1);
     gStyle->SetMarkerSize(1.2);
     gStyle->SetHistLineWidth(2.);
+    gStyle->SetLineWidth(2.);
     gStyle->SetLineStyleString(2,"[12 12]");// postscript dashes
 }

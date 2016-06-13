@@ -69,7 +69,8 @@ void HistoProducerMC()
     std::vector<std::string> EfficiencyLabel;
     std::vector<std::string> MCLabel;
     std::vector<std::string> GenLabel;
-    std::vector<std::string> BgrLabel;
+    std::vector<std::string> IntLabel;
+    std::vector<std::string> EffIntLabel;
 
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back ( 1 );
@@ -113,26 +114,55 @@ void HistoProducerMC()
 
     TF1* SinTheta = new TF1 ( "const","sin(x)",0,3.142 );
 
-    TLegend* LegendData = new TLegend ( 0.7,0.8,0.9,0.9 );
-    LegendData->SetHeader ( "Data Sample" );
+    TLegend* LegendEfficiency = new TLegend ( 0.15,0.65,0.45,0.8 );
+    LegendEfficiency->SetLineColorAlpha ( 0,0 );
+    LegendEfficiency->SetLineStyle ( 0 );
+    LegendEfficiency->SetFillStyle ( 0 );
+    LegendEfficiency->SetMargin ( 0.2 );
+    LegendEfficiency->SetTextFont ( 43 );
+    LegendEfficiency->SetTextSize ( 30 );
 
-    EfficiencyLabel.push_back ( "Efficiency" );
-    EfficiencyLabel.push_back ( "Contained" );
+    EfficiencyLabel.push_back ( "FV Efficiency" );
+    EfficiencyLabel.push_back ( "Contained Efficiency" );
 
-    TLegend* LegendMC = new TLegend ( 0.6,0.72,0.89,0.89 );
-    LegendMC->SetLineColor(0);
-    LegendMC->SetLineStyle(0);
-    LegendMC->SetFillStyle(0);
-    LegendMC->SetMargin(0.2);
-    LegendMC->SetTextFont(43);
-    LegendMC->SetTextSize(30);
-
-    std::cout << LegendMC->GetMargin() << " " << LegendMC->GetTextFont() << " " << LegendMC->GetTextSize() << std::endl;
-
+    TLegend* LegendMC = new TLegend ( 0.5,0.6,0.8,0.8 );
+    LegendMC->SetLineColorAlpha ( 0,0 );
+    LegendMC->SetLineStyle ( 0 );
+    LegendMC->SetFillStyle ( 0 );
+    LegendMC->SetMargin ( 0.2 );
+    LegendMC->SetTextFont ( 43 );
+    LegendMC->SetTextSize ( 30 );
 
     MCLabel.push_back ( "True Track in FV" );
     MCLabel.push_back ( "True Contained Tracks" );
     MCLabel.push_back ( "Selection on MC BNB+Cosmic with Stat. Error" );
+
+    TLegend* LegendInt = new TLegend ( 0.6,0.69,0.89,0.89 );
+    LegendInt->SetLineColorAlpha ( 0,0 );
+    LegendInt->SetLineStyle ( 0 );
+    LegendInt->SetFillStyle ( 0 );
+    LegendInt->SetMargin ( 0.2 );
+    LegendInt->SetTextFont ( 43 );
+    LegendInt->SetTextSize ( 30 );
+
+    IntLabel.push_back ( "QE Intercations" );
+    IntLabel.push_back ( "RES Interactions" );
+    IntLabel.push_back ( "DIS Interactions" );
+
+    TLegend* LegendEffInt = new TLegend ( 0.6,0.69,0.89,0.89 );
+    LegendEffInt->SetLineColorAlpha ( 0,0 );
+    LegendEffInt->SetLineStyle ( 0 );
+    LegendEffInt->SetFillStyle ( 0 );
+    LegendEffInt->SetMargin ( 0.2 );
+    LegendEffInt->SetTextFont ( 43 );
+    LegendEffInt->SetTextSize ( 30 );
+
+    EffIntLabel.push_back ( "QE Efficiency" );
+    EffIntLabel.push_back ( "RES Efficiency" );
+    EffIntLabel.push_back ( "DIS Efficiency" );
+//     EffIntLabel.push_back ( "QE Contained Eff." );
+//     EffIntLabel.push_back ( "RES Contained Eff." );
+//     EffIntLabel.push_back ( "DIS Contained Eff." );
 
 //     MCLabel.push_back ( "Selection MC BNB+Cosmic Sys. Error" );
 
@@ -144,6 +174,12 @@ void HistoProducerMC()
     GenLabel.push_back ( "QE Truth BNB Nu Cosmic in FV" );
     GenLabel.push_back ( "RES Truth BNB Nu Cosmic in FV" );
     GenLabel.push_back ( "DIS Truth BNB Nu Cosmic in FV" );
+    GenLabel.push_back ( "QE Truth BNB Nu Cosmic Contained" );
+    GenLabel.push_back ( "RES Truth BNB Nu Cosmic Contained" );
+    GenLabel.push_back ( "DIS Truth BNB Nu Cosmic Contained" );
+    GenLabel.push_back ( "QE Selection BNB Nu Cosmic in FV" );
+    GenLabel.push_back ( "RES Selection BNB Nu Cosmic in FV" );
+    GenLabel.push_back ( "DIS Selection BNB Nu Cosmic in FV" );
     GenLabel.push_back ( "MC Systematic Errors" );
 
     std::vector<TSpline5> SystematicErrors = Systematics();
@@ -421,50 +457,7 @@ void HistoProducerMC()
                 SelYVtxPosition.at ( 0 )->Fill ( YnuVtxTruth[0] );
                 SelZVtxPosition.at ( 0 )->Fill ( ZnuVtxTruth[0] );
 
-                
-
-
-                if ( inFV ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV ( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
-                {
-                    ContainedTracks++;
-
-                    SelectionTrackRange.at ( 1 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
-                    SelectionTheta.at ( 1 )->Fill ( MCTheta[MCTrkID] );
-                    SelectionCosTheta.at ( 1 )->Fill ( cos ( MCTheta[MCTrkID] ) );
-                    SelectionPhi.at ( 1 )->Fill ( MCPhi[MCTrkID] );
-                    SelectionEnergy.at ( 1 )->Fill ( MCEnergy[MCTrkID] );
-                    SelectionMomentum.at ( 1 )->Fill ( TrueLeptonMomentum[0] );
-
-                    SelXTrackStartEnd.at ( 1 )->Fill ( XMCTrackStart[MCTrkID] );
-                    SelXTrackStartEnd.at ( 1 )->Fill ( XMCTrackEnd[MCTrkID] );
-                    SelYTrackStartEnd.at ( 1 )->Fill ( YMCTrackStart[MCTrkID] );
-                    SelYTrackStartEnd.at ( 1 )->Fill ( YMCTrackEnd[MCTrkID] );
-                    SelZTrackStartEnd.at ( 1 )->Fill ( ZMCTrackStart[MCTrkID] );
-                    SelZTrackStartEnd.at ( 1 )->Fill ( ZMCTrackEnd[MCTrkID] );
-                    SelXVtxPosition.at ( 1 )->Fill ( XnuVtxTruth[0] );
-                    SelYVtxPosition.at ( 1 )->Fill ( YnuVtxTruth[0] );
-                    SelZVtxPosition.at ( 1 )->Fill ( ZnuVtxTruth[0] );
-                }
-            }
-            else if ( file_no == 1 && MCTrkID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && PDGTruth[MCTrkID] == 13 )
-            {
-                SelectionTrackRange.at ( 2 )->Fill ( CalcLength ( XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID] ) );
-                SelectionTheta.at ( 2 )->Fill ( TrackTheta[TrkID] );
-                SelectionCosTheta.at ( 2 )->Fill ( cos ( TrackTheta[TrkID] ) );
-                SelectionPhi.at ( 2 )->Fill ( TrackPhi[TrkID] );
-                SelectionEnergy.at ( 2 )->Fill ( KineticEnergy[TrkID][2]/1000 );
-                SelectionMomentum.at ( 2 )->Fill ( TrackMomentum[TrkID] );
-
-                SelXTrackStartEnd.at ( 2 )->Fill ( XTrackStart[TrkID] );
-                SelXTrackStartEnd.at ( 2 )->Fill ( XTrackEnd[TrkID] );
-                SelYTrackStartEnd.at ( 2 )->Fill ( YTrackStart[TrkID] );
-                SelYTrackStartEnd.at ( 2 )->Fill ( YTrackEnd[TrkID] );
-                SelZTrackStartEnd.at ( 2 )->Fill ( ZTrackStart[TrkID] );
-                SelZTrackStartEnd.at ( 2 )->Fill ( ZTrackEnd[TrkID] );
-                SelXVtxPosition.at ( 2 )->Fill ( XVertexPosition[VtxID] );
-                SelYVtxPosition.at ( 2 )->Fill ( YVertexPosition[VtxID] );
-                SelZVtxPosition.at ( 2 )->Fill ( ZVertexPosition[VtxID] );
-                
+                // True QE RES DIS
                 if ( TruthMode[0] == 0 )
                 {
                     nuQE++;
@@ -527,7 +520,178 @@ void HistoProducerMC()
                     SelYVtxPosition.at ( 5 )->Fill ( YnuVtxTruth[0] );
                     SelZVtxPosition.at ( 5 )->Fill ( ZnuVtxTruth[0] );
                 }
+
+
+                if ( inFV ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV ( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
+                {
+                    ContainedTracks++;
+
+                    SelectionTrackRange.at ( 1 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
+                    SelectionTheta.at ( 1 )->Fill ( MCTheta[MCTrkID] );
+                    SelectionCosTheta.at ( 1 )->Fill ( cos ( MCTheta[MCTrkID] ) );
+                    SelectionPhi.at ( 1 )->Fill ( MCPhi[MCTrkID] );
+                    SelectionEnergy.at ( 1 )->Fill ( MCEnergy[MCTrkID] );
+                    SelectionMomentum.at ( 1 )->Fill ( TrueLeptonMomentum[0] );
+
+                    SelXTrackStartEnd.at ( 1 )->Fill ( XMCTrackStart[MCTrkID] );
+                    SelXTrackStartEnd.at ( 1 )->Fill ( XMCTrackEnd[MCTrkID] );
+                    SelYTrackStartEnd.at ( 1 )->Fill ( YMCTrackStart[MCTrkID] );
+                    SelYTrackStartEnd.at ( 1 )->Fill ( YMCTrackEnd[MCTrkID] );
+                    SelZTrackStartEnd.at ( 1 )->Fill ( ZMCTrackStart[MCTrkID] );
+                    SelZTrackStartEnd.at ( 1 )->Fill ( ZMCTrackEnd[MCTrkID] );
+                    SelXVtxPosition.at ( 1 )->Fill ( XnuVtxTruth[0] );
+                    SelYVtxPosition.at ( 1 )->Fill ( YnuVtxTruth[0] );
+                    SelZVtxPosition.at ( 1 )->Fill ( ZnuVtxTruth[0] );
+
+                    // True Contained QE RES DIS
+                    if ( TruthMode[0] == 0 )
+                    {
+                        nuQE++;
+                        SelectionTrackRange.at ( 6 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
+                        SelectionTheta.at ( 6 )->Fill ( MCTheta[MCTrkID] );
+                        SelectionCosTheta.at ( 6 )->Fill ( cos ( MCTheta[MCTrkID] ) );
+                        SelectionPhi.at ( 6 )->Fill ( MCPhi[MCTrkID] );
+                        SelectionEnergy.at ( 6 )->Fill ( MCEnergy[MCTrkID] );
+                        SelectionMomentum.at ( 6 )->Fill ( TrueLeptonMomentum[0] );
+
+                        SelXTrackStartEnd.at ( 6 )->Fill ( XMCTrackStart[MCTrkID] );
+                        SelXTrackStartEnd.at ( 6 )->Fill ( XMCTrackEnd[MCTrkID] );
+                        SelYTrackStartEnd.at ( 6 )->Fill ( YMCTrackStart[MCTrkID] );
+                        SelYTrackStartEnd.at ( 6 )->Fill ( YMCTrackEnd[MCTrkID] );
+                        SelZTrackStartEnd.at ( 6 )->Fill ( ZMCTrackStart[MCTrkID] );
+                        SelZTrackStartEnd.at ( 6 )->Fill ( ZMCTrackEnd[MCTrkID] );
+                        SelXVtxPosition.at ( 6 )->Fill ( XnuVtxTruth[0] );
+                        SelYVtxPosition.at ( 6 )->Fill ( YnuVtxTruth[0] );
+                        SelZVtxPosition.at ( 6 )->Fill ( ZnuVtxTruth[0] );
+
+                    }
+                    else if ( TruthMode[0] == 1 )
+                    {
+                        nuRES++;
+                        SelectionTrackRange.at ( 7 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
+                        SelectionTheta.at ( 7 )->Fill ( MCTheta[MCTrkID] );
+                        SelectionCosTheta.at ( 7 )->Fill ( cos ( MCTheta[MCTrkID] ) );
+                        SelectionPhi.at ( 7 )->Fill ( MCPhi[MCTrkID] );
+                        SelectionEnergy.at ( 7 )->Fill ( MCEnergy[MCTrkID] );
+                        SelectionMomentum.at ( 7 )->Fill ( TrueLeptonMomentum[0] );
+
+                        SelXTrackStartEnd.at ( 7 )->Fill ( XMCTrackStart[MCTrkID] );
+                        SelXTrackStartEnd.at ( 7 )->Fill ( XMCTrackEnd[MCTrkID] );
+                        SelYTrackStartEnd.at ( 7 )->Fill ( YMCTrackStart[MCTrkID] );
+                        SelYTrackStartEnd.at ( 7 )->Fill ( YMCTrackEnd[MCTrkID] );
+                        SelZTrackStartEnd.at ( 7 )->Fill ( ZMCTrackStart[MCTrkID] );
+                        SelZTrackStartEnd.at ( 7 )->Fill ( ZMCTrackEnd[MCTrkID] );
+                        SelXVtxPosition.at ( 7 )->Fill ( XnuVtxTruth[0] );
+                        SelYVtxPosition.at ( 7 )->Fill ( YnuVtxTruth[0] );
+                        SelZVtxPosition.at ( 7 )->Fill ( ZnuVtxTruth[0] );
+
+                    }
+                    else if ( TruthMode[0] == 2 )
+                    {
+                        nuDIS++;
+                        SelectionTrackRange.at ( 8 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
+                        SelectionTheta.at ( 8 )->Fill ( MCTheta[MCTrkID] );
+                        SelectionCosTheta.at ( 8 )->Fill ( cos ( MCTheta[MCTrkID] ) );
+                        SelectionPhi.at ( 8 )->Fill ( MCPhi[MCTrkID] );
+                        SelectionEnergy.at ( 8 )->Fill ( MCEnergy[MCTrkID] );
+                        SelectionMomentum.at ( 8 )->Fill ( TrueLeptonMomentum[0] );
+
+                        SelXTrackStartEnd.at ( 8 )->Fill ( XMCTrackStart[MCTrkID] );
+                        SelXTrackStartEnd.at ( 8 )->Fill ( XMCTrackEnd[MCTrkID] );
+                        SelYTrackStartEnd.at ( 8 )->Fill ( YMCTrackStart[MCTrkID] );
+                        SelYTrackStartEnd.at ( 8 )->Fill ( YMCTrackEnd[MCTrkID] );
+                        SelZTrackStartEnd.at ( 8 )->Fill ( ZMCTrackStart[MCTrkID] );
+                        SelZTrackStartEnd.at ( 8 )->Fill ( ZMCTrackEnd[MCTrkID] );
+                        SelXVtxPosition.at ( 8 )->Fill ( XnuVtxTruth[0] );
+                        SelYVtxPosition.at ( 8 )->Fill ( YnuVtxTruth[0] );
+                        SelZVtxPosition.at ( 8 )->Fill ( ZnuVtxTruth[0] );
+                    }
+                }
+            }
+            else if ( file_no == 1 && TrkID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && PDGTruth[MCTrkID] == 13 )
+            {
+                SelectionTrackRange.at ( 2 )->Fill ( CalcLength ( XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID] ) );
+                SelectionTheta.at ( 2 )->Fill ( TrackTheta[TrkID] );
+                SelectionCosTheta.at ( 2 )->Fill ( cos ( TrackTheta[TrkID] ) );
+                SelectionPhi.at ( 2 )->Fill ( TrackPhi[TrkID] );
+                SelectionEnergy.at ( 2 )->Fill ( KineticEnergy[TrkID][2]/1000 );
+                SelectionMomentum.at ( 2 )->Fill ( TrackMomentum[TrkID] );
+
+                SelXTrackStartEnd.at ( 2 )->Fill ( XTrackStart[TrkID] );
+                SelXTrackStartEnd.at ( 2 )->Fill ( XTrackEnd[TrkID] );
+                SelYTrackStartEnd.at ( 2 )->Fill ( YTrackStart[TrkID] );
+                SelYTrackStartEnd.at ( 2 )->Fill ( YTrackEnd[TrkID] );
+                SelZTrackStartEnd.at ( 2 )->Fill ( ZTrackStart[TrkID] );
+                SelZTrackStartEnd.at ( 2 )->Fill ( ZTrackEnd[TrkID] );
+                SelXVtxPosition.at ( 2 )->Fill ( XVertexPosition[VtxID] );
+                SelYVtxPosition.at ( 2 )->Fill ( YVertexPosition[VtxID] );
+                SelZVtxPosition.at ( 2 )->Fill ( ZVertexPosition[VtxID] );
                 
+
+                // Selection QE RES DIS
+                if ( TruthMode[0] == 0 )
+                {
+                    nuQE++;
+                    SelectionTrackRange.at ( 9 )->Fill ( CalcLength ( XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID] ) );
+                    SelectionTheta.at ( 9 )->Fill ( TrackTheta[TrkID] );
+                    SelectionCosTheta.at ( 9 )->Fill ( cos ( TrackTheta[TrkID] ) );
+                    SelectionPhi.at ( 9 )->Fill ( TrackPhi[TrkID] );
+                    SelectionEnergy.at ( 9 )->Fill ( KineticEnergy[TrkID][2]/1000 );
+                    SelectionMomentum.at ( 9 )->Fill ( TrackMomentum[TrkID] );
+
+                    SelXTrackStartEnd.at ( 9 )->Fill ( XTrackStart[TrkID] );
+                    SelXTrackStartEnd.at ( 9 )->Fill ( XTrackEnd[TrkID] );
+                    SelYTrackStartEnd.at ( 9 )->Fill ( YTrackStart[TrkID] );
+                    SelYTrackStartEnd.at ( 9 )->Fill ( YTrackEnd[TrkID] );
+                    SelZTrackStartEnd.at ( 9 )->Fill ( ZTrackStart[TrkID] );
+                    SelZTrackStartEnd.at ( 9 )->Fill ( ZTrackEnd[TrkID] );
+                    SelXVtxPosition.at ( 9 )->Fill ( XVertexPosition[VtxID] );
+                    SelYVtxPosition.at ( 9 )->Fill ( YVertexPosition[VtxID] );
+                    SelZVtxPosition.at ( 9 )->Fill ( ZVertexPosition[VtxID] );
+
+                }
+                else if ( TruthMode[0] == 1 )
+                {
+                    nuRES++;
+                    SelectionTrackRange.at ( 10 )->Fill ( CalcLength ( XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID] ) );
+                    SelectionTheta.at ( 10 )->Fill ( TrackTheta[TrkID] );
+                    SelectionCosTheta.at ( 10 )->Fill ( cos ( TrackTheta[TrkID] ) );
+                    SelectionPhi.at ( 10 )->Fill ( TrackPhi[TrkID] );
+                    SelectionEnergy.at ( 10 )->Fill ( KineticEnergy[TrkID][2]/1000 );
+                    SelectionMomentum.at ( 10 )->Fill ( TrackMomentum[TrkID] );
+
+                    SelXTrackStartEnd.at ( 10 )->Fill ( XTrackStart[TrkID] );
+                    SelXTrackStartEnd.at ( 10 )->Fill ( XTrackEnd[TrkID] );
+                    SelYTrackStartEnd.at ( 10 )->Fill ( YTrackStart[TrkID] );
+                    SelYTrackStartEnd.at ( 10 )->Fill ( YTrackEnd[TrkID] );
+                    SelZTrackStartEnd.at ( 10 )->Fill ( ZTrackStart[TrkID] );
+                    SelZTrackStartEnd.at ( 10 )->Fill ( ZTrackEnd[TrkID] );
+                    SelXVtxPosition.at ( 10 )->Fill ( XVertexPosition[VtxID] );
+                    SelYVtxPosition.at ( 10 )->Fill ( YVertexPosition[VtxID] );
+                    SelZVtxPosition.at ( 10 )->Fill ( ZVertexPosition[VtxID] );
+
+                }
+                else if ( TruthMode[0] == 2 )
+                {
+                    nuDIS++;
+                    SelectionTrackRange.at ( 11 )->Fill ( CalcLength ( XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID] ) );
+                    SelectionTheta.at ( 11 )->Fill ( TrackTheta[TrkID] );
+                    SelectionCosTheta.at ( 11 )->Fill ( cos ( TrackTheta[TrkID] ) );
+                    SelectionPhi.at ( 11 )->Fill ( TrackPhi[TrkID] );
+                    SelectionEnergy.at ( 11 )->Fill ( KineticEnergy[TrkID][2]/1000 );
+                    SelectionMomentum.at ( 11 )->Fill ( TrackMomentum[TrkID] );
+
+                    SelXTrackStartEnd.at ( 11 )->Fill ( XTrackStart[TrkID] );
+                    SelXTrackStartEnd.at ( 11 )->Fill ( XTrackEnd[TrkID] );
+                    SelYTrackStartEnd.at ( 11 )->Fill ( YTrackStart[TrkID] );
+                    SelYTrackStartEnd.at ( 11 )->Fill ( YTrackEnd[TrkID] );
+                    SelZTrackStartEnd.at ( 11 )->Fill ( ZTrackStart[TrkID] );
+                    SelZTrackStartEnd.at ( 11 )->Fill ( ZTrackEnd[TrkID] );
+                    SelXVtxPosition.at ( 11 )->Fill ( XVertexPosition[VtxID] );
+                    SelYVtxPosition.at ( 11 )->Fill ( YVertexPosition[VtxID] );
+                    SelZVtxPosition.at ( 11 )->Fill ( ZVertexPosition[VtxID] );
+                }
+
 
                 // Fill systematic errors independet of CC or NC
                 SelectionTrackRange.back()->Fill ( CalcLength ( XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID] ),1+SystematicErrors.at ( 0 ).Eval ( NuEnergyTruth[0] ) );
@@ -576,95 +740,189 @@ void HistoProducerMC()
         EffYVtxPosition.push_back ( new TEfficiency ( *SelYVtxPosition.at ( 2 ),*SelYVtxPosition.at ( eff_no ) ) );
         EffZVtxPosition.push_back ( new TEfficiency ( *SelZVtxPosition.at ( 2 ),*SelZVtxPosition.at ( eff_no ) ) );
     }
+    
+    for ( unsigned int eff_no = 0; eff_no < EffIntLabel.size(); eff_no++ )
+    {
+        EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 9+eff_no ),*SelectionTrackRange.at ( 2+eff_no ) ) );
+        EffEnergy.push_back ( new TEfficiency ( *SelectionEnergy.at ( 9+eff_no ),*SelectionEnergy.at ( 2+eff_no ) ) );
+        EffMomentum.push_back ( new TEfficiency ( *SelectionMomentum.at ( 9+eff_no ),*SelectionMomentum.at ( 2+eff_no ) ) );
+        EffTheta.push_back ( new TEfficiency ( *SelectionTheta.at ( 9+eff_no ),*SelectionTheta.at ( 2+eff_no ) ) );
+        EffCosTheta.push_back ( new TEfficiency ( *SelectionCosTheta.at ( 9+eff_no ),*SelectionCosTheta.at ( 2+eff_no ) ) );
+        EffPhi.push_back ( new TEfficiency ( *SelectionPhi.at ( 9+eff_no ),*SelectionPhi.at ( 2+eff_no ) ) );
 
-    TCanvas *Canvas1 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Track Range", "Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
+        EffXTrackStartEnd.push_back ( new TEfficiency ( *SelXTrackStartEnd.at ( 9+eff_no ),*SelXTrackStartEnd.at ( 2+eff_no ) ) );
+        EffYTrackStartEnd.push_back ( new TEfficiency ( *SelYTrackStartEnd.at ( 9+eff_no ),*SelYTrackStartEnd.at ( 2+eff_no ) ) );
+        EffZTrackStartEnd.push_back ( new TEfficiency ( *SelZTrackStartEnd.at ( 9+eff_no ),*SelZTrackStartEnd.at ( 2+eff_no ) ) );
+
+        EffXVtxPosition.push_back ( new TEfficiency ( *SelXVtxPosition.at ( 9+eff_no ),*SelXVtxPosition.at ( 2+eff_no ) ) );
+        EffYVtxPosition.push_back ( new TEfficiency ( *SelYVtxPosition.at ( 9+eff_no ),*SelYVtxPosition.at ( 2+eff_no ) ) );
+        EffZVtxPosition.push_back ( new TEfficiency ( *SelZVtxPosition.at ( 9+eff_no ),*SelZVtxPosition.at ( 2+eff_no ) ) );
+    }
+    
+    LegendEffInt->AddEntry ( EffTrackRange.at ( 2 ), ( EffIntLabel.at ( 0 ) ).c_str(),"lep" );
+    LegendEffInt->AddEntry ( EffTrackRange.at ( 3 ), ( EffIntLabel.at ( 1 ) ).c_str(),"lep" );
+    LegendEffInt->AddEntry ( EffTrackRange.at ( 4 ), ( EffIntLabel.at ( 2 ) ).c_str(),"lep" );
+
+    LegendEfficiency->AddEntry ( EffTrackRange.at ( 1 ), ( EfficiencyLabel.at ( 1 ) ).c_str(),"lep" );
+    LegendEfficiency->AddEntry ( EffTrackRange.at ( 0 ), ( EfficiencyLabel.at ( 0 ) ).c_str(),"lep" );
+
+    TCanvas *Canvas1 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Track Range", "Efficiency OnBeam Minus OffBeam Track Range", 190, 1000 );
     TMultiGraph *MGTrackRange = new TMultiGraph();
     EffTrackRange.at ( 0 )->SetLineWidth ( 2 );
-    EffTrackRange.at ( 0 )->SetLineColor ( 31 );
+    EffTrackRange.at ( 0 )->SetLineColor ( 8 );
     EffTrackRange.at ( 1 )->SetLineWidth ( 2 );
-    EffTrackRange.at ( 1 )->SetLineColor ( 40 );
-    MGTrackRange->Add(EffTrackRange.at(0)->CreateGraph());
-    MGTrackRange->Add(EffTrackRange.at(1)->CreateGraph());
+    EffTrackRange.at ( 1 )->SetLineColor (9);
+    MGTrackRange->Add ( EffTrackRange.at ( 0 )->CreateGraph() );
+    MGTrackRange->Add ( EffTrackRange.at ( 1 )->CreateGraph() );
     Canvas1->cd();
-    MGTrackRange->Draw("AP");
-//     LegendMC->Draw();
+    MGTrackRange->Draw ( "AP" );
+    LegendEfficiency->Draw();
     Canvas1->SaveAs ( ( "EffMCRange"+SelectionLabel+"."+FileType ).c_str() );
+    
+    TCanvas *Canvas1Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Track Range", "Interaction Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
+    TMultiGraph *MGTrackRangeInt = new TMultiGraph();
+    EffTrackRange.at ( 2 )->SetLineWidth ( 2 );
+    EffTrackRange.at ( 2 )->SetLineColor ( 46 );
+    EffTrackRange.at ( 3 )->SetLineWidth ( 2 );
+    EffTrackRange.at ( 3 )->SetLineColor ( 42 );
+    EffTrackRange.at ( 4 )->SetLineWidth ( 2 );
+    EffTrackRange.at ( 4 )->SetLineColor ( 30 );
+    MGTrackRangeInt->Add ( EffTrackRange.at ( 2 )->CreateGraph() );
+    MGTrackRangeInt->Add ( EffTrackRange.at ( 3 )->CreateGraph() );
+    MGTrackRangeInt->Add ( EffTrackRange.at ( 4 )->CreateGraph() );
+    Canvas1Int->cd();
+    MGTrackRangeInt->Draw ( "AP" );
+    LegendEffInt->Draw();
+    Canvas1Int->SaveAs ( ( "EffIntMCRange"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Theta-Angle", "Efficiency OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
     TMultiGraph *MGTheta = new TMultiGraph();
     EffTheta.at ( 0 )->SetLineWidth ( 2 );
-    EffTheta.at ( 0 )->SetLineColor ( 31 );
+    EffTheta.at ( 0 )->SetLineColor ( 8 );
     EffTheta.at ( 1 )->SetLineWidth ( 2 );
-    EffTheta.at ( 1 )->SetLineColor ( 40 );
-    MGTheta->Add(EffTheta.at(0)->CreateGraph());
-    MGTheta->Add(EffTheta.at(1)->CreateGraph());
+    EffTheta.at ( 1 )->SetLineColor (9);
+    MGTheta->Add ( EffTheta.at ( 0 )->CreateGraph() );
+    MGTheta->Add ( EffTheta.at ( 1 )->CreateGraph() );
     Canvas2->cd();
-    MGTheta->Draw("AP");
-//     LegendMC->Draw();
+    MGTheta->Draw ( "AP" );
+    LegendEfficiency->Draw();
     Canvas2->SaveAs ( ( "EffMCTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2b = new TCanvas ( "Efficiency OnBeam Minus OffBeam Cos Theta-Angle", "Efficiency OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
     TMultiGraph *MGCosTheta = new TMultiGraph();
     EffCosTheta.at ( 0 )->SetLineWidth ( 2 );
-    EffCosTheta.at ( 0 )->SetLineColor ( 31 );
+    EffCosTheta.at ( 0 )->SetLineColor ( 8 );
     EffCosTheta.at ( 1 )->SetLineWidth ( 2 );
-    EffCosTheta.at ( 1 )->SetLineColor ( 40 );
-    MGCosTheta->Add(EffCosTheta.at(0)->CreateGraph());
-    MGCosTheta->Add(EffCosTheta.at(1)->CreateGraph());
+    EffCosTheta.at ( 1 )->SetLineColor (9);
+    MGCosTheta->Add ( EffCosTheta.at ( 0 )->CreateGraph() );
+    MGCosTheta->Add ( EffCosTheta.at ( 1 )->CreateGraph() );
     Canvas2b->cd();
-    MGCosTheta->Draw("AP");
-//     LegendMC->Draw();
+    MGCosTheta->Draw ( "AP" );
+    LegendEfficiency->Draw();
     Canvas2b->SaveAs ( ( "EffMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
-
-    TCanvas *Canvas3 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Phi-Angle", "Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
-    TMultiGraph *MGPhi = new TMultiGraph();
-    EffPhi.at ( 0 )->SetLineWidth ( 2 );
-    EffPhi.at ( 0 )->SetLineColor ( 31 );
-    EffPhi.at ( 1 )->SetLineWidth ( 2 );
-    EffPhi.at ( 1 )->SetLineColor ( 40 );
-    MGPhi->Add(EffPhi.at(0)->CreateGraph());
-    MGPhi->Add(EffPhi.at(1)->CreateGraph());
-    Canvas3->cd();
-    MGPhi->Draw("AP");
-//     LegendMC->Draw();
-    Canvas3->SaveAs ( ( "EffMCPhi"+SelectionLabel+"."+FileType ).c_str() );
+    
+    TCanvas *Canvas2bInt = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Cos Theta-Angle", "Interaction Efficiency OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
+    TMultiGraph *MGCosThetaInt = new TMultiGraph();
+    EffCosTheta.at ( 2 )->SetLineWidth ( 2 );
+    EffCosTheta.at ( 2 )->SetLineColor ( 46 );
+    EffCosTheta.at ( 3 )->SetLineWidth ( 2 );
+    EffCosTheta.at ( 3 )->SetLineColor ( 42 );
+    EffCosTheta.at ( 4 )->SetLineWidth ( 2 );
+    EffCosTheta.at ( 4 )->SetLineColor ( 30 );
+    MGCosThetaInt->Add ( EffCosTheta.at ( 2 )->CreateGraph() );
+    MGCosThetaInt->Add ( EffCosTheta.at ( 3 )->CreateGraph() );
+    MGCosThetaInt->Add ( EffCosTheta.at ( 4 )->CreateGraph() );
+    Canvas2bInt->cd();
+    MGCosThetaInt->Draw ( "AP" );
+    LegendEffInt->Draw();
+    Canvas2bInt->SaveAs ( ( "EffIntMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas4 = new TCanvas ( "Efficiency Energy", "Efficiency Energy", 1400, 1000 );
     TMultiGraph *MGEnergy = new TMultiGraph();
     EffEnergy.at ( 0 )->SetLineWidth ( 2 );
-    EffEnergy.at ( 0 )->SetLineColor ( 31 );
+    EffEnergy.at ( 0 )->SetLineColor ( 8 );
     EffEnergy.at ( 1 )->SetLineWidth ( 2 );
-    EffEnergy.at ( 1 )->SetLineColor ( 40 );
-    MGEnergy->Add(EffEnergy.at(0)->CreateGraph());
-    MGEnergy->Add(EffEnergy.at(1)->CreateGraph());
+    EffEnergy.at ( 1 )->SetLineColor (9);
+    MGEnergy->Add ( EffEnergy.at ( 0 )->CreateGraph() );
+    MGEnergy->Add ( EffEnergy.at ( 1 )->CreateGraph() );
     Canvas4->cd();
-    MGEnergy->Draw("AP");
-//     LegendMC->Draw();
+    MGEnergy->Draw ( "AP" );
+    LegendEfficiency->Draw();
     Canvas4->SaveAs ( ( "EffMCEnergy"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas4a = new TCanvas ( "Efficiency Momentum", "Efficiency Momentum", 1400, 1000 );
     TMultiGraph *MGMomentum = new TMultiGraph();
     EffMomentum.at ( 0 )->SetLineWidth ( 2 );
-    EffMomentum.at ( 0 )->SetLineColor ( 31 );
+    EffMomentum.at ( 0 )->SetLineColor ( 8 );
     EffMomentum.at ( 1 )->SetLineWidth ( 2 );
-    EffMomentum.at ( 1 )->SetLineColor ( 40 );
-    MGMomentum->Add(EffMomentum.at(0)->CreateGraph());
-    MGMomentum->Add(EffMomentum.at(1)->CreateGraph());
+    EffMomentum.at ( 1 )->SetLineColor (9);
+    MGMomentum->Add ( EffMomentum.at ( 0 )->CreateGraph() );
+    MGMomentum->Add ( EffMomentum.at ( 1 )->CreateGraph() );
     Canvas4a->cd();
-    MGMomentum->Draw("AP");
-//     LegendMC->Draw();
+    MGMomentum->Draw ( "AP" );
+    LegendEfficiency->Draw();
     Canvas4a->SaveAs ( ( "EffMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
+    
+    TCanvas *Canvas4aInt = new TCanvas ( "Interaction Efficiency Momentum", "Interaction Efficiency Momentum", 1400, 1000 );
+    TMultiGraph *MGMomentumInt = new TMultiGraph();
+    EffMomentum.at ( 2 )->SetLineWidth ( 2 );
+    EffMomentum.at ( 2 )->SetLineColor ( 46 );
+    EffMomentum.at ( 3 )->SetLineWidth ( 2 );
+    EffMomentum.at ( 3 )->SetLineColor ( 42 );
+    EffMomentum.at ( 4 )->SetLineWidth ( 2 );
+    EffMomentum.at ( 4 )->SetLineColor ( 30 );
+    MGMomentumInt->Add ( EffMomentum.at ( 2 )->CreateGraph() );
+    MGMomentumInt->Add ( EffMomentum.at ( 3 )->CreateGraph() );
+    MGMomentumInt->Add ( EffMomentum.at ( 4 )->CreateGraph() );
+    Canvas4aInt->cd();
+    MGMomentumInt->Draw ( "AP" );
+    LegendEffInt->Draw();
+    Canvas4aInt->SaveAs ( ( "EffIntMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
+
+    LegendEfficiency->SetX1NDC ( 0.5 );
+    LegendEfficiency->SetY1NDC ( 0.4 );
+    LegendEfficiency->SetX2NDC ( 0.8 );
+    LegendEfficiency->SetY2NDC ( 0.6 );
+
+    TCanvas *Canvas3 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Phi-Angle", "Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
+    TMultiGraph *MGPhi = new TMultiGraph();
+    EffPhi.at ( 0 )->SetLineWidth ( 2 );
+    EffPhi.at ( 0 )->SetLineColor ( 8 );
+    EffPhi.at ( 1 )->SetLineWidth ( 2 );
+    EffPhi.at ( 1 )->SetLineColor (9);
+    MGPhi->Add ( EffPhi.at ( 0 )->CreateGraph() );
+    MGPhi->Add ( EffPhi.at ( 1 )->CreateGraph() );
+    Canvas3->cd();
+    MGPhi->Draw ( "AP" );
+    LegendEfficiency->Draw();
+    Canvas3->SaveAs ( ( "EffMCPhi"+SelectionLabel+"."+FileType ).c_str() );
+    
+    TCanvas *Canvas3Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
+    TMultiGraph *MGPhiInt = new TMultiGraph();
+    EffPhi.at ( 2 )->SetLineWidth ( 2 );
+    EffPhi.at ( 2 )->SetLineColor ( 46 );
+    EffPhi.at ( 3 )->SetLineWidth ( 2 );
+    EffPhi.at ( 3 )->SetLineColor ( 42 );
+    EffPhi.at ( 4 )->SetLineWidth ( 2 );
+    EffPhi.at ( 4 )->SetLineColor ( 30 );
+    MGPhiInt->Add ( EffPhi.at ( 2 )->CreateGraph() );
+    MGPhiInt->Add ( EffPhi.at ( 3 )->CreateGraph() );
+    MGPhiInt->Add ( EffPhi.at ( 4 )->CreateGraph() );
+    Canvas3Int->cd();
+    MGPhiInt->Draw ( "AP" );
+    LegendEffInt->Draw();
+    Canvas3Int->SaveAs ( ( "EffIntMCPhi"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas5 = new TCanvas ( "Efficiency OnBeam Minus OffBeam X Start & End Point ", "Efficiency OnBeam Minus OffBeam X Start & End Point ", 1400, 1000 );
     TMultiGraph *MGXStart = new TMultiGraph();
     Canvas5->cd();
 //     EffXTrackStartEnd.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffXTrackStartEnd) );
 //     EffXTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    EffXTrackStartEnd.at ( 1 )->SetLineColor ( 40 );
+    EffXTrackStartEnd.at ( 1 )->SetLineColor (9);
     EffXTrackStartEnd.at ( 1 )->Draw ( "A" );
-    EffXTrackStartEnd.at ( 0 )->SetLineColor ( 31 );
+    EffXTrackStartEnd.at ( 0 )->SetLineColor ( 8 );
     EffXTrackStartEnd.at ( 0 )->Draw ( "SAME" );
-//     LegendMC->Draw();
+    LegendEfficiency->Draw();
     Canvas5->SaveAs ( ( "EffMCXTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas6 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Y Start & End Point ", "Efficiency OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000 );
@@ -672,11 +930,11 @@ void HistoProducerMC()
     Canvas6->cd();
 //     EffYTrackStartEnd.at ( 1 )->SetMaximum ( 1.8*GetMaximum(EffYTrackStartEnd) );
 //     EffYTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    EffYTrackStartEnd.at ( 1 )->SetLineColor ( 40 );
+    EffYTrackStartEnd.at ( 1 )->SetLineColor (9);
     EffYTrackStartEnd.at ( 1 )->Draw ( "A" );
-    EffYTrackStartEnd.at ( 0 )->SetLineColor ( 31 );
+    EffYTrackStartEnd.at ( 0 )->SetLineColor ( 8 );
     EffYTrackStartEnd.at ( 0 )->Draw ( "SAME" );
-//     LegendMC->Draw();
+    LegendEfficiency->Draw();
     Canvas6->SaveAs ( ( "EffMCYTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas7 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Z Start & End Point ", "Efficiency OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000 );
@@ -684,9 +942,9 @@ void HistoProducerMC()
     Canvas7->cd();
 //     EffZTrackStartEnd.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffZTrackStartEnd) );
 //     EffZTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    EffZTrackStartEnd.at ( 1 )->SetLineColor ( 40 );
+    EffZTrackStartEnd.at ( 1 )->SetLineColor (9);
     EffZTrackStartEnd.at ( 1 )->Draw ( "A" );
-    EffZTrackStartEnd.at ( 0 )->SetLineColor ( 31 );
+    EffZTrackStartEnd.at ( 0 )->SetLineColor ( 8 );
     EffZTrackStartEnd.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas7->SaveAs ( ( "EffMCZTrack"+SelectionLabel+"."+FileType ).c_str() );
@@ -696,9 +954,9 @@ void HistoProducerMC()
     Canvas8->cd();
 //     EffXVtxPosition.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffXVtxPosition) );
 //     EffXVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    EffXVtxPosition.at ( 1 )->SetLineColor ( 40 );
+    EffXVtxPosition.at ( 1 )->SetLineColor (9);
     EffXVtxPosition.at ( 1 )->Draw ( "A" );
-    EffXVtxPosition.at ( 0 )->SetLineColor ( 31 );
+    EffXVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffXVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas8->SaveAs ( ( "EffMCXVertex"+SelectionLabel+"."+FileType ).c_str() );
@@ -708,9 +966,9 @@ void HistoProducerMC()
     Canvas9->cd();
 //     EffYVtxPosition.at ( 1 )->SetMaximum ( 1.8*GetMaximum(EffYVtxPosition) );
 //     EffYVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    EffYVtxPosition.at ( 1 )->SetLineColor ( 40 );
+    EffYVtxPosition.at ( 1 )->SetLineColor (9);
     EffYVtxPosition.at ( 1 )->Draw ( "A" );
-    EffYVtxPosition.at ( 0 )->SetLineColor ( 31 );
+    EffYVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffYVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas9->SaveAs ( ( "EffMCYVertex"+SelectionLabel+"."+FileType ).c_str() );
@@ -720,9 +978,9 @@ void HistoProducerMC()
     Canvas10->cd();
 //     EffZVtxPosition.at ( 1 )->SetMaximum ( 1.5*GetMaximum(EffZVtxPosition) );
 //     EffZVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    EffZVtxPosition.at ( 1 )->SetLineColor ( 40 );
+    EffZVtxPosition.at ( 1 )->SetLineColor (9);
     EffZVtxPosition.at ( 1 )->Draw ( "A" );
-    EffZVtxPosition.at ( 0 )->SetLineColor ( 31 );
+    EffZVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffZVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
     Canvas10->SaveAs ( ( "EffMCZVertex"+SelectionLabel+"."+FileType ).c_str() );
@@ -747,43 +1005,57 @@ void HistoProducerMC()
     LegendMC->AddEntry ( SelectionTrackRange.at ( 0 ), ( MCLabel.at ( 0 ) ).c_str(),"f" );
     LegendMC->AddEntry ( SelectionTrackRange.at ( 1 ), ( MCLabel.at ( 1 ) ).c_str(),"f" );
 //     LegendMC->AddEntry ( SelectionTrackRange.at ( 2 ), ( MCLabel.at ( 2 ) ).c_str(),"f" );
-    for ( unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++ )
-    {
+//     for ( unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++ )
+//     {
 //         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
-    }
+//     }
 
     TCanvas *Canvas11 = new TCanvas ( "OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000 );
     Canvas11->cd();
     SelectionTrackRange.at ( 1 )->SetMaximum ( 1.1*GetMaximum ( SelectionTrackRange ) );
     SelectionTrackRange.at ( 1 )->SetMinimum ( 0.0 );
-    SelectionTrackRange.at ( 1 )->SetFillColor ( 40 );
+    SelectionTrackRange.at ( 1 )->SetFillColor (9);
     SelectionTrackRange.at ( 1 )->Draw ( "E2" );
-    SelectionTrackRange.at ( 0 )->SetFillColor ( 31 );
+    SelectionTrackRange.at ( 0 )->SetFillColor ( 8 );
     SelectionTrackRange.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas11->SaveAs ( ( "MCRange"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas11Int = new TCanvas ( "OnBeam Minus OffBeam Track Range Int", "OnBeam Minus OffBeam Track Range Int", 1400, 1000 );
     Canvas11Int->cd();
-    SelectionTrackRange.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionTrackRange ) );
-    SelectionTrackRange.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionTrackRange.at ( 3 )->SetFillColor ( 3 );
-    SelectionTrackRange.at ( 3 )->Draw ( "E2" );
-    for(unsigned int iter = 4; iter < SelectionTrackRange.size()-1; iter++)
+    SelectionTrackRange.at ( 9 )->SetMaximum ( 1.1*GetMaximum ( SelectionTrackRange ) );
+    SelectionTrackRange.at ( 9 )->SetMinimum ( 0.0 );
+    SelectionTrackRange.at ( 9 )->SetFillColor ( 3 );
+    SelectionTrackRange.at ( 9 )->Draw ( "E2" );
+    for ( unsigned int iter = 10; iter < SelectionTrackRange.size()-1; iter++ )
     {
-        SelectionTrackRange.at(iter)->SetFillColor(iter);
+        SelectionTrackRange.at ( iter )->SetFillColor ( iter );
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
     Canvas11Int->SaveAs ( ( "MCRange_Int"+SelectionLabel+"."+FileType ).c_str() );
 
+    TCanvas *Canvas11IntTrue = new TCanvas ( "OnBeam Minus OffBeam Track Range Int True", "OnBeam Minus OffBeam Track Range Int Ture", 1400, 1000 );
+    Canvas11IntTrue->cd();
+    SelectionTrackRange.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionTrackRange ) );
+    SelectionTrackRange.at ( 3 )->SetMinimum ( 0.0 );
+    SelectionTrackRange.at ( 3 )->SetFillColor ( 3 );
+    SelectionTrackRange.at ( 3 )->Draw ( "E2" );
+    for ( unsigned int iter = 4; iter < 6; iter++ )
+    {
+        SelectionTrackRange.at ( iter )->SetFillColor ( iter );
+        SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
+    }
+//     LegendMC->Draw();
+    Canvas11Int->SaveAs ( ( "MCRange_Int_True"+SelectionLabel+"."+FileType ).c_str() );
+
     TCanvas *Canvas12 = new TCanvas ( "OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
     Canvas12->cd();
-    SelectionTheta.at ( 1 )->SetMaximum ( 1.5*GetMaximum ( SelectionTheta ) );
+    SelectionTheta.at ( 1 )->SetMaximum ( 1.2*GetMaximum ( SelectionTheta ) );
     SelectionTheta.at ( 1 )->SetMinimum ( 0.0 );
-    SelectionTheta.at ( 1 )->SetFillColor ( 40 );
+    SelectionTheta.at ( 1 )->SetFillColor (9);
     SelectionTheta.at ( 1 )->Draw ( "E2" );
-    SelectionTheta.at ( 0 )->SetFillColor ( 31 );
+    SelectionTheta.at ( 0 )->SetFillColor ( 8 );
     SelectionTheta.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas12->SaveAs ( ( "MCTheta"+SelectionLabel+"."+FileType ).c_str() );
@@ -795,45 +1067,114 @@ void HistoProducerMC()
 
     TCanvas *Canvas12a = new TCanvas ( "OnBeam Minus OffBeam Theta-Angle Omega", "OnBeam Minus OffBeam Theta-Angle Omega", 1400, 1000 );
     Canvas12a->cd();
-    SelectionTheta.at ( 1 )->SetMaximum ( 1.5*GetMaximum ( SelectionTheta ) );
+    SelectionTheta.at ( 1 )->SetMaximum ( 1.2*GetMaximum ( SelectionTheta ) );
     SelectionTheta.at ( 1 )->SetMinimum ( 0.0 );
     SelectionTheta.at ( 1 )->GetYaxis()->SetTitle ( "Shape normalized #frac{dn}{d#Omega}" );
-    SelectionTheta.at ( 1 )->SetFillColor ( 40 );
+    SelectionTheta.at ( 1 )->SetFillColor (9);
     SelectionTheta.at ( 1 )->Draw ( "E2" );
-    SelectionTheta.at ( 0 )->SetFillColor ( 31 );
+    SelectionTheta.at ( 0 )->SetFillColor ( 8 );
     SelectionTheta.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas12a->SaveAs ( ( "MCThetaOmega"+SelectionLabel+"."+FileType ).c_str() );
 
+    LegendMC->SetX1NDC ( 0.2 );
+    LegendMC->SetY1NDC ( 0.6 );
+    LegendMC->SetX2NDC ( 0.5 );
+    LegendMC->SetY2NDC ( 0.8 );
+
     TCanvas *Canvas12b = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
     Canvas12b->cd();
-    SelectionCosTheta.at ( 1 )->SetMaximum ( 1.5*GetMaximum ( SelectionTheta ) );
+    SelectionCosTheta.at ( 1 )->SetMaximum ( 1.2*GetMaximum ( SelectionCosTheta ) );
     SelectionCosTheta.at ( 1 )->SetMinimum ( 0.0 );
-    SelectionCosTheta.at ( 1 )->SetFillColor ( 40 );
+    SelectionCosTheta.at ( 1 )->SetFillColor (9);
     SelectionCosTheta.at ( 1 )->Draw ( "E2" );
-    SelectionCosTheta.at ( 0 )->SetFillColor ( 31 );
+    SelectionCosTheta.at ( 0 )->SetFillColor ( 8 );
     SelectionCosTheta.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas12b->SaveAs ( ( "MCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
 
+    TCanvas *Canvas12bInt = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle Int", "OnBeam Minus OffBeam Cos Theta-Angle Int", 1400, 1000 );
+    Canvas12bInt->cd();
+    SelectionCosTheta.at ( 9 )->SetMaximum ( 1.1*GetMaximum ( SelectionCosTheta ) );
+    SelectionCosTheta.at ( 9 )->SetMinimum ( 0.0 );
+    SelectionCosTheta.at ( 9 )->SetFillColor ( 3 );
+    SelectionCosTheta.at ( 9 )->Draw ( "E2" );
+    for ( unsigned int iter = 10; iter < SelectionCosTheta.size()-1; iter++ )
+    {
+        SelectionCosTheta.at ( iter )->SetFillColor ( iter );
+        SelectionCosTheta.at ( iter )->Draw ( "E2SAME" );
+    }
+//     LegendMC->Draw();
+    Canvas12bInt->SaveAs ( ( "MCCosTheta_Int"+SelectionLabel+"."+FileType ).c_str() );
+
+    TCanvas *Canvas12bIntTrue = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle Int Ture", "OnBeam Minus OffBeam Cos Theta-Angle Int Ture", 1400, 1000 );
+    Canvas12bIntTrue->cd();
+    SelectionCosTheta.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionCosTheta ) );
+    SelectionCosTheta.at ( 3 )->SetMinimum ( 0.0 );
+    SelectionCosTheta.at ( 3 )->SetFillColor ( 3 );
+    SelectionCosTheta.at ( 3 )->Draw ( "E2" );
+    for ( unsigned int iter = 4; iter < 6; iter++ )
+    {
+        SelectionCosTheta.at ( iter )->SetFillColor ( iter );
+        SelectionCosTheta.at ( iter )->Draw ( "E2SAME" );
+    }
+    Canvas12bInt->SaveAs ( ( "MCCosTheta_Int_True"+SelectionLabel+"."+FileType ).c_str() );
+
+    LegendMC->SetX1NDC ( 0.5 );
+    LegendMC->SetY1NDC ( 0.4 );
+    LegendMC->SetX2NDC ( 0.8 );
+    LegendMC->SetY2NDC ( 0.6 );
+
     TCanvas *Canvas13 = new TCanvas ( "OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     Canvas13->cd();
-    SelectionPhi.at ( 1 )->SetMaximum ( 1.9*GetMaximum ( SelectionPhi ) );
+    SelectionPhi.at ( 1 )->SetMaximum ( 1.2*GetMaximum ( SelectionPhi ) );
     SelectionPhi.at ( 1 )->SetMinimum ( 0.0 );
-    SelectionPhi.at ( 1 )->SetFillColor ( 40 );
+    SelectionPhi.at ( 1 )->SetFillColor (9);
     SelectionPhi.at ( 1 )->Draw ( "E2" );
-    SelectionPhi.at ( 0 )->SetFillColor ( 31 );
+    SelectionPhi.at ( 0 )->SetFillColor ( 8 );
     SelectionPhi.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas13->SaveAs ( ( "MCPhi"+SelectionLabel+"."+FileType ).c_str() );
+
+    TCanvas *Canvas13Int = new TCanvas ( "OnBeam Minus OffBeam Phi-Angle Int", "OnBeam Minus OffBeam Phi-Angle Int", 1400, 1000 );
+    Canvas13Int->cd();
+    SelectionPhi.at ( 9 )->SetMaximum ( 1.1*GetMaximum ( SelectionPhi ) );
+    SelectionPhi.at ( 9 )->SetMinimum ( 0.0 );
+    SelectionPhi.at ( 9 )->SetFillColor ( 3 );
+    SelectionPhi.at ( 9 )->Draw ( "E2" );
+    for ( unsigned int iter = 10; iter < SelectionPhi.size()-1; iter++ )
+    {
+        SelectionPhi.at ( iter )->SetFillColor ( iter );
+        SelectionPhi.at ( iter )->Draw ( "E2SAME" );
+    }
+//     LegendMC->Draw();
+    Canvas13Int->SaveAs ( ( "MCPhi_Int"+SelectionLabel+"."+FileType ).c_str() );
+
+    TCanvas *Canvas13IntTrue = new TCanvas ( "OnBeam Minus OffBeam Phi-Angle Int Ture", "OnBeam Minus OffBeam Phi-Angle Int Ture", 1400, 1000 );
+    Canvas13IntTrue->cd();
+    SelectionPhi.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionPhi ) );
+    SelectionPhi.at ( 3 )->SetMinimum ( 0.0 );
+    SelectionPhi.at ( 3 )->SetFillColor ( 3 );
+    SelectionPhi.at ( 3 )->Draw ( "E2" );
+    for ( unsigned int iter = 4; iter < 6; iter++ )
+    {
+        SelectionPhi.at ( iter )->SetFillColor ( iter );
+        SelectionPhi.at ( iter )->Draw ( "E2SAME" );
+    }
+    Canvas13Int->SaveAs ( ( "MCPhi_Int_True"+SelectionLabel+"."+FileType ).c_str() );
+
+    LegendMC->SetX1NDC ( 0.5 );
+    LegendMC->SetY1NDC ( 0.6 );
+    LegendMC->SetX2NDC ( 0.8 );
+    LegendMC->SetY2NDC ( 0.8 );
 
     TCanvas *Canvas14 = new TCanvas ( "Energy", "Energy", 1400, 1000 );
     Canvas14->cd();
     SelectionEnergy.at ( 1 )->SetMaximum ( 1.2*GetMaximum ( SelectionEnergy ) );
     SelectionEnergy.at ( 1 )->SetMinimum ( 0.0 );
-    SelectionEnergy.at ( 1 )->SetFillColor ( 40 );
+    SelectionEnergy.at ( 1 )->SetFillColor (9);
     SelectionEnergy.at ( 1 )->Draw ( "E2" );
-    SelectionEnergy.at ( 0 )->SetFillColor ( 31 );
+    SelectionEnergy.at ( 0 )->SetFillColor ( 8 );
     SelectionEnergy.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas14->SaveAs ( ( "MCEnergy"+SelectionLabel+"."+FileType ).c_str() );
@@ -842,20 +1183,47 @@ void HistoProducerMC()
     Canvas14a->cd();
     SelectionMomentum.at ( 1 )->SetMaximum ( 1.2*GetMaximum ( SelectionMomentum ) );
     SelectionMomentum.at ( 1 )->SetMinimum ( 0.0 );
-    SelectionMomentum.at ( 1 )->SetFillColor ( 40 );
+    SelectionMomentum.at ( 1 )->SetFillColor (9);
     SelectionMomentum.at ( 1 )->Draw ( "E2" );
-    SelectionMomentum.at ( 0 )->SetFillColor ( 31 );
+    SelectionMomentum.at ( 0 )->SetFillColor ( 8 );
     SelectionMomentum.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas14a->SaveAs ( ( "MCMomentum"+SelectionLabel+"."+FileType ).c_str() );
+
+    TCanvas *Canvas14aInt = new TCanvas ( "Momentum Int", "Momentum Int", 1400, 1000 );
+    Canvas14aInt->cd();
+    SelectionMomentum.at ( 9 )->SetMaximum ( 1.1*GetMaximum ( SelectionMomentum ) );
+    SelectionMomentum.at ( 9 )->SetMinimum ( 0.0 );
+    SelectionMomentum.at ( 9 )->SetFillColor ( 3 );
+    SelectionMomentum.at ( 9 )->Draw ( "E2" );
+    for ( unsigned int iter = 10; iter < SelectionMomentum.size()-1; iter++ )
+    {
+        SelectionMomentum.at ( iter )->SetFillColor ( iter );
+        SelectionMomentum.at ( iter )->Draw ( "E2SAME" );
+    }
+//     LegendMC->Draw();
+    Canvas14aInt->SaveAs ( ( "MCPhi_Int"+SelectionLabel+"."+FileType ).c_str() );
+
+    TCanvas *Canvas14aIntTrue = new TCanvas ( "Momentum Int Ture", "Momentum Int Ture", 1400, 1000 );
+    Canvas14aIntTrue->cd();
+    SelectionMomentum.at ( 3 )->SetMaximum ( 1.1*GetMaximum ( SelectionMomentum ) );
+    SelectionMomentum.at ( 3 )->SetMinimum ( 0.0 );
+    SelectionMomentum.at ( 3 )->SetFillColor ( 3 );
+    SelectionMomentum.at ( 3 )->Draw ( "E2" );
+    for ( unsigned int iter = 4; iter < 6; iter++ )
+    {
+        SelectionMomentum.at ( iter )->SetFillColor ( iter );
+        SelectionMomentum.at ( iter )->Draw ( "E2SAME" );
+    }
+    Canvas14aInt->SaveAs ( ( "MCPhi_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas15 = new TCanvas ( "OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000 );
     Canvas15->cd();
     SelXTrackStartEnd.at ( 1 )->SetMaximum ( 1.5*GetMaximum ( SelXTrackStartEnd ) );
     SelXTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    SelXTrackStartEnd.at ( 1 )->SetFillColor ( 40 );
+    SelXTrackStartEnd.at ( 1 )->SetFillColor (9);
     SelXTrackStartEnd.at ( 1 )->Draw ( "E2" );
-    SelXTrackStartEnd.at ( 0 )->SetFillColor ( 31 );
+    SelXTrackStartEnd.at ( 0 )->SetFillColor ( 8 );
     SelXTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas15->SaveAs ( ( "MCXTrack"+SelectionLabel+"."+FileType ).c_str() );
@@ -864,9 +1232,9 @@ void HistoProducerMC()
     Canvas16->cd();
     SelYTrackStartEnd.at ( 1 )->SetMaximum ( 1.8*GetMaximum ( SelYTrackStartEnd ) );
     SelYTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    SelYTrackStartEnd.at ( 1 )->SetFillColor ( 40 );
+    SelYTrackStartEnd.at ( 1 )->SetFillColor (9);
     SelYTrackStartEnd.at ( 1 )->Draw ( "E2" );
-    SelYTrackStartEnd.at ( 0 )->SetFillColor ( 31 );
+    SelYTrackStartEnd.at ( 0 )->SetFillColor ( 8 );
     SelYTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas16->SaveAs ( ( "MCYTrack"+SelectionLabel+"."+FileType ).c_str() );
@@ -875,9 +1243,9 @@ void HistoProducerMC()
     Canvas17->cd();
     SelZTrackStartEnd.at ( 1 )->SetMaximum ( 1.5*GetMaximum ( SelZTrackStartEnd ) );
     SelZTrackStartEnd.at ( 1 )->SetMinimum ( 0.0 );
-    SelZTrackStartEnd.at ( 1 )->SetFillColor ( 40 );
+    SelZTrackStartEnd.at ( 1 )->SetFillColor (9);
     SelZTrackStartEnd.at ( 1 )->Draw ( "E2" );
-    SelZTrackStartEnd.at ( 0 )->SetFillColor ( 31 );
+    SelZTrackStartEnd.at ( 0 )->SetFillColor ( 8 );
     SelZTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas17->SaveAs ( ( "MCZTrack"+SelectionLabel+"."+FileType ).c_str() );
@@ -886,9 +1254,9 @@ void HistoProducerMC()
     Canvas18->cd();
     SelXVtxPosition.at ( 1 )->SetMaximum ( 1.5*GetMaximum ( SelXVtxPosition ) );
     SelXVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    SelXVtxPosition.at ( 1 )->SetFillColor ( 40 );
+    SelXVtxPosition.at ( 1 )->SetFillColor (9);
     SelXVtxPosition.at ( 1 )->Draw ( "E2" );
-    SelXVtxPosition.at ( 0 )->SetFillColor ( 31 );
+    SelXVtxPosition.at ( 0 )->SetFillColor ( 8 );
     SelXVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas18->SaveAs ( ( "MCXVertex"+SelectionLabel+"."+FileType ).c_str() );
@@ -897,9 +1265,9 @@ void HistoProducerMC()
     Canvas19->cd();
     SelYVtxPosition.at ( 1 )->SetMaximum ( 1.8*GetMaximum ( SelYVtxPosition ) );
     SelYVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    SelYVtxPosition.at ( 1 )->SetFillColor ( 40 );
+    SelYVtxPosition.at ( 1 )->SetFillColor (9);
     SelYVtxPosition.at ( 1 )->Draw ( "E2" );
-    SelYVtxPosition.at ( 0 )->SetFillColor ( 31 );
+    SelYVtxPosition.at ( 0 )->SetFillColor ( 8 );
     SelYVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas19->SaveAs ( ( "MCYVertex"+SelectionLabel+"."+FileType ).c_str() );
@@ -908,9 +1276,9 @@ void HistoProducerMC()
     Canvas20->cd();
     SelZVtxPosition.at ( 1 )->SetMaximum ( 1.5*GetMaximum ( SelZVtxPosition ) );
     SelZVtxPosition.at ( 1 )->SetMinimum ( 0.0 );
-    SelZVtxPosition.at ( 1 )->SetFillColor ( 40 );
+    SelZVtxPosition.at ( 1 )->SetFillColor (9);
     SelZVtxPosition.at ( 1 )->Draw ( "E2" );
-    SelZVtxPosition.at ( 0 )->SetFillColor ( 31 );
+    SelZVtxPosition.at ( 0 )->SetFillColor ( 8 );
     SelZVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas20->SaveAs ( ( "MCZVertex"+SelectionLabel+"."+FileType ).c_str() );

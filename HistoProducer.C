@@ -434,7 +434,8 @@ void HistoProducer()
     double beammin;
     double beammax;
 
-    std::ofstream DataToLookAt("SelectedData.txt",std::ios::trunc);
+    std::ofstream DataToLookAtOn("SelectedDataOnBeam.txt",std::ios::trunc);
+    std::ofstream DataToLookAtOff("SelectedDataOffBeam.txt",std::ios::trunc);
 
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
@@ -546,8 +547,17 @@ void HistoProducer()
             {
                 if(file_no == 0)
                 {
-                    DataToLookAt << Run << " " << Subrun << " " << Event << "\n";
+                    DataToLookAtOn << Run << " " << Subrun << " " << Event << " " <<
+                    XVertexPosition[VtxID] << " " << YVertexPosition[VtxID] << " " << ZVertexPosition[VtxID] << " " <<
+                    -1 << " " << 1 << "\n";
                 }
+                if(file_no == 1)
+                {
+                    DataToLookAtOff << Run << " " << Subrun << " " << Event << " " <<
+                    XVertexPosition[VtxID] << " " << YVertexPosition[VtxID] << " " << ZVertexPosition[VtxID] << " " <<
+                    -1 << " " << 1 << "\n";
+                }
+                
 
                 Signal++;
 
@@ -828,7 +838,8 @@ void HistoProducer()
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
 
-    DataToLookAt.close();
+    DataToLookAtOn.close();
+    DataToLookAtOff.close();
     
     std::cout << SelectionTrackRange.at(2)->Integral() << " " << BgrTrackRange.at(4)->Integral() << std::endl;
 
