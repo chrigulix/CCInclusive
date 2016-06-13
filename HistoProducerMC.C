@@ -112,7 +112,7 @@ void HistoProducerMC()
     std::vector<TEfficiency*> EffYVtxPosition;
     std::vector<TEfficiency*> EffZVtxPosition;
     
-    std::vector<int> ColorVec(3,4,5);
+    std::vector<int> ColorVec = {3,4,5};
 
     TF1* SinTheta = new TF1 ( "const","sin(x)",0,3.142 );
 
@@ -1057,7 +1057,7 @@ void HistoProducerMC()
     SelectionTrackRange.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionTrackRange.size()-1; iter++ )
     {
-        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-) );
+        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
 //     LegendMC->Draw();
