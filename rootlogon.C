@@ -28,7 +28,7 @@ void rootlogon()
     gStyle->SetLabelSize(tsize,"z");
     gStyle->SetTitleSize(tsize,"z");
 
-    gStyle->SetOptTitle(0);
+//     gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);
 
     int icol = 0; // WHITE

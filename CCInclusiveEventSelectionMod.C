@@ -126,6 +126,10 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     {
         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/MECmerge.root").c_str() );
     }
+    else if(GeneratorName == "MA")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/MAmerge.root").c_str() );
+    }
     else if(GeneratorName == "test")
     {
         for(unsigned int index = 1; index < 8; index++)

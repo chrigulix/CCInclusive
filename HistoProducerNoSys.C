@@ -58,8 +58,8 @@ void HistoProducerNoSys()
     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
-//     std::string FileType = "png";
-    std::string FileType = "pdf";
+    std::string FileType = "png";
+//     std::string FileType = "pdf";
     
     std::vector<TChain*> ChainVec;
 
@@ -70,7 +70,7 @@ void HistoProducerNoSys()
 
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1);
-    ScalingFactors.push_back(1.28711);
+    ScalingFactors.push_back(1.2300);
     ScalingFactors.push_back(1);
 
     // Binning
@@ -139,15 +139,25 @@ void HistoProducerNoSys()
     DataLabel.push_back("On-Beam BNB");
     DataLabel.push_back("Off-Beam BNB ext");
 
-    TLegend* LegendMC = new TLegend(0.6,0.72,0.9,0.9);
-//     LegendMC->SetHeader("Data Type");
+    TLegend* LegendMC = new TLegend(0.55,0.6,0.85,0.85);
+    LegendMC->SetLineStyle ( 0 );
+    LegendMC->SetLineColorAlpha ( 0,0 );
+    LegendMC->SetFillStyle ( 0 );
+    LegendMC->SetMargin ( 0.2 );
+    LegendMC->SetTextFont ( 42 );
+//     LegendMC->SetTextSize ( 30 );
 
     MCLabel.push_back("On-Beam Minus Off-Beam Sample");
-    MCLabel.push_back("Selection on MC BNB+Cosmic with Stat. Error");
+    MCLabel.push_back("Selection MC BNB+Cosmic & Stat. Unc.");
 //     MCLabel.push_back("MC BNB+Cosmic Sys. Error");
 
     TLegend* FlashLabel = new TLegend(0.7,0.7,0.9,0.9);
-//     FlashLabel->SetHeader("Generator Type");
+    FlashLabel->SetLineStyle ( 0 );
+    FlashLabel->SetLineColorAlpha ( 0,0 );
+    FlashLabel->SetFillStyle ( 0 );
+    FlashLabel->SetMargin ( 0.2 );
+    FlashLabel->SetTextFont ( 42 );
+//     FlashLabel->SetTextSize ( 30 );
 
     GenLabel.push_back("Data On-Beam BNB");
     GenLabel.push_back("Data Off-Beam BNBEXT");
@@ -183,72 +193,72 @@ void HistoProducerNoSys()
         SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",NumberOfBins,0,1036.8));
         SelectionTrackRange.back()->SetStats(0);
         SelectionTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
-        SelectionTrackRange.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
+        SelectionTrackRange.back()->GetYaxis()->SetTitle("# Events");
 
         SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle of Selected Track",NumberOfBins,0,3.142));
         SelectionTheta.back()->SetStats(0);
         SelectionTheta.back()->GetXaxis()->SetTitle("#theta [rad]");
-        SelectionTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
+        SelectionTheta.back()->GetYaxis()->SetTitle("# Events");
         SelectionTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1));
         SelectionCosTheta.back()->SetStats(0);
         SelectionCosTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
-        SelectionCosTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
+        SelectionCosTheta.back()->GetYaxis()->SetTitle("# Events");
         SelectionCosTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142));
         SelectionPhi.back()->SetStats(0);
         SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
-        SelectionPhi.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
+        SelectionPhi.back()->GetYaxis()->SetTitle("# Events");
         SelectionPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3));
         SelectionEnergy.back()->SetStats(0);
         SelectionEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
-        SelectionEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
+        SelectionEnergy.back()->GetYaxis()->SetTitle("# Events");
         SelectionEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
         
         SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3));
         SelectionMomentum.back()->SetStats(0);
         SelectionMomentum.back()->GetXaxis()->SetTitle("Muon Momentum [GeV/c]");
-        SelectionMomentum.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dp}");
+        SelectionMomentum.back()->GetYaxis()->SetTitle("# Events");
         SelectionMomentum.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",NumberOfBins,0,256));
         SelXTrackStartEnd.back()->SetStats(0);
         SelXTrackStartEnd.back()->GetXaxis()->SetTitle("x [cm]");
-        SelXTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
+        SelXTrackStartEnd.back()->GetYaxis()->SetTitle("# Events");
         SelXTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",NumberOfBins,-233/2,233/2));
         SelYTrackStartEnd.back()->SetStats(0);
         SelYTrackStartEnd.back()->GetXaxis()->SetTitle("y [cm]");
-        SelYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
+        SelYTrackStartEnd.back()->GetYaxis()->SetTitle("# Events");
         SelYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8));
         SelZTrackStartEnd.back()->SetStats(0);
         SelZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
-        SelZTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
+        SelZTrackStartEnd.back()->GetYaxis()->SetTitle("# Events");
         SelZTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",NumberOfBins,0,256));
         SelXVtxPosition.back()->SetStats(0);
         SelXVtxPosition.back()->GetXaxis()->SetTitle("x [cm]");
-        SelXVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
+        SelXVtxPosition.back()->GetYaxis()->SetTitle("# Events");
         SelXVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",NumberOfBins,-233/2,233/2));
         SelYVtxPosition.back()->SetStats(0);
         SelYVtxPosition.back()->GetXaxis()->SetTitle("y [cm]");
-        SelYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
+        SelYVtxPosition.back()->GetYaxis()->SetTitle("# Events");
         SelYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8));
         SelZVtxPosition.back()->SetStats(0);
         SelZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
-        SelZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
+        SelZVtxPosition.back()->GetYaxis()->SetTitle("# Events");
         SelZVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         PhiVsTheta.push_back(new TH2F(("PhiVsTheta"+Label).c_str(),"Phi Vs. Theta",NumberOf2DBins,-3.142,3.142,NumberOf2DBins,0,3.142));
@@ -739,35 +749,6 @@ void HistoProducerNoSys()
     
     std::cout << SelectionTrackRange.at(2)->Integral() << " " << BgrTrackRange.at(4)->Integral() << std::endl;
 
-    for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
-    {
-        BgrTrackRange.at(bgrhist_no)->Scale(1/SelectionTrackRange.at(2)->Integral());
-        BgrTheta.at(bgrhist_no)->Scale(1/SelectionTheta.at(2)->Integral());
-        BgrCosTheta.at(bgrhist_no)->Scale(1/SelectionCosTheta.at(2)->Integral());
-        BgrPhi.at(bgrhist_no)->Scale(1/SelectionPhi.at(2)->Integral());
-        BgrEnergy.at(bgrhist_no)->Scale(1/SelectionEnergy.at(2)->Integral());
-        BgrMomentum.at(bgrhist_no)->Scale(1/SelectionMomentum.at(2)->Integral());
-        BgrXTrackStartEnd.at(bgrhist_no)->Scale(1/SelXTrackStartEnd.at(2)->Integral());
-        BgrYTrackStartEnd.at(bgrhist_no)->Scale(1/SelYTrackStartEnd.at(2)->Integral());
-        BgrZTrackStartEnd.at(bgrhist_no)->Scale(1/SelZTrackStartEnd.at(2)->Integral());
-        BgrXVtxPosition.at(bgrhist_no)->Scale(1/SelXVtxPosition.at(2)->Integral());
-        BgrYVtxPosition.at(bgrhist_no)->Scale(1/SelYVtxPosition.at(2)->Integral());
-        BgrZVtxPosition.at(bgrhist_no)->Scale(1/SelZVtxPosition.at(2)->Integral());
-
-        StackBgrTrackRange->Add(BgrTrackRange.at(bgrhist_no));
-        StackBgrTheta->Add(BgrTheta.at(bgrhist_no));
-        StackBgrCosTheta->Add(BgrCosTheta.at(bgrhist_no));
-        StackBgrPhi->Add(BgrPhi.at(bgrhist_no));
-        StackBgrEnergy->Add(BgrEnergy.at(bgrhist_no));
-        StackBgrMomentum->Add(BgrMomentum.at(bgrhist_no));
-        StackBgrXTrackStartEnd->Add(BgrXTrackStartEnd.at(bgrhist_no));
-        StackBgrYTrackStartEnd->Add(BgrYTrackStartEnd.at(bgrhist_no));
-        StackBgrZTrackStartEnd->Add(BgrZTrackStartEnd.at(bgrhist_no));
-        StackBgrXVtxPosition->Add(BgrXVtxPosition.at(bgrhist_no));
-        StackBgrYVtxPosition->Add(BgrYVtxPosition.at(bgrhist_no));
-        StackBgrZVtxPosition->Add(BgrZVtxPosition.at(bgrhist_no));
-    }
-
     for(unsigned int file_no = 0; file_no < ScalingFactors.size(); file_no++)
     {
         SelectionTrackRange.at(file_no)->Sumw2();
@@ -963,6 +944,52 @@ void HistoProducerNoSys()
     AddFirstTwoHistograms2D(ZPosVsYPos,-1);
     AddFirstTwoHistograms2D(RangeVsYPos,-1);
     AddFirstTwoHistograms2D(PhiVsFlashTrackDist,-1);
+    
+    for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
+    {
+        BgrTrackRange.at(bgrhist_no)->Scale(SelectionTrackRange.at(0)->Integral()/SelectionTrackRange.at(1)->Integral());
+        BgrTheta.at(bgrhist_no)->Scale(SelectionTheta.at(0)->Integral()/SelectionTheta.at(1)->Integral());
+        BgrCosTheta.at(bgrhist_no)->Scale(SelectionCosTheta.at(0)->Integral()/SelectionCosTheta.at(1)->Integral());
+        BgrPhi.at(bgrhist_no)->Scale(SelectionPhi.at(0)->Integral()/SelectionPhi.at(1)->Integral());
+        BgrEnergy.at(bgrhist_no)->Scale(SelectionEnergy.at(0)->Integral()/SelectionEnergy.at(1)->Integral());
+        BgrMomentum.at(bgrhist_no)->Scale(SelectionMomentum.at(0)->Integral()/SelectionMomentum.at(1)->Integral());
+        BgrXTrackStartEnd.at(bgrhist_no)->Scale(SelXTrackStartEnd.at(0)->Integral()/SelXTrackStartEnd.at(1)->Integral());
+        BgrYTrackStartEnd.at(bgrhist_no)->Scale(SelYTrackStartEnd.at(0)->Integral()/SelYTrackStartEnd.at(1)->Integral());
+        BgrZTrackStartEnd.at(bgrhist_no)->Scale(SelZTrackStartEnd.at(0)->Integral()/SelZTrackStartEnd.at(1)->Integral());
+        BgrXVtxPosition.at(bgrhist_no)->Scale(SelXVtxPosition.at(0)->Integral()/SelXVtxPosition.at(1)->Integral());
+        BgrYVtxPosition.at(bgrhist_no)->Scale(SelYVtxPosition.at(0)->Integral()/SelYVtxPosition.at(1)->Integral());
+        BgrZVtxPosition.at(bgrhist_no)->Scale(SelZVtxPosition.at(0)->Integral()/SelZVtxPosition.at(1)->Integral());
+
+        StackBgrTrackRange->Add(BgrTrackRange.at(bgrhist_no));
+        StackBgrTheta->Add(BgrTheta.at(bgrhist_no));
+        StackBgrCosTheta->Add(BgrCosTheta.at(bgrhist_no));
+        StackBgrPhi->Add(BgrPhi.at(bgrhist_no));
+        StackBgrEnergy->Add(BgrEnergy.at(bgrhist_no));
+        StackBgrMomentum->Add(BgrMomentum.at(bgrhist_no));
+        StackBgrXTrackStartEnd->Add(BgrXTrackStartEnd.at(bgrhist_no));
+        StackBgrYTrackStartEnd->Add(BgrYTrackStartEnd.at(bgrhist_no));
+        StackBgrZTrackStartEnd->Add(BgrZTrackStartEnd.at(bgrhist_no));
+        StackBgrXVtxPosition->Add(BgrXVtxPosition.at(bgrhist_no));
+        StackBgrYVtxPosition->Add(BgrYVtxPosition.at(bgrhist_no));
+        StackBgrZVtxPosition->Add(BgrZVtxPosition.at(bgrhist_no));
+    }
+    
+    
+    SelectionTrackRange.at(1)->Scale(SelectionTrackRange.at(0)->Integral()/SelectionTrackRange.at(1)->Integral());
+    SelectionTheta.at(1)->Scale(SelectionTheta.at(0)->Integral()/SelectionTheta.at(1)->Integral());
+    SelectionCosTheta.at(1)->Scale(SelectionCosTheta.at(0)->Integral()/SelectionCosTheta.at(1)->Integral());
+    SelectionPhi.at(1)->Scale(SelectionPhi.at(0)->Integral()/SelectionPhi.at(1)->Integral());
+    SelectionEnergy.at(1)->Scale(SelectionEnergy.at(0)->Integral()/SelectionEnergy.at(1)->Integral());
+    SelectionMomentum.at(1)->Scale(SelectionMomentum.at(0)->Integral()/SelectionMomentum.at(1)->Integral());
+     
+    SelXTrackStartEnd.at(1)->Scale(SelXTrackStartEnd.at(0)->Integral()/SelXTrackStartEnd.at(1)->Integral());
+    SelYTrackStartEnd.at(1)->Scale(SelYTrackStartEnd.at(0)->Integral()/SelYTrackStartEnd.at(1)->Integral());
+    SelZTrackStartEnd.at(1)->Scale(SelZTrackStartEnd.at(0)->Integral()/SelZTrackStartEnd.at(1)->Integral());
+    SelXVtxPosition.at(1)->Scale(SelXVtxPosition.at(0)->Integral()/SelXVtxPosition.at(1)->Integral());
+    SelYVtxPosition.at(1)->Scale(SelYVtxPosition.at(0)->Integral()/SelYVtxPosition.at(1)->Integral());
+    SelZVtxPosition.at(1)->Scale(SelZVtxPosition.at(0)->Integral()/SelZVtxPosition.at(1)->Integral());
+    
+    
 
     std::cout << "Theta KS significance: " << SelectionTheta.at(1)->KolmogorovTest(SelectionTheta.at(0)) << std::endl;
     std::cout << "Phi KS significance: " << SelectionPhi.at(1)->KolmogorovTest(SelectionPhi.at(0)) << std::endl;
@@ -976,27 +1003,27 @@ void HistoProducerNoSys()
 
     TCanvas *Canvas11 = new TCanvas("OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000);
     Canvas11->cd();
-    SelectionTrackRange.at(1)->SetMaximum(1.4*SelectionTrackRange.at(1)->GetBinContent(SelectionTrackRange.at(1)->GetMaximumBin()));
+    SelectionTrackRange.at(1)->SetMaximum(1.2*SelectionTrackRange.at(1)->GetBinContent(SelectionTrackRange.at(1)->GetMaximumBin()));
     SelectionTrackRange.at(1)->SetMinimum(0.0);
     SelectionTrackRange.at(1)->SetFillColor(46);
-    SelectionTrackRange.at(1)->DrawNormalized("E2");
+    SelectionTrackRange.at(1)->Draw("E2");
     StackBgrTrackRange->Draw("SAME");
     SelectionTrackRange.at(0)->SetLineWidth(2);
     SelectionTrackRange.at(0)->SetLineColor(1);
-    SelectionTrackRange.at(0)->DrawNormalized("SAME");
+    SelectionTrackRange.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas11->SaveAs(("On-OffBeamSelRange"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas12 = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
     Canvas12->cd();
-    SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
+    SelectionTheta.at(1)->SetMaximum(1.2*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
     SelectionTheta.at(1)->SetMinimum(0.0);
     SelectionTheta.at(1)->SetFillColor(46);
-    SelectionTheta.at(1)->DrawNormalized("E2");
+    SelectionTheta.at(1)->Draw("E2");
     StackBgrTheta->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
-    SelectionTheta.at(0)->DrawNormalized("SAME");
+    SelectionTheta.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas12->SaveAs(("On-OffBeamSelTheta"+SelectionLabel+"."+FileType).c_str());
 
@@ -1020,41 +1047,51 @@ void HistoProducerNoSys()
 
     TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Theta-Angle Omega", "OnBeam Minus OffBeam Theta-Angle Omega", 1400, 1000);
     Canvas12a->cd();
-    SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
+    SelectionTheta.at(1)->SetMaximum(1.2*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
     SelectionTheta.at(1)->SetMinimum(0.0);
     SelectionTheta.at(1)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
     SelectionTheta.at(1)->SetFillColor(46);
-    SelectionTheta.at(1)->DrawNormalized("E2");
+    SelectionTheta.at(1)->Draw("E2");
     StackBgrTheta->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
-    SelectionTheta.at(0)->DrawNormalized("SAME");
+    SelectionTheta.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas12a->SaveAs(("On-OffBeamSelThetaOmega"+SelectionLabel+"."+FileType).c_str());
 
+    LegendMC->SetX1NDC(0.15);
+    LegendMC->SetY1NDC(0.6);
+    LegendMC->SetX2NDC(0.45);
+    LegendMC->SetY2NDC(0.85);
+
     TCanvas *Canvas12b = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
     Canvas12b->cd();
-    SelectionCosTheta.at(1)->SetMaximum(1.5*SelectionCosTheta.at(1)->GetBinContent(SelectionCosTheta.at(1)->GetMaximumBin()));
+    SelectionCosTheta.at(1)->SetMaximum(1.2*SelectionCosTheta.at(1)->GetBinContent(SelectionCosTheta.at(1)->GetMaximumBin()));
     SelectionCosTheta.at(1)->SetMinimum(0.0);
     SelectionCosTheta.at(1)->SetFillColor(46);
-    SelectionCosTheta.at(1)->DrawNormalized("E2");
+    SelectionCosTheta.at(1)->Draw("E2");
     StackBgrCosTheta->Draw("SAME");
     SelectionCosTheta.at(0)->SetLineWidth(2);
     SelectionCosTheta.at(0)->SetLineColor(1);
-    SelectionCosTheta.at(0)->DrawNormalized("SAME");
+    SelectionCosTheta.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas12b->SaveAs(("On-OffBeamSelCosTheta"+SelectionLabel+"."+FileType).c_str());
 
+    LegendMC->SetX1NDC(0.55);
+    LegendMC->SetY1NDC(0.6);
+    LegendMC->SetX2NDC(0.85);
+    LegendMC->SetY2NDC(0.85);
+    
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
-    SelectionPhi.at(1)->SetMaximum(1.9*SelectionPhi.at(1)->GetBinContent(SelectionPhi.at(1)->GetMaximumBin()));
+    SelectionPhi.at(1)->SetMaximum(2.2*SelectionPhi.at(1)->GetBinContent(SelectionPhi.at(1)->GetMaximumBin()));
     SelectionPhi.at(1)->SetMinimum(0.0);
     SelectionPhi.at(1)->SetFillColor(46);
-    SelectionPhi.at(1)->DrawNormalized("E2");
+    SelectionPhi.at(1)->Draw("E2");
     StackBgrPhi->Draw("SAME");
     SelectionPhi.at(0)->SetLineWidth(2);
     SelectionPhi.at(0)->SetLineColor(1);
-    SelectionPhi.at(0)->DrawNormalized("SAME");
+    SelectionPhi.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas13->SaveAs(("On-OffBeamSelPhi"+SelectionLabel+"."+FileType).c_str());
 
@@ -1063,11 +1100,11 @@ void HistoProducerNoSys()
     SelectionEnergy.at(1)->SetMaximum(1.2*SelectionEnergy.at(1)->GetBinContent(SelectionEnergy.at(1)->GetMaximumBin()));
     SelectionEnergy.at(1)->SetMinimum(0.0);
     SelectionEnergy.at(1)->SetFillColor(46);
-    SelectionEnergy.at(1)->DrawNormalized("E2");
+    SelectionEnergy.at(1)->Draw("E2");
     StackBgrEnergy->Draw("SAME");
     SelectionEnergy.at(0)->SetLineWidth(2);
     SelectionEnergy.at(0)->SetLineColor(1);
-    SelectionEnergy.at(0)->DrawNormalized("SAME");
+    SelectionEnergy.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas14->SaveAs(("On-OffBeamSelEnergy"+SelectionLabel+"."+FileType).c_str());
     
@@ -1076,11 +1113,11 @@ void HistoProducerNoSys()
     SelectionMomentum.at(1)->SetMaximum(1.2*SelectionMomentum.at(1)->GetBinContent(SelectionMomentum.at(1)->GetMaximumBin()));
     SelectionMomentum.at(1)->SetMinimum(0.0);
     SelectionMomentum.at(1)->SetFillColor(46);
-    SelectionMomentum.at(1)->DrawNormalized("E2");
+    SelectionMomentum.at(1)->Draw("E2");
     StackBgrMomentum->Draw("SAME");
     SelectionMomentum.at(0)->SetLineWidth(2);
     SelectionMomentum.at(0)->SetLineColor(1);
-    SelectionMomentum.at(0)->DrawNormalized("SAME");
+    SelectionMomentum.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas14a->SaveAs(("On-OffBeamSelMomentum"+SelectionLabel+"."+FileType).c_str());
 
@@ -1089,11 +1126,11 @@ void HistoProducerNoSys()
     SelXTrackStartEnd.at(1)->SetMaximum(1.7*SelXTrackStartEnd.at(1)->GetBinContent(SelXTrackStartEnd.at(1)->GetMaximumBin()));
     SelXTrackStartEnd.at(1)->SetMinimum(0.0);
     SelXTrackStartEnd.at(1)->SetFillColor(46);
-    SelXTrackStartEnd.at(1)->DrawNormalized("E2");
+    SelXTrackStartEnd.at(1)->Draw("E2");
     StackBgrXTrackStartEnd->Draw("SAME");
     SelXTrackStartEnd.at(0)->SetLineWidth(2);
     SelXTrackStartEnd.at(0)->SetLineColor(1);
-    SelXTrackStartEnd.at(0)->DrawNormalized("SAME");
+    SelXTrackStartEnd.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas15->SaveAs(("On-OffBeamSelXTrack"+SelectionLabel+"."+FileType).c_str());
 
@@ -1102,11 +1139,11 @@ void HistoProducerNoSys()
     SelYTrackStartEnd.at(1)->SetMaximum(1.7*SelYTrackStartEnd.at(1)->GetBinContent(SelYTrackStartEnd.at(1)->GetMaximumBin()));
     SelYTrackStartEnd.at(1)->SetMinimum(0.0);
     SelYTrackStartEnd.at(1)->SetFillColor(46);
-    SelYTrackStartEnd.at(1)->DrawNormalized("E2");
+    SelYTrackStartEnd.at(1)->Draw("E2");
     StackBgrYTrackStartEnd->Draw("SAME");
     SelYTrackStartEnd.at(0)->SetLineWidth(2);
     SelYTrackStartEnd.at(0)->SetLineColor(1);
-    SelYTrackStartEnd.at(0)->DrawNormalized("SAME");
+    SelYTrackStartEnd.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas16->SaveAs(("On-OffBeamSelYTrack"+SelectionLabel+"."+FileType).c_str());
 
@@ -1115,11 +1152,11 @@ void HistoProducerNoSys()
     SelZTrackStartEnd.at(1)->SetMaximum(1.5*SelZTrackStartEnd.at(1)->GetBinContent(SelZTrackStartEnd.at(1)->GetMaximumBin()));
     SelZTrackStartEnd.at(1)->SetMinimum(0.0);
     SelZTrackStartEnd.at(1)->SetFillColor(46);
-    SelZTrackStartEnd.at(1)->DrawNormalized("E2");
+    SelZTrackStartEnd.at(1)->Draw("E2");
     StackBgrZTrackStartEnd->Draw("SAME");
     SelZTrackStartEnd.at(0)->SetLineWidth(2);
     SelZTrackStartEnd.at(0)->SetLineColor(1);
-    SelZTrackStartEnd.at(0)->DrawNormalized("SAME");
+    SelZTrackStartEnd.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas17->SaveAs(("On-OffBeamSelZTrack"+SelectionLabel+"."+FileType).c_str());
 
@@ -1128,11 +1165,11 @@ void HistoProducerNoSys()
     SelXVtxPosition.at(1)->SetMaximum(1.7*SelXVtxPosition.at(1)->GetBinContent(SelXVtxPosition.at(1)->GetMaximumBin()));
     SelXVtxPosition.at(1)->SetMinimum(0.0);
     SelXVtxPosition.at(1)->SetFillColor(46);
-    SelXVtxPosition.at(1)->DrawNormalized("E2");
+    SelXVtxPosition.at(1)->Draw("E2");
     StackBgrXVtxPosition->Draw("SAME");
     SelXVtxPosition.at(0)->SetLineWidth(2);
     SelXVtxPosition.at(0)->SetLineColor(1);
-    SelXVtxPosition.at(0)->DrawNormalized("SAME");
+    SelXVtxPosition.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas18->SaveAs(("On-OffBeamSelXVertex"+SelectionLabel+"."+FileType).c_str());
 
@@ -1141,11 +1178,11 @@ void HistoProducerNoSys()
     SelYVtxPosition.at(1)->SetMaximum(1.7*SelYVtxPosition.at(1)->GetBinContent(SelYVtxPosition.at(1)->GetMaximumBin()));
     SelYVtxPosition.at(1)->SetMinimum(0.0);
     SelYVtxPosition.at(1)->SetFillColor(46);
-    SelYVtxPosition.at(1)->DrawNormalized("E2");
+    SelYVtxPosition.at(1)->Draw("E2");
     StackBgrYVtxPosition->Draw("SAME");
     SelYVtxPosition.at(0)->SetLineWidth(2);
     SelYVtxPosition.at(0)->SetLineColor(1);
-    SelYVtxPosition.at(0)->DrawNormalized("SAME");
+    SelYVtxPosition.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas19->SaveAs(("On-OffBeamSelYVertex"+SelectionLabel+"."+FileType).c_str());
 
@@ -1154,11 +1191,11 @@ void HistoProducerNoSys()
     SelZVtxPosition.at(1)->SetMaximum(1.7*SelZVtxPosition.at(1)->GetBinContent(SelZVtxPosition.at(1)->GetMaximumBin()));
     SelZVtxPosition.at(1)->SetMinimum(0.0);
     SelZVtxPosition.at(1)->SetFillColor(46);
-    SelZVtxPosition.at(1)->DrawNormalized("E2");
+    SelZVtxPosition.at(1)->Draw("E2");
     StackBgrZVtxPosition->Draw("SAME");
     SelZVtxPosition.at(0)->SetLineWidth(2);
     SelZVtxPosition.at(0)->SetLineColor(1);
-    SelZVtxPosition.at(0)->DrawNormalized("SAME");
+    SelZVtxPosition.at(0)->Draw("SAME");
     LegendMC->Draw();
     Canvas20->SaveAs(("On-OffBeamSelZVertex"+SelectionLabel+"."+FileType).c_str());
 

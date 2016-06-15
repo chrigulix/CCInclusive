@@ -70,7 +70,7 @@ void HistoProducerNoSysCuts()
 
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1);
-    ScalingFactors.push_back(1.28711);
+    ScalingFactors.push_back(1.2300);
     ScalingFactors.push_back(1);
 
     // Binning
@@ -547,7 +547,8 @@ void HistoProducerNoSysCuts()
 //                     ZTrackStart[TrkID] < (1036.8-ZFVCutValue) && ZTrackStart[TrkID] > ZFVCutValue && ZTrackEnd[TrkID] < (1036.8-ZFVCutValue) && ZTrackEnd[TrkID] > ZFVCutValue &&
 //                     FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut )
 //             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID]))
-            if(!(Run < 5750 && Run > 5650) || file_no > 1)
+//             if(!(Run < 5750 && Run > 5650) || file_no > 1)
+            if( (TrackPhi[TrkID] < TMath::Pi()/4. && TrackPhi[TrkID] > -TMath::Pi()/4.) || TrackPhi[TrkID] < -TMath::Pi()*3/4. || TrackPhi[TrkID] > TMath::Pi()*3/4. )
 //             if(true)
             {
                 if(file_no == 0)
@@ -750,7 +751,7 @@ void HistoProducerNoSysCuts()
 
     DataToLookAt.close();
     
-    ScalingFactors.at(1) *= OnBeamFactor/OffBeamFactor;
+//     ScalingFactors.at(1) *= OnBeamFactor/OffBeamFactor;
     
     std::cout << SelectionTrackRange.at(2)->Integral() << " " << BgrTrackRange.at(4)->Integral() << std::endl;
 

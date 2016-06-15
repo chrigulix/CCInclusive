@@ -61,8 +61,8 @@ void HistoProducerMC()
     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
 
-//     std::string FileType = "png";
-    std::string FileType = "pdf";
+    std::string FileType = "png";
+//     std::string FileType = "pdf";
 
     std::vector<TChain*> ChainVec;
 
@@ -71,6 +71,7 @@ void HistoProducerMC()
     std::vector<std::string> GenLabel;
     std::vector<std::string> IntLabel;
     std::vector<std::string> EffIntLabel;
+    std::vector<std::string> IntTrueLabel;
 
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back ( 1 );
@@ -112,8 +113,6 @@ void HistoProducerMC()
     std::vector<TEfficiency*> EffYVtxPosition;
     std::vector<TEfficiency*> EffZVtxPosition;
     
-    std::vector<int> ColorVec = {3,4,5};
-
     TF1* SinTheta = new TF1 ( "const","sin(x)",0,3.142 );
 
     TLegend* LegendEfficiency = new TLegend ( 0.15,0.7,0.45,0.85 );
@@ -139,7 +138,7 @@ void HistoProducerMC()
     MCLabel.push_back ( "True Contained Tracks" );
     MCLabel.push_back ( "Selection on MC BNB+Cosmic with Stat. Error" );
 
-    TLegend* LegendInt = new TLegend ( 0.6,0.69,0.89,0.89 );
+    TLegend* LegendInt = new TLegend ( 0.15,0.65,0.5,0.85 );
     LegendInt->SetLineColorAlpha ( 0,0 );
     LegendInt->SetLineStyle ( 0 );
     LegendInt->SetFillStyle ( 0 );
@@ -147,11 +146,23 @@ void HistoProducerMC()
     LegendInt->SetTextFont ( 43 );
     LegendInt->SetTextSize ( 30 );
 
-    IntLabel.push_back ( "QE Intercations" );
-    IntLabel.push_back ( "RES Interactions" );
-    IntLabel.push_back ( "DIS Interactions" );
+    IntLabel.push_back ( "CCQE events after selection" );
+    IntLabel.push_back ( "CCRES events after selection" );
+    IntLabel.push_back ( "CCDIS events after selection" );
+    
+    TLegend* LegendIntTrue = new TLegend ( 0.15,0.65,0.5,0.85 );
+    LegendIntTrue->SetLineColorAlpha ( 0,0 );
+    LegendIntTrue->SetLineStyle ( 0 );
+    LegendIntTrue->SetFillStyle ( 0 );
+    LegendIntTrue->SetMargin ( 0.2 );
+    LegendIntTrue->SetTextFont ( 43 );
+    LegendIntTrue->SetTextSize ( 30 );
 
-    TLegend* LegendEffInt = new TLegend ( 0.65,0.65,0.85,0.85 );
+    IntTrueLabel.push_back ( "CCQE events before selection" );
+    IntTrueLabel.push_back ( "CCRES events before selection" );
+    IntTrueLabel.push_back ( "CCDIS events before selection" );
+
+    TLegend* LegendEffInt = new TLegend ( 0.15,0.65,0.35,0.85 );
     LegendEffInt->SetLineColorAlpha ( 0,0 );
     LegendEffInt->SetLineStyle ( 0 );
     LegendEffInt->SetFillStyle ( 0 );
@@ -159,9 +170,9 @@ void HistoProducerMC()
     LegendEffInt->SetTextFont ( 43 );
     LegendEffInt->SetTextSize ( 30 );
 
-    EffIntLabel.push_back ( "QE Efficiency" );
-    EffIntLabel.push_back ( "RES Efficiency" );
-    EffIntLabel.push_back ( "DIS Efficiency" );
+    EffIntLabel.push_back ( "CCQE Efficiency" );
+    EffIntLabel.push_back ( "CCRES Efficiency" );
+    EffIntLabel.push_back ( "CCDIS Efficiency" );
 //     EffIntLabel.push_back ( "QE Contained Eff." );
 //     EffIntLabel.push_back ( "RES Contained Eff." );
 //     EffIntLabel.push_back ( "DIS Contained Eff." );
@@ -186,7 +197,7 @@ void HistoProducerMC()
 
     std::vector<TSpline5> SystematicErrors = Systematics();
 
-    std::vector<unsigned int> ColorMap = {28,42,30,38};
+    std::vector<unsigned int> ColorMap = {46,42,30};
 
     ChainVec.push_back ( new TChain ( "anatree" ) );
     ChainVec.back() -> Add ( "/lheppc46/data/uBData/anatrees/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root" );
@@ -210,7 +221,7 @@ void HistoProducerMC()
         SelectionCosTheta.push_back ( new TH1F ( ( "cos#theta-Angle"+Label ).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1 ) );
         SelectionCosTheta.back()->SetStats ( 0 );
         SelectionCosTheta.back()->GetXaxis()->SetTitle ( "cos#theta [ ]" );
-        SelectionCosTheta.back()->GetYaxis()->SetTitle ( "# Events}" );
+        SelectionCosTheta.back()->GetYaxis()->SetTitle ( "# Events" );
         SelectionCosTheta.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionPhi.push_back ( new TH1F ( ( "#phi-Angle"+Label ).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142 ) );
@@ -746,20 +757,20 @@ void HistoProducerMC()
     
     for ( unsigned int eff_no = 0; eff_no < EffIntLabel.size(); eff_no++ )
     {
-        EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 9+eff_no ),*SelectionTrackRange.at ( 2+eff_no ) ) );
-        EffEnergy.push_back ( new TEfficiency ( *SelectionEnergy.at ( 9+eff_no ),*SelectionEnergy.at ( 2+eff_no ) ) );
-        EffMomentum.push_back ( new TEfficiency ( *SelectionMomentum.at ( 9+eff_no ),*SelectionMomentum.at ( 2+eff_no ) ) );
-        EffTheta.push_back ( new TEfficiency ( *SelectionTheta.at ( 9+eff_no ),*SelectionTheta.at ( 2+eff_no ) ) );
-        EffCosTheta.push_back ( new TEfficiency ( *SelectionCosTheta.at ( 9+eff_no ),*SelectionCosTheta.at ( 2+eff_no ) ) );
-        EffPhi.push_back ( new TEfficiency ( *SelectionPhi.at ( 9+eff_no ),*SelectionPhi.at ( 2+eff_no ) ) );
+        EffTrackRange.push_back ( new TEfficiency ( *SelectionTrackRange.at ( 9+eff_no ),*SelectionTrackRange.at ( 3+eff_no ) ) );
+        EffEnergy.push_back ( new TEfficiency ( *SelectionEnergy.at ( 9+eff_no ),*SelectionEnergy.at ( 3+eff_no ) ) );
+        EffMomentum.push_back ( new TEfficiency ( *SelectionMomentum.at ( 9+eff_no ),*SelectionMomentum.at ( 3+eff_no ) ) );
+        EffTheta.push_back ( new TEfficiency ( *SelectionTheta.at ( 9+eff_no ),*SelectionTheta.at ( 3+eff_no ) ) );
+        EffCosTheta.push_back ( new TEfficiency ( *SelectionCosTheta.at ( 9+eff_no ),*SelectionCosTheta.at ( 3+eff_no ) ) );
+        EffPhi.push_back ( new TEfficiency ( *SelectionPhi.at ( 9+eff_no ),*SelectionPhi.at ( 3+eff_no ) ) );
 
-        EffXTrackStartEnd.push_back ( new TEfficiency ( *SelXTrackStartEnd.at ( 9+eff_no ),*SelXTrackStartEnd.at ( 2+eff_no ) ) );
-        EffYTrackStartEnd.push_back ( new TEfficiency ( *SelYTrackStartEnd.at ( 9+eff_no ),*SelYTrackStartEnd.at ( 2+eff_no ) ) );
-        EffZTrackStartEnd.push_back ( new TEfficiency ( *SelZTrackStartEnd.at ( 9+eff_no ),*SelZTrackStartEnd.at ( 2+eff_no ) ) );
+        EffXTrackStartEnd.push_back ( new TEfficiency ( *SelXTrackStartEnd.at ( 9+eff_no ),*SelXTrackStartEnd.at ( 3+eff_no ) ) );
+        EffYTrackStartEnd.push_back ( new TEfficiency ( *SelYTrackStartEnd.at ( 9+eff_no ),*SelYTrackStartEnd.at ( 3+eff_no ) ) );
+        EffZTrackStartEnd.push_back ( new TEfficiency ( *SelZTrackStartEnd.at ( 9+eff_no ),*SelZTrackStartEnd.at ( 3+eff_no ) ) );
 
-        EffXVtxPosition.push_back ( new TEfficiency ( *SelXVtxPosition.at ( 9+eff_no ),*SelXVtxPosition.at ( 2+eff_no ) ) );
-        EffYVtxPosition.push_back ( new TEfficiency ( *SelYVtxPosition.at ( 9+eff_no ),*SelYVtxPosition.at ( 2+eff_no ) ) );
-        EffZVtxPosition.push_back ( new TEfficiency ( *SelZVtxPosition.at ( 9+eff_no ),*SelZVtxPosition.at ( 2+eff_no ) ) );
+        EffXVtxPosition.push_back ( new TEfficiency ( *SelXVtxPosition.at ( 9+eff_no ),*SelXVtxPosition.at ( 3+eff_no ) ) );
+        EffYVtxPosition.push_back ( new TEfficiency ( *SelYVtxPosition.at ( 9+eff_no ),*SelYVtxPosition.at ( 3+eff_no ) ) );
+        EffZVtxPosition.push_back ( new TEfficiency ( *SelZVtxPosition.at ( 9+eff_no ),*SelZVtxPosition.at ( 3+eff_no ) ) );
     }
     
     LegendEffInt->AddEntry ( EffTrackRange.at ( 2 ), ( EffIntLabel.at ( 0 ) ).c_str(),"lep" );
@@ -782,7 +793,7 @@ void HistoProducerMC()
     MGTrackRange->GetXaxis()->SetTitle("Track Range [cm]");
     MGTrackRange->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEfficiency->Draw();
-    Canvas1->SaveAs ( ( "EffMCRange"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas1->SaveAs ( ( "EffMCRange"+SelectionLabel+"."+FileType ).c_str() );
     
     TCanvas *Canvas1Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Track Range", "Interaction Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
     TMultiGraph *MGTrackRangeInt = new TMultiGraph();
@@ -800,7 +811,7 @@ void HistoProducerMC()
     MGTrackRangeInt->GetXaxis()->SetTitle("Track Range [cm]");
     MGTrackRangeInt->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEffInt->Draw();
-    Canvas1Int->SaveAs ( ( "EffIntMCRange"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas1Int->SaveAs ( ( "EffIntMCRange"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Theta-Angle", "Efficiency OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
     TMultiGraph *MGTheta = new TMultiGraph();
@@ -815,7 +826,7 @@ void HistoProducerMC()
     MGTheta->GetXaxis()->SetTitle("#theta-Angle [rad]");
     MGTheta->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEfficiency->Draw();
-    Canvas2->SaveAs ( ( "EffMCTheta"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas2->SaveAs ( ( "EffMCTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2b = new TCanvas ( "Efficiency OnBeam Minus OffBeam Cos Theta-Angle", "Efficiency OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
     TMultiGraph *MGCosTheta = new TMultiGraph();
@@ -863,7 +874,7 @@ void HistoProducerMC()
     MGEnergy->GetXaxis()->SetTitle("Muon Energy [GeV]");
     MGEnergy->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEfficiency->Draw();
-    Canvas4->SaveAs ( ( "EffMCEnergy"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas4->SaveAs ( ( "EffMCEnergy"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas4a = new TCanvas ( "Efficiency Momentum", "Efficiency Momentum", 1400, 1000 );
     TMultiGraph *MGMomentum = new TMultiGraph();
@@ -879,6 +890,11 @@ void HistoProducerMC()
     MGMomentum->GetYaxis()->SetTitle("Efficiency [ ]");
     LegendEfficiency->Draw();
     Canvas4a->SaveAs ( ( "EffMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
+    
+    LegendEffInt->SetX1NDC ( 0.65 );
+    LegendEffInt->SetY1NDC ( 0.65 );
+    LegendEffInt->SetX2NDC ( 0.85 );
+    LegendEffInt->SetY2NDC ( 0.85 );
     
     TCanvas *Canvas4aInt = new TCanvas ( "Interaction Efficiency Momentum", "Interaction Efficiency Momentum", 1400, 1000 );
     TMultiGraph *MGMomentumInt = new TMultiGraph();
@@ -918,10 +934,10 @@ void HistoProducerMC()
     LegendEfficiency->Draw();
     Canvas3->SaveAs ( ( "EffMCPhi"+SelectionLabel+"."+FileType ).c_str() );
     
-    LegendEffInt->SetX1NDC ( 0.65 );
-    LegendEffInt->SetY1NDC ( 0.35 );
-    LegendEffInt->SetX2NDC ( 0.85 );
-    LegendEffInt->SetY2NDC ( 0.55 );
+    LegendEffInt->SetX1NDC ( 0.28 );
+    LegendEffInt->SetY1NDC ( 0.65 );
+    LegendEffInt->SetX2NDC ( 0.48 );
+    LegendEffInt->SetY2NDC ( 0.85 );
     
     TCanvas *Canvas3Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhiInt = new TMultiGraph();
@@ -951,7 +967,7 @@ void HistoProducerMC()
     EffXTrackStartEnd.at ( 0 )->SetLineColor ( 8 );
     EffXTrackStartEnd.at ( 0 )->Draw ( "SAME" );
     LegendEfficiency->Draw();
-    Canvas5->SaveAs ( ( "EffMCXTrack"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas5->SaveAs ( ( "EffMCXTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas6 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Y Start & End Point ", "Efficiency OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000 );
     TMultiGraph *MGYStart = new TMultiGraph();
@@ -963,7 +979,7 @@ void HistoProducerMC()
     EffYTrackStartEnd.at ( 0 )->SetLineColor ( 8 );
     EffYTrackStartEnd.at ( 0 )->Draw ( "SAME" );
     LegendEfficiency->Draw();
-    Canvas6->SaveAs ( ( "EffMCYTrack"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas6->SaveAs ( ( "EffMCYTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas7 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Z Start & End Point ", "Efficiency OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000 );
     TMultiGraph *MGZStart = new TMultiGraph();
@@ -975,7 +991,7 @@ void HistoProducerMC()
     EffZTrackStartEnd.at ( 0 )->SetLineColor ( 8 );
     EffZTrackStartEnd.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
-    Canvas7->SaveAs ( ( "EffMCZTrack"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas7->SaveAs ( ( "EffMCZTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas8 = new TCanvas ( "Efficiency OnBeam Minus OffBeam X Vertex Postion", "Efficiency OnBeam Minus OffBeam X Vertex Postion", 1400, 1000 );
     TMultiGraph *MGXVertex = new TMultiGraph();
@@ -987,7 +1003,7 @@ void HistoProducerMC()
     EffXVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffXVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
-    Canvas8->SaveAs ( ( "EffMCXVertex"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas8->SaveAs ( ( "EffMCXVertex"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas9 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Y Vertex Postion", "Efficiency OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000 );
     TMultiGraph *MGYVertex = new TMultiGraph();
@@ -999,7 +1015,7 @@ void HistoProducerMC()
     EffYVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffYVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
-    Canvas9->SaveAs ( ( "EffMCYVertex"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas9->SaveAs ( ( "EffMCYVertex"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas10 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Z Vertex Postion", "Efficiency OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000 );
     TMultiGraph *MGZVertex = new TMultiGraph();
@@ -1011,7 +1027,7 @@ void HistoProducerMC()
     EffZVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffZVtxPosition.at ( 0 )->Draw ( "SAME" );
 //     LegendMC->Draw();
-    Canvas10->SaveAs ( ( "EffMCZVertex"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas10->SaveAs ( ( "EffMCZVertex"+SelectionLabel+"."+FileType ).c_str() );
 
 
     for ( unsigned int file_no = 0; file_no < ScalingFactors.size(); file_no++ )
@@ -1037,6 +1053,15 @@ void HistoProducerMC()
 //     {
 //         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
 //     }
+    
+    LegendInt->AddEntry(SelectionTrackRange.at ( 9 ), ( IntLabel.at ( 0 ) ).c_str(),"f");
+    LegendInt->AddEntry(SelectionTrackRange.at ( 10 ), ( IntLabel.at ( 1 ) ).c_str(),"f");
+    LegendInt->AddEntry(SelectionTrackRange.at ( 11 ), ( IntLabel.at ( 2 ) ).c_str(),"f");
+    
+    LegendIntTrue->AddEntry(SelectionTrackRange.at ( 3 ), ( IntTrueLabel.at ( 0 ) ).c_str(),"f");
+    LegendIntTrue->AddEntry(SelectionTrackRange.at ( 4 ), ( IntTrueLabel.at ( 1 ) ).c_str(),"f");
+    LegendIntTrue->AddEntry(SelectionTrackRange.at ( 5 ), ( IntTrueLabel.at ( 2 ) ).c_str(),"f");
+    
 
     TCanvas *Canvas11 = new TCanvas ( "OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000 );
     Canvas11->cd();
@@ -1047,35 +1072,35 @@ void HistoProducerMC()
     SelectionTrackRange.at ( 0 )->SetFillColor ( 8 );
     SelectionTrackRange.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas11->SaveAs ( ( "MCRange"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas11->SaveAs ( ( "MCRange"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas11Int = new TCanvas ( "OnBeam Minus OffBeam Track Range Int", "OnBeam Minus OffBeam Track Range Int", 1400, 1000 );
     Canvas11Int->cd();
     SelectionTrackRange.at ( 9 )->SetMaximum ( 1.1*SelectionTrackRange.at(9)->GetBinContent(SelectionTrackRange.at(9)->GetMaximumBin()) );
     SelectionTrackRange.at ( 9 )->SetMinimum ( 0.0 );
-    SelectionTrackRange.at ( 9 )->SetFillColor ( ColorVec.at(0) );
+    SelectionTrackRange.at ( 9 )->SetFillColor ( ColorMap.at(0) );
     SelectionTrackRange.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionTrackRange.size()-1; iter++ )
     {
-        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
+        SelectionTrackRange.at ( iter )->SetFillColor ( ColorMap.at(iter-9) );
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
-//     LegendMC->Draw();
-    Canvas11Int->SaveAs ( ( "MCRange_Int"+SelectionLabel+"."+FileType ).c_str() );
+    LegendInt->Draw();
+//     Canvas11Int->SaveAs ( ( "MCRange_Int"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas11IntTrue = new TCanvas ( "OnBeam Minus OffBeam Track Range Int True", "OnBeam Minus OffBeam Track Range Int Ture", 1400, 1000 );
     Canvas11IntTrue->cd();
     SelectionTrackRange.at ( 3 )->SetMaximum ( 1.1*SelectionTrackRange.at(3)->GetBinContent(SelectionTrackRange.at(3)->GetMaximumBin()) );
     SelectionTrackRange.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionTrackRange.at ( 3 )->SetFillColor ( ColorVec.at(0) );
+    SelectionTrackRange.at ( 3 )->SetFillColor ( ColorMap.at(0) );
     SelectionTrackRange.at ( 3 )->Draw ( "E2" );
     for ( unsigned int iter = 4; iter < 6; iter++ )
     {
-        SelectionTrackRange.at ( iter )->SetFillColor ( ColorVec.at(iter-3) );
+        SelectionTrackRange.at ( iter )->SetFillColor ( ColorMap.at(iter-3) );
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
-//     LegendMC->Draw();
-    Canvas11Int->SaveAs ( ( "MCRange_Int_True"+SelectionLabel+"."+FileType ).c_str() );
+    LegendIntTrue->Draw();
+//     Canvas11Int->SaveAs ( ( "MCRange_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas12 = new TCanvas ( "OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
     Canvas12->cd();
@@ -1086,7 +1111,7 @@ void HistoProducerMC()
     SelectionTheta.at ( 0 )->SetFillColor ( 8 );
     SelectionTheta.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas12->SaveAs ( ( "MCTheta"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas12->SaveAs ( ( "MCTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     for ( auto& ThetaHistogram : SelectionTheta )
     {
@@ -1103,12 +1128,12 @@ void HistoProducerMC()
     SelectionTheta.at ( 0 )->SetFillColor ( 8 );
     SelectionTheta.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas12a->SaveAs ( ( "MCThetaOmega"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas12a->SaveAs ( ( "MCThetaOmega"+SelectionLabel+"."+FileType ).c_str() );
 
-    LegendMC->SetX1NDC ( 0.2 );
-    LegendMC->SetY1NDC ( 0.6 );
-    LegendMC->SetX2NDC ( 0.5 );
-    LegendMC->SetY2NDC ( 0.8 );
+//     LegendMC->SetX1NDC ( 0.2 );
+//     LegendMC->SetY1NDC ( 0.6 );
+//     LegendMC->SetX2NDC ( 0.5 );    
+//     LegendMC->SetY2NDC ( 0.8 );
 
     TCanvas *Canvas12b = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
     Canvas12b->cd();
@@ -1125,28 +1150,29 @@ void HistoProducerMC()
     Canvas12bInt->cd();
     SelectionCosTheta.at ( 9 )->SetMaximum ( 1.1*SelectionCosTheta.at(9)->GetBinContent(SelectionCosTheta.at(9)->GetMaximumBin()) );
     SelectionCosTheta.at ( 9 )->SetMinimum ( 0.0 );
-    SelectionCosTheta.at ( 9 )->SetFillColor ( ColorVec.at(0) );
+    SelectionCosTheta.at ( 9 )->SetFillColor ( ColorMap.at(0) );
     SelectionCosTheta.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionCosTheta.size()-1; iter++ )
     {
-        SelectionCosTheta.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
+        SelectionCosTheta.at ( iter )->SetFillColor ( ColorMap.at(iter-9) );
         SelectionCosTheta.at ( iter )->Draw ( "E2SAME" );
     }
-//     LegendMC->Draw();
+    LegendInt->Draw();
     Canvas12bInt->SaveAs ( ( "MCCosTheta_Int"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas12bIntTrue = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle Int Ture", "OnBeam Minus OffBeam Cos Theta-Angle Int Ture", 1400, 1000 );
     Canvas12bIntTrue->cd();
     SelectionCosTheta.at ( 3 )->SetMaximum ( 1.1*SelectionCosTheta.at(3)->GetBinContent(SelectionCosTheta.at(3)->GetMaximumBin()) );
     SelectionCosTheta.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionCosTheta.at ( 3 )->SetFillColor ( ColorVec.at(0) );
+    SelectionCosTheta.at ( 3 )->SetFillColor ( ColorMap.at(0) );
     SelectionCosTheta.at ( 3 )->Draw ( "E2" );
     for ( unsigned int iter = 4; iter < 6; iter++ )
     {
-        SelectionCosTheta.at ( iter )->SetFillColor ( ColorVec.at(iter-3) );
+        SelectionCosTheta.at ( iter )->SetFillColor ( ColorMap.at(iter-3) );
         SelectionCosTheta.at ( iter )->Draw ( "E2SAME" );
     }
-    Canvas12bInt->SaveAs ( ( "MCCosTheta_Int_True"+SelectionLabel+"."+FileType ).c_str() );
+    LegendIntTrue->Draw();
+    Canvas12bIntTrue->SaveAs ( ( "MCCosTheta_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
     LegendMC->SetX1NDC ( 0.5 );
     LegendMC->SetY1NDC ( 0.4 );
@@ -1163,33 +1189,44 @@ void HistoProducerMC()
     SelectionPhi.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     Canvas13->SaveAs ( ( "MCPhi"+SelectionLabel+"."+FileType ).c_str() );
+    
+    LegendInt->SetX1NDC ( 0.5 );
+    LegendInt->SetY1NDC ( 0.65 );
+    LegendInt->SetX2NDC ( 0.85 );
+    LegendInt->SetY2NDC ( 0.85 );
 
     TCanvas *Canvas13Int = new TCanvas ( "OnBeam Minus OffBeam Phi-Angle Int", "OnBeam Minus OffBeam Phi-Angle Int", 1400, 1000 );
     Canvas13Int->cd();
-    SelectionPhi.at ( 9 )->SetMaximum ( 1.1*SelectionPhi.at(9)->GetBinContent(SelectionPhi.at(9)->GetMaximumBin()) );
+    SelectionPhi.at ( 9 )->SetMaximum ( 1.9*SelectionPhi.at(9)->GetBinContent(SelectionPhi.at(9)->GetMaximumBin()) );
     SelectionPhi.at ( 9 )->SetMinimum ( 0.0 );
-    SelectionPhi.at ( 9 )->SetFillColor ( ColorVec.at(0) );
+    SelectionPhi.at ( 9 )->SetFillColor ( ColorMap.at(0) );
     SelectionPhi.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionPhi.size()-1; iter++ )
     {
-        SelectionPhi.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
+        SelectionPhi.at ( iter )->SetFillColor ( ColorMap.at(iter-9) );
         SelectionPhi.at ( iter )->Draw ( "E2SAME" );
     }
-//     LegendMC->Draw();
+    LegendInt->Draw();
     Canvas13Int->SaveAs ( ( "MCPhi_Int"+SelectionLabel+"."+FileType ).c_str() );
 
+    LegendIntTrue->SetX1NDC ( 0.5 );
+    LegendIntTrue->SetY1NDC ( 0.65 );
+    LegendIntTrue->SetX2NDC ( 0.85 );
+    LegendIntTrue->SetY2NDC ( 0.85 );
+    
     TCanvas *Canvas13IntTrue = new TCanvas ( "OnBeam Minus OffBeam Phi-Angle Int Ture", "OnBeam Minus OffBeam Phi-Angle Int Ture", 1400, 1000 );
     Canvas13IntTrue->cd();
-    SelectionPhi.at ( 3 )->SetMaximum ( 1.1*SelectionPhi.at(3)->GetBinContent(SelectionPhi.at(3)->GetMaximumBin()) );
+    SelectionPhi.at ( 3 )->SetMaximum ( 1.9*SelectionPhi.at(3)->GetBinContent(SelectionPhi.at(3)->GetMaximumBin()) );
     SelectionPhi.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionPhi.at ( 3 )->SetFillColor ( ColorVec.at(0) );
+    SelectionPhi.at ( 3 )->SetFillColor ( ColorMap.at(0) );
     SelectionPhi.at ( 3 )->Draw ( "E2" );
     for ( unsigned int iter = 4; iter < 6; iter++ )
     {
-        SelectionPhi.at ( iter )->SetFillColor ( ColorVec.at(iter-3) );
+        SelectionPhi.at ( iter )->SetFillColor ( ColorMap.at(iter-3) );
         SelectionPhi.at ( iter )->Draw ( "E2SAME" );
     }
-    Canvas13Int->SaveAs ( ( "MCPhi_Int_True"+SelectionLabel+"."+FileType ).c_str() );
+    LegendIntTrue->Draw();
+    Canvas13IntTrue->SaveAs ( ( "MCPhi_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
     LegendMC->SetX1NDC ( 0.5 );
     LegendMC->SetY1NDC ( 0.6 );
@@ -1205,7 +1242,7 @@ void HistoProducerMC()
     SelectionEnergy.at ( 0 )->SetFillColor ( 8 );
     SelectionEnergy.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas14->SaveAs ( ( "MCEnergy"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas14->SaveAs ( ( "MCEnergy"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas14a = new TCanvas ( "Momentum", "Momentum", 1400, 1000 );
     Canvas14a->cd();
@@ -1222,28 +1259,29 @@ void HistoProducerMC()
     Canvas14aInt->cd();
     SelectionMomentum.at ( 9 )->SetMaximum ( 1.1*SelectionMomentum.at(9)->GetBinContent(SelectionMomentum.at(9)->GetMaximumBin()) );
     SelectionMomentum.at ( 9 )->SetMinimum ( 0.0 );
-    SelectionMomentum.at ( 9 )->SetFillColor ( ColorVec.at(0) );
+    SelectionMomentum.at ( 9 )->SetFillColor ( ColorMap.at(0) );
     SelectionMomentum.at ( 9 )->Draw ( "E2" );
     for ( unsigned int iter = 10; iter < SelectionMomentum.size()-1; iter++ )
     {
-        SelectionMomentum.at ( iter )->SetFillColor ( ColorVec.at(iter-9) );
+        SelectionMomentum.at ( iter )->SetFillColor ( ColorMap.at(iter-9) );
         SelectionMomentum.at ( iter )->Draw ( "E2SAME" );
     }
-//     LegendMC->Draw();
-    Canvas14aInt->SaveAs ( ( "MCPhi_Int"+SelectionLabel+"."+FileType ).c_str() );
+    LegendInt->Draw();
+    Canvas14aInt->SaveAs ( ( "MCMomentum_Int"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas14aIntTrue = new TCanvas ( "Momentum Int Ture", "Momentum Int Ture", 1400, 1000 );
     Canvas14aIntTrue->cd();
     SelectionMomentum.at ( 3 )->SetMaximum ( 1.1*SelectionMomentum.at(3)->GetBinContent(SelectionMomentum.at(3)->GetMaximumBin()) );
     SelectionMomentum.at ( 3 )->SetMinimum ( 0.0 );
-    SelectionMomentum.at ( 3 )->SetFillColor ( ColorVec.at(0) );
+    SelectionMomentum.at ( 3 )->SetFillColor ( ColorMap.at(0) );
     SelectionMomentum.at ( 3 )->Draw ( "E2" );
     for ( unsigned int iter = 4; iter < 6; iter++ )
     {
-        SelectionMomentum.at ( iter )->SetFillColor ( ColorVec.at(iter-3) );
+        SelectionMomentum.at ( iter )->SetFillColor ( ColorMap.at(iter-3) );
         SelectionMomentum.at ( iter )->Draw ( "E2SAME" );
     }
-    Canvas14aInt->SaveAs ( ( "MCPhi_Int_True"+SelectionLabel+"."+FileType ).c_str() );
+    LegendIntTrue->Draw();
+    Canvas14aIntTrue->SaveAs ( ( "MCMomentum_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas15 = new TCanvas ( "OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000 );
     Canvas15->cd();
@@ -1254,7 +1292,7 @@ void HistoProducerMC()
     SelXTrackStartEnd.at ( 0 )->SetFillColor ( 8 );
     SelXTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas15->SaveAs ( ( "MCXTrack"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas15->SaveAs ( ( "MCXTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas16 = new TCanvas ( "OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000 );
     Canvas16->cd();
@@ -1265,7 +1303,7 @@ void HistoProducerMC()
     SelYTrackStartEnd.at ( 0 )->SetFillColor ( 8 );
     SelYTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas16->SaveAs ( ( "MCYTrack"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas16->SaveAs ( ( "MCYTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas17 = new TCanvas ( "OnBeam Minus OffBeam Z Start & End Point ", "OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000 );
     Canvas17->cd();
@@ -1276,7 +1314,7 @@ void HistoProducerMC()
     SelZTrackStartEnd.at ( 0 )->SetFillColor ( 8 );
     SelZTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas17->SaveAs ( ( "MCZTrack"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas17->SaveAs ( ( "MCZTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas18 = new TCanvas ( "OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000 );
     Canvas18->cd();
@@ -1287,7 +1325,7 @@ void HistoProducerMC()
     SelXVtxPosition.at ( 0 )->SetFillColor ( 8 );
     SelXVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas18->SaveAs ( ( "MCXVertex"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas18->SaveAs ( ( "MCXVertex"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas19 = new TCanvas ( "OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000 );
     Canvas19->cd();
@@ -1298,7 +1336,7 @@ void HistoProducerMC()
     SelYVtxPosition.at ( 0 )->SetFillColor ( 8 );
     SelYVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas19->SaveAs ( ( "MCYVertex"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas19->SaveAs ( ( "MCYVertex"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas20 = new TCanvas ( "OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000 );
     Canvas20->cd();
@@ -1309,7 +1347,7 @@ void HistoProducerMC()
     SelZVtxPosition.at ( 0 )->SetFillColor ( 8 );
     SelZVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
-    Canvas20->SaveAs ( ( "MCZVertex"+SelectionLabel+"."+FileType ).c_str() );
+//     Canvas20->SaveAs ( ( "MCZVertex"+SelectionLabel+"."+FileType ).c_str() );
 }
 
 float GetMaximum ( const std::vector<TH1F*>& HistVector )

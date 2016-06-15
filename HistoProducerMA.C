@@ -72,7 +72,7 @@ void HistoProducerMA()
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1);
 //     ScalingFactors.push_back(1/179041.);
-    ScalingFactors.push_back(1.28711);
+    ScalingFactors.push_back(1.2300);
     ScalingFactors.push_back(1);
     ScalingFactors.push_back(1);
 
