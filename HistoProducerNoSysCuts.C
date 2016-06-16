@@ -58,8 +58,8 @@ void HistoProducerNoSysCuts()
     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
-    std::string FileType = "png";
-//     std::string FileType = "pdf";
+//     std::string FileType = "png";
+    std::string FileType = "pdf";
     
     std::vector<TChain*> ChainVec;
 

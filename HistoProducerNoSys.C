@@ -19,6 +19,7 @@
 #include <TLine.h>
 #include <TAxis.h>
 #include <TSpline.h>
+#include <TPaveText.h>
 
 //This defines our current settings for the fiducial volume
 double FVx = 256.35;
@@ -58,8 +59,8 @@ void HistoProducerNoSys()
     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
-    std::string FileType = "png";
-//     std::string FileType = "pdf";
+//     std::string FileType = "png";
+    std::string FileType = "pdf";
     
     std::vector<TChain*> ChainVec;
 
@@ -132,23 +133,40 @@ void HistoProducerNoSys()
     THStack* StackBgrXVtxPosition = new THStack("Bgr X Vertex","Bgr X Vertex");
     THStack* StackBgrYVtxPosition = new THStack("Bgr X Vertex","Bgr X Vertex");
     THStack* StackBgrZVtxPosition = new THStack("Bgr X Vertex","Bgr X Vertex");
-
-    TLegend* LegendData = new TLegend(0.7,0.8,0.9,0.9);
-    LegendData->SetHeader("Data Sample");
+    
+    TPaveText TextSimulation(0.5,0.905,0.9,0.96,"nbNDC");
+    TextSimulation.AddText("#muBooNE Simulation, Preliminary");
+    TextSimulation.SetTextSize(0.04);
+    TextSimulation.SetTextColor(14);
+    TextSimulation.SetLineColorAlpha(0,0);
+    
+    TPaveText TextPreliminary(0.6,0.905,0.9,0.96,"nbNDC");
+    TextPreliminary.AddText("#muBooNE Preliminary");
+    TextPreliminary.SetTextSize(0.04);
+    TextPreliminary.SetTextColor(14);
+    TextSimulation.SetLineColorAlpha(0,0);
+    
+    TLegend* LegendData = new TLegend(0.70,0.78,0.85,0.85);
+    LegendData->SetLineStyle ( 0 );
+    LegendData->SetLineColorAlpha ( 0,0 );
+    LegendData->SetFillStyle ( 0 );
+    LegendData->SetMargin ( 0.2 );
+    LegendData->SetTextFont ( 42 );
+//     LegendData->SetHeader("Data Sample");
 
     DataLabel.push_back("On-Beam BNB");
-    DataLabel.push_back("Off-Beam BNB ext");
+    DataLabel.push_back("Off-Beam BNBEXT");
 
-    TLegend* LegendMC = new TLegend(0.55,0.6,0.85,0.85);
+    TLegend* LegendMC = new TLegend(0.56,0.57,0.85,0.87);
     LegendMC->SetLineStyle ( 0 );
     LegendMC->SetLineColorAlpha ( 0,0 );
     LegendMC->SetFillStyle ( 0 );
     LegendMC->SetMargin ( 0.2 );
-    LegendMC->SetTextFont ( 42 );
-//     LegendMC->SetTextSize ( 30 );
+    LegendMC->SetTextFont ( 43 );
+    LegendMC->SetTextSize ( 30 );
 
-    MCLabel.push_back("On-Beam Minus Off-Beam Sample");
-    MCLabel.push_back("Selection MC BNB+Cosmic & Stat. Unc.");
+    MCLabel.push_back("On-Beam Minus Off-Beam");
+    MCLabel.push_back("Selection MC & Stat. Unc.");
 //     MCLabel.push_back("MC BNB+Cosmic Sys. Error");
 
     TLegend* FlashLabel = new TLegend(0.7,0.7,0.9,0.9);
@@ -166,11 +184,11 @@ void HistoProducerNoSys()
 //     GenLabel.push_back("MC Prodgenie BNB Nu");
 //     GenLabel.push_back("MC Prodcosmic Corsika in-Time");
 
-    BgrLabel.push_back("Bgr #bar{#nu}_{#mu} Events MC BNB+Cosmic");
-    BgrLabel.push_back("Bgr #nu_{e} Events MC BNB+Cosmic");
-    BgrLabel.push_back("Bgr #nu_{#mu} CC Out of FV MC BNB+Cosmic");
-    BgrLabel.push_back("Bgr NC Events MC BNB+Cosmic");
-    BgrLabel.push_back("Bgr Cosmic Events MC BNB+Cosmic");
+    BgrLabel.push_back("MC Bgr #bar{#nu}_{#mu} Events");
+    BgrLabel.push_back("MC Bgr #nu_{e} Events");
+    BgrLabel.push_back("MC Bgr #nu_{#mu} CC Out of FV");
+    BgrLabel.push_back("MC Bgr NC Events");
+    BgrLabel.push_back("MC Bgr Cosmic Events");
 
     std::vector<TSpline5> SystematicErrors = Systematics();
 
@@ -794,7 +812,7 @@ void HistoProducerNoSys()
 
     for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
     {
-        LegendData->AddEntry( SelectionTrackRange.at(hist_no), (DataLabel.at(hist_no)).c_str(),"l" );
+        LegendData->AddEntry( SelectionTrackRange.at(hist_no), (DataLabel.at(hist_no)).c_str(),"lep" );
     }
 
     TCanvas *Canvas1 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
@@ -804,6 +822,7 @@ void HistoProducerNoSys()
     SelectionTrackRange.at(1)->SetLineColor(2);
     SelectionTrackRange.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas1->SaveAs(("DataSelRange"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas2 = new TCanvas("Theta-Angle of Selected Track", "Theta-Angle of Selected Track", 1400, 1000);
@@ -813,7 +832,13 @@ void HistoProducerNoSys()
     SelectionTheta.at(1)->SetLineColor(2);
     SelectionTheta.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas2->SaveAs(("DataSelTheta"+SelectionLabel+"."+FileType).c_str());
+    
+    LegendData->SetX1NDC(0.15);
+    LegendData->SetY1NDC(0.78);
+    LegendData->SetX2NDC(0.30);
+    LegendData->SetY2NDC(0.85);
 
     TCanvas *Canvas2a = new TCanvas("Cos Theta-Angle of Selected Track", "Cos Theta-Angle of Selected Track", 1400, 1000);
     Canvas2a->cd();
@@ -821,9 +846,15 @@ void HistoProducerNoSys()
     SelectionCosTheta.at(0)->Draw();
     SelectionCosTheta.at(1)->SetLineColor(2);
     SelectionCosTheta.at(1)->Draw("SAME");
+    TextPreliminary.Draw();
     LegendData->Draw();
     Canvas2a->SaveAs(("DataSelCosTheta"+SelectionLabel+"."+FileType).c_str());
 
+    LegendData->SetX1NDC(0.70);
+    LegendData->SetY1NDC(0.78);
+    LegendData->SetX2NDC(0.85);
+    LegendData->SetY2NDC(0.85);
+    
     TCanvas *Canvas3 = new TCanvas("Phi-Angle of Selected Track", "Phi-Angle of Selected Track", 1400, 1000);
     Canvas3->cd();
     SelectionPhi.at(0)->SetMaximum(1.1*GetMaximum(SelectionPhi));
@@ -832,6 +863,7 @@ void HistoProducerNoSys()
     SelectionPhi.at(1)->SetLineColor(2);
     SelectionPhi.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas3->SaveAs(("DataSelPhi"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas4 = new TCanvas("Energy of Selected Track", "Energy of Selected Track", 1400, 1000);
@@ -841,6 +873,7 @@ void HistoProducerNoSys()
     SelectionEnergy.at(1)->SetLineColor(2);
     SelectionEnergy.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas4->SaveAs(("DataSelEnergy"+SelectionLabel+"."+FileType).c_str());
     
     TCanvas *Canvas4a = new TCanvas("Momentum of Selected Track", "Momentum of Selected Track", 1400, 1000);
@@ -850,6 +883,7 @@ void HistoProducerNoSys()
     SelectionMomentum.at(1)->SetLineColor(2);
     SelectionMomentum.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas4a->SaveAs(("DataSelMomentum"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas5 = new TCanvas("X Start & End Point Selected Track", "X Start & End Point Selected Track", 1400, 1000);
@@ -860,6 +894,7 @@ void HistoProducerNoSys()
     SelXTrackStartEnd.at(1)->SetLineColor(2);
     SelXTrackStartEnd.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas5->SaveAs(("DataSelXTrack"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas6 = new TCanvas("Y Start & End Point Selected Track", "Y Start & End Point Selected Track", 1400, 1000);
@@ -870,16 +905,18 @@ void HistoProducerNoSys()
     SelYTrackStartEnd.at(1)->SetLineColor(2);
     SelYTrackStartEnd.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas6->SaveAs(("DataSelYTrack"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas7 = new TCanvas("Z Start & End Point Selected Track", "Z Start & End Point Selected Track", 1400, 1000);
     Canvas7->cd();
-    SelZTrackStartEnd.at(0)->SetMaximum(1.2*GetMaximum(SelZTrackStartEnd));
+    SelZTrackStartEnd.at(0)->SetMaximum(1.4*GetMaximum(SelZTrackStartEnd));
     SelZTrackStartEnd.at(0)->SetMinimum(0);
     SelZTrackStartEnd.at(0)->Draw();
     SelZTrackStartEnd.at(1)->SetLineColor(2);
     SelZTrackStartEnd.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas7->SaveAs(("DataSelZTrack"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas8 = new TCanvas("X Vertex Postion", "X Vertex Postion", 1400, 1000);
@@ -890,6 +927,7 @@ void HistoProducerNoSys()
     SelXVtxPosition.at(1)->SetLineColor(2);
     SelXVtxPosition.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas8->SaveAs(("DataSelXVertex"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas9 = new TCanvas("Y Vertex Postion", "Y Vertex Postion", 1400, 1000);
@@ -900,16 +938,18 @@ void HistoProducerNoSys()
     SelYVtxPosition.at(1)->SetLineColor(2);
     SelYVtxPosition.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas9->SaveAs(("DataSelYVertex"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas10 = new TCanvas("Z Vertex Postion", "Z Vertex Postion", 1400, 1000);
     Canvas10->cd();
-    SelZVtxPosition.at(0)->SetMaximum(1.3*GetMaximum(SelZVtxPosition));
+    SelZVtxPosition.at(0)->SetMaximum(1.4*GetMaximum(SelZVtxPosition));
     SelZVtxPosition.at(0)->SetMinimum(0);
     SelZVtxPosition.at(0)->Draw();
     SelZVtxPosition.at(1)->SetLineColor(2);
     SelZVtxPosition.at(1)->Draw("SAME");
     LegendData->Draw();
+    TextPreliminary.Draw();
     Canvas10->SaveAs(("DataSelZVertex"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas101 = new TCanvas("Range Vs YPos OnBeam", "Range Vs YPos OnBeam", 1400, 1000);
@@ -1012,6 +1052,7 @@ void HistoProducerNoSys()
     SelectionTrackRange.at(0)->SetLineColor(1);
     SelectionTrackRange.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas11->SaveAs(("On-OffBeamSelRange"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas12 = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
@@ -1025,6 +1066,7 @@ void HistoProducerNoSys()
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas12->SaveAs(("On-OffBeamSelTheta"+SelectionLabel+"."+FileType).c_str());
 
 
@@ -1057,12 +1099,13 @@ void HistoProducerNoSys()
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas12a->SaveAs(("On-OffBeamSelThetaOmega"+SelectionLabel+"."+FileType).c_str());
 
     LegendMC->SetX1NDC(0.15);
-    LegendMC->SetY1NDC(0.6);
+    LegendMC->SetY1NDC(0.57);
     LegendMC->SetX2NDC(0.45);
-    LegendMC->SetY2NDC(0.85);
+    LegendMC->SetY2NDC(0.87);
 
     TCanvas *Canvas12b = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
     Canvas12b->cd();
@@ -1075,16 +1118,17 @@ void HistoProducerNoSys()
     SelectionCosTheta.at(0)->SetLineColor(1);
     SelectionCosTheta.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas12b->SaveAs(("On-OffBeamSelCosTheta"+SelectionLabel+"."+FileType).c_str());
 
-    LegendMC->SetX1NDC(0.55);
-    LegendMC->SetY1NDC(0.6);
+    LegendMC->SetX1NDC(0.56);
+    LegendMC->SetY1NDC(0.57);
     LegendMC->SetX2NDC(0.85);
-    LegendMC->SetY2NDC(0.85);
+    LegendMC->SetY2NDC(0.87);
     
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
-    SelectionPhi.at(1)->SetMaximum(2.2*SelectionPhi.at(1)->GetBinContent(SelectionPhi.at(1)->GetMaximumBin()));
+    SelectionPhi.at(1)->SetMaximum(2.5*SelectionPhi.at(1)->GetBinContent(SelectionPhi.at(1)->GetMaximumBin()));
     SelectionPhi.at(1)->SetMinimum(0.0);
     SelectionPhi.at(1)->SetFillColor(46);
     SelectionPhi.at(1)->Draw("E2");
@@ -1093,6 +1137,7 @@ void HistoProducerNoSys()
     SelectionPhi.at(0)->SetLineColor(1);
     SelectionPhi.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas13->SaveAs(("On-OffBeamSelPhi"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas14 = new TCanvas("Energy", "Energy", 1400, 1000);
@@ -1106,6 +1151,7 @@ void HistoProducerNoSys()
     SelectionEnergy.at(0)->SetLineColor(1);
     SelectionEnergy.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas14->SaveAs(("On-OffBeamSelEnergy"+SelectionLabel+"."+FileType).c_str());
     
     TCanvas *Canvas14a = new TCanvas("Momentum", "Momentum", 1400, 1000);
@@ -1119,11 +1165,17 @@ void HistoProducerNoSys()
     SelectionMomentum.at(0)->SetLineColor(1);
     SelectionMomentum.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas14a->SaveAs(("On-OffBeamSelMomentum"+SelectionLabel+"."+FileType).c_str());
+    
+    LegendMC->SetX1NDC(0.15);
+    LegendMC->SetY1NDC(0.57);
+    LegendMC->SetX2NDC(0.45);
+    LegendMC->SetY2NDC(0.87);
 
     TCanvas *Canvas15 = new TCanvas("OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000);
     Canvas15->cd();
-    SelXTrackStartEnd.at(1)->SetMaximum(1.7*SelXTrackStartEnd.at(1)->GetBinContent(SelXTrackStartEnd.at(1)->GetMaximumBin()));
+    SelXTrackStartEnd.at(1)->SetMaximum(2.5*SelXTrackStartEnd.at(1)->GetBinContent(SelXTrackStartEnd.at(1)->GetMaximumBin()));
     SelXTrackStartEnd.at(1)->SetMinimum(0.0);
     SelXTrackStartEnd.at(1)->SetFillColor(46);
     SelXTrackStartEnd.at(1)->Draw("E2");
@@ -1132,11 +1184,12 @@ void HistoProducerNoSys()
     SelXTrackStartEnd.at(0)->SetLineColor(1);
     SelXTrackStartEnd.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas15->SaveAs(("On-OffBeamSelXTrack"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas16 = new TCanvas("OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000);
     Canvas16->cd();
-    SelYTrackStartEnd.at(1)->SetMaximum(1.7*SelYTrackStartEnd.at(1)->GetBinContent(SelYTrackStartEnd.at(1)->GetMaximumBin()));
+    SelYTrackStartEnd.at(1)->SetMaximum(1.2*SelYTrackStartEnd.at(1)->GetBinContent(SelYTrackStartEnd.at(1)->GetMaximumBin()));
     SelYTrackStartEnd.at(1)->SetMinimum(0.0);
     SelYTrackStartEnd.at(1)->SetFillColor(46);
     SelYTrackStartEnd.at(1)->Draw("E2");
@@ -1144,12 +1197,13 @@ void HistoProducerNoSys()
     SelYTrackStartEnd.at(0)->SetLineWidth(2);
     SelYTrackStartEnd.at(0)->SetLineColor(1);
     SelYTrackStartEnd.at(0)->Draw("SAME");
-    LegendMC->Draw();
+//     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas16->SaveAs(("On-OffBeamSelYTrack"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas17 = new TCanvas("OnBeam Minus OffBeam Z Start & End Point ", "OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000);
     Canvas17->cd();
-    SelZTrackStartEnd.at(1)->SetMaximum(1.5*SelZTrackStartEnd.at(1)->GetBinContent(SelZTrackStartEnd.at(1)->GetMaximumBin()));
+    SelZTrackStartEnd.at(1)->SetMaximum(1.2*SelZTrackStartEnd.at(1)->GetBinContent(SelZTrackStartEnd.at(1)->GetMaximumBin()));
     SelZTrackStartEnd.at(1)->SetMinimum(0.0);
     SelZTrackStartEnd.at(1)->SetFillColor(46);
     SelZTrackStartEnd.at(1)->Draw("E2");
@@ -1157,12 +1211,13 @@ void HistoProducerNoSys()
     SelZTrackStartEnd.at(0)->SetLineWidth(2);
     SelZTrackStartEnd.at(0)->SetLineColor(1);
     SelZTrackStartEnd.at(0)->Draw("SAME");
-    LegendMC->Draw();
+//     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas17->SaveAs(("On-OffBeamSelZTrack"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas18 = new TCanvas("OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000);
     Canvas18->cd();
-    SelXVtxPosition.at(1)->SetMaximum(1.7*SelXVtxPosition.at(1)->GetBinContent(SelXVtxPosition.at(1)->GetMaximumBin()));
+    SelXVtxPosition.at(1)->SetMaximum(2.5*SelXVtxPosition.at(1)->GetBinContent(SelXVtxPosition.at(1)->GetMaximumBin()));
     SelXVtxPosition.at(1)->SetMinimum(0.0);
     SelXVtxPosition.at(1)->SetFillColor(46);
     SelXVtxPosition.at(1)->Draw("E2");
@@ -1171,11 +1226,12 @@ void HistoProducerNoSys()
     SelXVtxPosition.at(0)->SetLineColor(1);
     SelXVtxPosition.at(0)->Draw("SAME");
     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas18->SaveAs(("On-OffBeamSelXVertex"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas19 = new TCanvas("OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000);
     Canvas19->cd();
-    SelYVtxPosition.at(1)->SetMaximum(1.7*SelYVtxPosition.at(1)->GetBinContent(SelYVtxPosition.at(1)->GetMaximumBin()));
+    SelYVtxPosition.at(1)->SetMaximum(1.2*SelYVtxPosition.at(1)->GetBinContent(SelYVtxPosition.at(1)->GetMaximumBin()));
     SelYVtxPosition.at(1)->SetMinimum(0.0);
     SelYVtxPosition.at(1)->SetFillColor(46);
     SelYVtxPosition.at(1)->Draw("E2");
@@ -1183,12 +1239,13 @@ void HistoProducerNoSys()
     SelYVtxPosition.at(0)->SetLineWidth(2);
     SelYVtxPosition.at(0)->SetLineColor(1);
     SelYVtxPosition.at(0)->Draw("SAME");
-    LegendMC->Draw();
+//     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas19->SaveAs(("On-OffBeamSelYVertex"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas20 = new TCanvas("OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000);
     Canvas20->cd();
-    SelZVtxPosition.at(1)->SetMaximum(1.7*SelZVtxPosition.at(1)->GetBinContent(SelZVtxPosition.at(1)->GetMaximumBin()));
+    SelZVtxPosition.at(1)->SetMaximum(1.2*SelZVtxPosition.at(1)->GetBinContent(SelZVtxPosition.at(1)->GetMaximumBin()));
     SelZVtxPosition.at(1)->SetMinimum(0.0);
     SelZVtxPosition.at(1)->SetFillColor(46);
     SelZVtxPosition.at(1)->Draw("E2");
@@ -1196,7 +1253,8 @@ void HistoProducerNoSys()
     SelZVtxPosition.at(0)->SetLineWidth(2);
     SelZVtxPosition.at(0)->SetLineColor(1);
     SelZVtxPosition.at(0)->Draw("SAME");
-    LegendMC->Draw();
+//     LegendMC->Draw();
+    TextPreliminary.Draw();
     Canvas20->SaveAs(("On-OffBeamSelZVertex"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas21 = new TCanvas("Phi Vs Theta", "Phi Vs Theta", 1400, 1000);
