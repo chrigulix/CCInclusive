@@ -10,7 +10,7 @@ void rootlogon()
 // gROOT->LoadMacro("AtlasStyle.C");
 // AtlasStyle();
     int font = 42; // Serif
-    double tsize = 0.03;
+    double tsize = 0.04;
     gStyle->SetTextFont(font);
 
     gStyle->SetTextSize(tsize);
@@ -27,7 +27,8 @@ void rootlogon()
     gStyle->SetTitleSize(tsize,"y");
     gStyle->SetLabelSize(tsize,"z");
     gStyle->SetTitleSize(tsize,"z");
-    gStyle->SetTitleOffset(1.3,"y");
+    gStyle->SetTitleOffset(1.3,"x");
+    gStyle->SetTitleOffset(1.1,"y");
 
     gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);

@@ -23,6 +23,7 @@
 #include <TSpline.h>
 #include <TLatex.h>
 #include <TPaveText.h>
+#include <TGraphAsymmErrors.h>
 
 //This defines our current settings for the fiducial volume
 double FVx = 256.35;
@@ -59,8 +60,8 @@ void HistoProducerMC()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-    std::string SelectionLabel = "_Old";
-//     std::string SelectionLabel = "_Mod";
+//     std::string SelectionLabel = "_Old";
+    std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
 
 //     std::string FileType = "png";
@@ -117,17 +118,29 @@ void HistoProducerMC()
 
     TF1* SinTheta = new TF1 ( "const","sin(x)",0,3.142 );
     
-    TPaveText TextSimulation(0.5,0.905,0.9,0.96,"nbNDC");
-    TextSimulation.AddText("#muBooNE Simulation, Preliminary");
+    TPaveText TextSimulation(0.5,0.92,0.9,0.96,"nbNDC");
+    TextSimulation.AddText("MicroBooNE Simulation, Preliminary");
     TextSimulation.SetTextSize(0.04);
-    TextSimulation.SetTextColor(14);
+    TextSimulation.SetTextColor(12);
     TextSimulation.SetLineColorAlpha(0,0);
+    TextSimulation.SetFillColorAlpha(0,0);
+    TextSimulation.SetTextAlign(33);
     
-    TPaveText TextPreliminary(0.6,0.905,0.9,0.96,"nbNDC");
-    TextPreliminary.AddText("#muBooNE Preliminary");
+    TPaveText TextPreliminary(0.6,0.92,0.9,0.96,"nbNDC");
+    TextPreliminary.AddText("MicroBooNE Preliminary");
     TextPreliminary.SetTextSize(0.04);
-    TextPreliminary.SetTextColor(14);
-    TextSimulation.SetLineColorAlpha(0,0);
+    TextPreliminary.SetTextColor(12);
+    TextPreliminary.SetLineColorAlpha(0,0);
+    TextPreliminary.SetFillColorAlpha(0,0);
+    TextPreliminary.SetTextAlign(33);
+    
+    TPaveText TextSelection(0.1,0.92,0.3,0.96,"nbNDC");
+    TextSelection.AddText("Selection I");
+    TextSelection.SetTextSize(0.04);
+    TextSelection.SetTextColor(1);
+    TextSelection.SetLineColorAlpha(0,0);
+    TextSelection.SetFillColorAlpha(0,0);
+    TextSelection.SetTextAlign(13);
 
     TLegend* LegendEfficiency = new TLegend ( 0.15,0.7,0.45,0.85 );
     LegendEfficiency->SetLineColorAlpha ( 0,0 );
@@ -135,7 +148,7 @@ void HistoProducerMC()
     LegendEfficiency->SetFillStyle ( 0 );
     LegendEfficiency->SetMargin ( 0.2 );
     LegendEfficiency->SetTextFont ( 43 );
-    LegendEfficiency->SetTextSize ( 30 );
+    LegendEfficiency->SetTextSize ( 35 );
 
     EfficiencyLabel.push_back ( "Vertex in FV Eff." );
     EfficiencyLabel.push_back ( "Contained Track Eff." );
@@ -146,7 +159,7 @@ void HistoProducerMC()
     LegendMCSel->SetFillStyle ( 0 );
     LegendMCSel->SetMargin ( 0.2 );
     LegendMCSel->SetTextFont ( 43 );
-    LegendMCSel->SetTextSize ( 30 );
+    LegendMCSel->SetTextSize ( 35 );
 
     TLegend* LegendMC = new TLegend ( 0.5,0.6,0.8,0.8 );
     LegendMC->SetLineColorAlpha ( 0,0 );
@@ -154,7 +167,7 @@ void HistoProducerMC()
     LegendMC->SetFillStyle ( 0 );
     LegendMC->SetMargin ( 0.2 );
     LegendMC->SetTextFont ( 43 );
-    LegendMC->SetTextSize ( 30 );
+    LegendMC->SetTextSize ( 35 );
 
     MCLabel.push_back ( "MC True Vertex in FV" );
     MCLabel.push_back ( "MC True Contained Tracks" );
@@ -166,7 +179,7 @@ void HistoProducerMC()
     LegendInt->SetFillStyle ( 0 );
     LegendInt->SetMargin ( 0.2 );
     LegendInt->SetTextFont ( 43 );
-    LegendInt->SetTextSize ( 30 );
+    LegendInt->SetTextSize ( 35 );
 
     IntLabel.push_back ( "CCQE events after selection" );
     IntLabel.push_back ( "CCRES events after selection" );
@@ -178,7 +191,7 @@ void HistoProducerMC()
     LegendIntTrue->SetFillStyle ( 0 );
     LegendIntTrue->SetMargin ( 0.2 );
     LegendIntTrue->SetTextFont ( 43 );
-    LegendIntTrue->SetTextSize ( 30 );
+    LegendIntTrue->SetTextSize ( 35 );
 
     IntTrueLabel.push_back ( "CCQE events before selection" );
     IntTrueLabel.push_back ( "CCRES events before selection" );
@@ -190,7 +203,7 @@ void HistoProducerMC()
     LegendEffInt->SetFillStyle ( 0 );
     LegendEffInt->SetMargin ( 0.2 );
     LegendEffInt->SetTextFont ( 43 );
-    LegendEffInt->SetTextSize ( 30 );
+    LegendEffInt->SetTextSize ( 35 );
 
     EffIntLabel.push_back ( "CCQE Efficiency" );
     EffIntLabel.push_back ( "CCRES Efficiency" );
@@ -220,7 +233,7 @@ void HistoProducerMC()
 
     std::vector<TSpline5> SystematicErrors = Systematics();
 
-    std::vector<unsigned int> ColorMap = {46,42,30};
+    std::vector<unsigned int> ColorMap = {30,38,42};
 
     ChainVec.push_back ( new TChain ( "anatree" ) );
     ChainVec.back() -> Add ( "/lheppc46/data/uBData/anatrees/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root" );
@@ -233,72 +246,72 @@ void HistoProducerMC()
         SelectionTrackRange.push_back ( new TH1F ( ( "Track Range"+Label ).c_str(),"Track Range of Selected Track",NumberOfBins,0,1000 ) );
         SelectionTrackRange.back()->SetStats ( 0 );
         SelectionTrackRange.back()->GetXaxis()->SetTitle ( "Track Range [cm]" );
-        SelectionTrackRange.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelectionTrackRange.back()->GetYaxis()->SetTitle ( "No. of events" );
 
         SelectionTheta.push_back ( new TH1F ( ( "#theta-Angle"+Label ).c_str(),"#theta-Angle of Selected Track",NumberOfBins,0,3.142 ) );
         SelectionTheta.back()->SetStats ( 0 );
-        SelectionTheta.back()->GetXaxis()->SetTitle ( "#theta [rad]" );
-        SelectionTheta.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelectionTheta.back()->GetXaxis()->SetTitle ( "#theta-angle [rad]" );
+        SelectionTheta.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelectionTheta.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionCosTheta.push_back ( new TH1F ( ( "cos#theta-Angle"+Label ).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1 ) );
         SelectionCosTheta.back()->SetStats ( 0 );
-        SelectionCosTheta.back()->GetXaxis()->SetTitle ( "cos#theta [ ]" );
-        SelectionCosTheta.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelectionCosTheta.back()->GetXaxis()->SetTitle ( "cos(#theta)" );
+        SelectionCosTheta.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelectionCosTheta.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionPhi.push_back ( new TH1F ( ( "#phi-Angle"+Label ).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142 ) );
         SelectionPhi.back()->SetStats ( 0 );
-        SelectionPhi.back()->GetXaxis()->SetTitle ( "#phi angle [rad]" );
-        SelectionPhi.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelectionPhi.back()->GetXaxis()->SetTitle ( "#phi-angle [rad]" );
+        SelectionPhi.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelectionPhi.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionEnergy.push_back ( new TH1F ( ( "Energy"+Label ).c_str(),"Energy of Selected Track",NumberOfBins,0,3 ) );
         SelectionEnergy.back()->SetStats ( 0 );
         SelectionEnergy.back()->GetXaxis()->SetTitle ( "Muon Kinetic Energy [MeV]" );
-        SelectionEnergy.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelectionEnergy.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelectionEnergy.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionMomentum.push_back ( new TH1F ( ( "Momentum"+Label ).c_str(),"Momentum of Selected Track",NumberOfBins,0,3 ) );
         SelectionMomentum.back()->SetStats ( 0 );
         SelectionMomentum.back()->GetXaxis()->SetTitle ( "Muon Momentum [GeV/c]" );
-        SelectionMomentum.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelectionMomentum.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelectionMomentum.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelXTrackStartEnd.push_back ( new TH1F ( ( "XTrack"+Label ).c_str(),"X Track Start & End Positions",NumberOfBins,0,256 ) );
         SelXTrackStartEnd.back()->SetStats ( 0 );
-        SelXTrackStartEnd.back()->GetXaxis()->SetTitle ( "x [cm]" );
-        SelXTrackStartEnd.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelXTrackStartEnd.back()->GetXaxis()->SetTitle ( "Track start and end x [cm]" );
+        SelXTrackStartEnd.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelXTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelYTrackStartEnd.push_back ( new TH1F ( ( "YTrack"+Label ).c_str(),"Y Track Start & End Positions",NumberOfBins,-233/2,233/2 ) );
         SelYTrackStartEnd.back()->SetStats ( 0 );
-        SelYTrackStartEnd.back()->GetXaxis()->SetTitle ( "y [cm]" );
-        SelYTrackStartEnd.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelYTrackStartEnd.back()->GetXaxis()->SetTitle ( "Track start and end y [cm]" );
+        SelYTrackStartEnd.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelYTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelZTrackStartEnd.push_back ( new TH1F ( ( "ZTrack"+Label ).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8 ) );
         SelZTrackStartEnd.back()->SetStats ( 0 );
-        SelZTrackStartEnd.back()->GetXaxis()->SetTitle ( "z [cm]" );
-        SelZTrackStartEnd.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelZTrackStartEnd.back()->GetXaxis()->SetTitle ( "Track start and end z [cm]" );
+        SelZTrackStartEnd.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelZTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelXVtxPosition.push_back ( new TH1F ( ( "XVertex"+Label ).c_str(),"X Vertex Position",NumberOfBins,0,256 ) );
         SelXVtxPosition.back()->SetStats ( 0 );
-        SelXVtxPosition.back()->GetXaxis()->SetTitle ( "x [cm]" );
-        SelXVtxPosition.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelXVtxPosition.back()->GetXaxis()->SetTitle ( "Vertex x [cm]" );
+        SelXVtxPosition.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelXVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelYVtxPosition.push_back ( new TH1F ( ( "YVertex"+Label ).c_str(),"Y Vertex Position",NumberOfBins,-233/2,233/2 ) );
         SelYVtxPosition.back()->SetStats ( 0 );
-        SelYVtxPosition.back()->GetXaxis()->SetTitle ( "y [cm]" );
-        SelYVtxPosition.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelYVtxPosition.back()->GetXaxis()->SetTitle ( "Vertex y [cm]" );
+        SelYVtxPosition.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelYVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelZVtxPosition.push_back ( new TH1F ( ( "ZVertex"+Label ).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8 ) );
         SelZVtxPosition.back()->SetStats ( 0 );
-        SelZVtxPosition.back()->GetXaxis()->SetTitle ( "z [cm]" );
-        SelZVtxPosition.back()->GetYaxis()->SetTitle ( "# Events" );
+        SelZVtxPosition.back()->GetXaxis()->SetTitle ( "Vertex z [cm]" );
+        SelZVtxPosition.back()->GetYaxis()->SetTitle ( "No. of events" );
         SelZVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
     }
 
@@ -815,46 +828,75 @@ void HistoProducerMC()
         EffZVtxPosition.push_back ( new TEfficiency ( *SelZVtxPosition.at ( 10+eff_no ),*SelZVtxPosition.at ( 4+eff_no ) ) );
     }
 
-    LegendEffInt->AddEntry ( EffTrackRange.at ( 2 ), ( EffIntLabel.at ( 0 ) ).c_str(),"lep" );
-    LegendEffInt->AddEntry ( EffTrackRange.at ( 3 ), ( EffIntLabel.at ( 1 ) ).c_str(),"lep" );
-    LegendEffInt->AddEntry ( EffTrackRange.at ( 4 ), ( EffIntLabel.at ( 2 ) ).c_str(),"lep" );
+    LegendEffInt->AddEntry ( EffTrackRange.at ( 2 ), ( EffIntLabel.at ( 0 ) ).c_str(),"lf" );
+    LegendEffInt->AddEntry ( EffTrackRange.at ( 3 ), ( EffIntLabel.at ( 1 ) ).c_str(),"lf" );
+    LegendEffInt->AddEntry ( EffTrackRange.at ( 4 ), ( EffIntLabel.at ( 2 ) ).c_str(),"lf" );
 
-    LegendEfficiency->AddEntry ( EffTrackRange.at ( 1 ), ( EfficiencyLabel.at ( 1 ) ).c_str(),"lep" );
-    LegendEfficiency->AddEntry ( EffTrackRange.at ( 0 ), ( EfficiencyLabel.at ( 0 ) ).c_str(),"lep" );
+    LegendEfficiency->AddEntry ( EffTrackRange.at ( 1 ), ( EfficiencyLabel.at ( 1 ) ).c_str(),"lf" );
+    LegendEfficiency->AddEntry ( EffTrackRange.at ( 0 ), ( EfficiencyLabel.at ( 0 ) ).c_str(),"lf" );
 
     TCanvas *Canvas1 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Track Range", "Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
     TMultiGraph *MGTrackRange = new TMultiGraph();
+    std::vector<TGraphAsymmErrors*> TrackRangeGraphs;
     EffTrackRange.at ( 0 )->SetLineWidth ( 2 );
     EffTrackRange.at ( 0 )->SetLineColor ( 8 );
+    EffTrackRange.at ( 0 )->SetFillColorAlpha ( 8,0.5 );
     EffTrackRange.at ( 1 )->SetLineWidth ( 2 );
     EffTrackRange.at ( 1 )->SetLineColor ( 9 );
-    MGTrackRange->Add ( EffTrackRange.at ( 0 )->CreateGraph() );
-    MGTrackRange->Add ( EffTrackRange.at ( 1 )->CreateGraph() );
+    EffTrackRange.at ( 1 )->SetFillColorAlpha ( 9,0.5 );
+    TrackRangeGraphs.push_back(EffCosTheta.at ( 0 )->CreateGraph());
+    TrackRangeGraphs.push_back(EffCosTheta.at ( 1 )->CreateGraph());
+    for(const auto& Graph : TrackRangeGraphs) 
+    {
+        TGraphAsymmErrors* TempGraph = (TGraphAsymmErrors*) Graph->Clone();
+        MGTrackRange->Add ( TempGraph );
+    }
     Canvas1->cd();
-    MGTrackRange->Draw ( "AP" );
+    MGTrackRange->Draw ( "2AP" );
+    for(const auto& Graph : TrackRangeGraphs)
+    {
+        for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
+        Graph->Draw("sameP");
+    }
     MGTrackRange->GetXaxis()->SetTitle ( "Track Range [cm]" );
-    MGTrackRange->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGTrackRange->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEfficiency->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas1->SaveAs ( ( "EffMCRange"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas1Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Track Range", "Interaction Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
     TMultiGraph *MGTrackRangeInt = new TMultiGraph();
+    std::vector<TGraphAsymmErrors*> TrackRangeGraphsInt;
     EffTrackRange.at ( 2 )->SetLineWidth ( 2 );
-    EffTrackRange.at ( 2 )->SetLineColor ( 46 );
+    EffTrackRange.at ( 2 )->SetFillColorAlpha (  ColorMap.at ( 0 ),0.5 );
+    EffTrackRange.at ( 2 )->SetLineColor (  ColorMap.at ( 0 ) );
     EffTrackRange.at ( 3 )->SetLineWidth ( 2 );
-    EffTrackRange.at ( 3 )->SetLineColor ( 42 );
+    EffTrackRange.at ( 3 )->SetFillColorAlpha (  ColorMap.at ( 1 ),0.5 );
+    EffTrackRange.at ( 3 )->SetLineColor (  ColorMap.at ( 1 ) );
     EffTrackRange.at ( 4 )->SetLineWidth ( 2 );
-    EffTrackRange.at ( 4 )->SetLineColor ( 30 );
-    MGTrackRangeInt->Add ( EffTrackRange.at ( 2 )->CreateGraph() );
-    MGTrackRangeInt->Add ( EffTrackRange.at ( 3 )->CreateGraph() );
-    MGTrackRangeInt->Add ( EffTrackRange.at ( 4 )->CreateGraph() );
+    EffTrackRange.at ( 4 )->SetFillColorAlpha (  ColorMap.at ( 2 ),0.5 );
+    EffTrackRange.at ( 4 )->SetLineColor (  ColorMap.at ( 2 ) );
+    TrackRangeGraphsInt.push_back(EffTrackRange.at ( 2 )->CreateGraph());
+    TrackRangeGraphsInt.push_back(EffTrackRange.at ( 3 )->CreateGraph());
+    TrackRangeGraphsInt.push_back(EffTrackRange.at ( 4 )->CreateGraph());
+    for(const auto& Graph : TrackRangeGraphsInt) 
+    {
+        TGraphAsymmErrors* TempGraph = (TGraphAsymmErrors*) Graph->Clone();
+        MGTrackRangeInt->Add ( TempGraph );
+    }
     Canvas1Int->cd();
-    MGTrackRangeInt->Draw ( "AP" );
+    MGTrackRangeInt->Draw ( "2AP" );
+    for(const auto& Graph : TrackRangeGraphsInt)
+    {
+        for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
+        Graph->Draw("sameP");
+    }
     MGTrackRangeInt->GetXaxis()->SetTitle ( "Track Range [cm]" );
-    MGTrackRangeInt->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGTrackRangeInt->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEffInt->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas1Int->SaveAs ( ( "EffIntMCRange"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Theta-Angle", "Efficiency OnBeam Minus OffBeam Theta-Angle", 1400, 1000 );
@@ -868,44 +910,74 @@ void HistoProducerMC()
     Canvas2->cd();
     MGTheta->Draw ( "AP" );
     MGTheta->GetXaxis()->SetTitle ( "#theta-Angle [rad]" );
-    MGTheta->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGTheta->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEfficiency->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas2->SaveAs ( ( "EffMCTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2b = new TCanvas ( "Efficiency OnBeam Minus OffBeam Cos Theta-Angle", "Efficiency OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
     TMultiGraph *MGCosTheta = new TMultiGraph();
+    std::vector<TGraphAsymmErrors*> CosThetaGraphs;
     EffCosTheta.at ( 0 )->SetLineWidth ( 2 );
     EffCosTheta.at ( 0 )->SetLineColor ( 8 );
+    EffCosTheta.at ( 0 )->SetFillColorAlpha ( 8,0.5 );
     EffCosTheta.at ( 1 )->SetLineWidth ( 2 );
     EffCosTheta.at ( 1 )->SetLineColor ( 9 );
-    MGCosTheta->Add ( EffCosTheta.at ( 0 )->CreateGraph() );
-    MGCosTheta->Add ( EffCosTheta.at ( 1 )->CreateGraph() );
+    EffCosTheta.at ( 1 )->SetFillColorAlpha ( 9,0.5 );
+    CosThetaGraphs.push_back(EffCosTheta.at ( 0 )->CreateGraph());
+    CosThetaGraphs.push_back(EffCosTheta.at ( 1 )->CreateGraph());
+    for(const auto& Graph : CosThetaGraphs) 
+    {
+        TGraphAsymmErrors* TempGraph = (TGraphAsymmErrors*) Graph->Clone();
+        MGCosTheta->Add ( TempGraph );
+    }
     Canvas2b->cd();
-    MGCosTheta->Draw ( "AP" );
-    MGCosTheta->GetXaxis()->SetTitle ( "cos #theta [ ]" );
-    MGCosTheta->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGCosTheta->Draw ( "2AP" );
+    for(const auto& Graph : CosThetaGraphs)
+    {
+        for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
+        Graph->Draw("sameP");
+    }
+    MGCosTheta->GetXaxis()->SetTitle ( "cos(#theta)" );
+    MGCosTheta->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEfficiency->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas2b->SaveAs ( ( "EffMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas2bInt = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Cos Theta-Angle", "Interaction Efficiency OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
     TMultiGraph *MGCosThetaInt = new TMultiGraph();
+    std::vector<TGraphAsymmErrors*> CosThetaGraphsInt;
     EffCosTheta.at ( 2 )->SetLineWidth ( 2 );
-    EffCosTheta.at ( 2 )->SetLineColor ( 46 );
+    EffCosTheta.at ( 2 )->SetFillColorAlpha (  ColorMap.at ( 0 ),0.5 );
+    EffCosTheta.at ( 2 )->SetLineColor (  ColorMap.at ( 0 ) );
     EffCosTheta.at ( 3 )->SetLineWidth ( 2 );
-    EffCosTheta.at ( 3 )->SetLineColor ( 42 );
+    EffCosTheta.at ( 3 )->SetFillColorAlpha (  ColorMap.at ( 1 ),0.5 );
+    EffCosTheta.at ( 3 )->SetLineColor (  ColorMap.at ( 1 ) );
     EffCosTheta.at ( 4 )->SetLineWidth ( 2 );
-    EffCosTheta.at ( 4 )->SetLineColor ( 30 );
-    MGCosThetaInt->Add ( EffCosTheta.at ( 2 )->CreateGraph() );
-    MGCosThetaInt->Add ( EffCosTheta.at ( 3 )->CreateGraph() );
-    MGCosThetaInt->Add ( EffCosTheta.at ( 4 )->CreateGraph() );
+    EffCosTheta.at ( 4 )->SetFillColorAlpha (  ColorMap.at ( 2 ),0.5 );
+    EffCosTheta.at ( 4 )->SetLineColor (  ColorMap.at ( 2 ) );
+    CosThetaGraphsInt.push_back(EffCosTheta.at ( 2 )->CreateGraph());
+    CosThetaGraphsInt.push_back(EffCosTheta.at ( 3 )->CreateGraph());
+    CosThetaGraphsInt.push_back(EffCosTheta.at ( 4 )->CreateGraph());
+    for(const auto& Graph : CosThetaGraphsInt) 
+    {
+        TGraphAsymmErrors* TempGraph = (TGraphAsymmErrors*) Graph->Clone();
+        MGCosThetaInt->Add ( TempGraph );
+    }
     Canvas2bInt->cd();
-    MGCosThetaInt->Draw ( "AP" );
-    MGCosThetaInt->GetXaxis()->SetTitle ( "cos #theta [ ]" );
-    MGCosThetaInt->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGCosThetaInt->Draw ( "2AP" );
+    for(const auto& Graph : CosThetaGraphsInt)
+    {
+        for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
+        Graph->Draw("sameP");
+    }
+    MGCosThetaInt->GetXaxis()->SetTitle ( "cos(#theta)" );
+    MGCosThetaInt->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEffInt->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas2bInt->SaveAs ( ( "EffIntMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas4 = new TCanvas ( "Efficiency Energy", "Efficiency Energy", 1400, 1000 );
@@ -919,26 +991,42 @@ void HistoProducerMC()
     Canvas4->cd();
     MGEnergy->Draw ( "AP" );
     MGEnergy->GetXaxis()->SetTitle ( "Muon Energy [GeV]" );
-    MGEnergy->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGEnergy->GetYaxis()->SetTitle ( "Efficiency" );
     TextSimulation.Draw();
+    TextSelection.Draw();
     LegendEfficiency->Draw();
 //     Canvas4->SaveAs ( ( "EffMCEnergy"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas4a = new TCanvas ( "Efficiency Momentum", "Efficiency Momentum", 1400, 1000 );
     TMultiGraph *MGMomentum = new TMultiGraph();
+    std::vector<TGraphAsymmErrors*> MomentumGraphs;
     EffMomentum.at ( 0 )->SetLineWidth ( 2 );
     EffMomentum.at ( 0 )->SetLineColor ( 8 );
+    EffMomentum.at ( 0 )->SetFillColorAlpha ( 8,0.5 );
     EffMomentum.at ( 1 )->SetLineWidth ( 2 );
     EffMomentum.at ( 1 )->SetLineColor ( 9 );
-    MGMomentum->Add ( EffMomentum.at ( 0 )->CreateGraph() );
-    MGMomentum->Add ( EffMomentum.at ( 1 )->CreateGraph() );
+    EffMomentum.at ( 1 )->SetFillColorAlpha ( 9,0.5 );
+    MomentumGraphs.push_back(EffMomentum.at ( 0 )->CreateGraph());
+    MomentumGraphs.push_back(EffMomentum.at ( 1 )->CreateGraph());
+    for(const auto& Graph : MomentumGraphs) 
+    {
+        TGraphAsymmErrors* TempGraph = (TGraphAsymmErrors*) Graph->Clone();
+        MGMomentum->Add ( TempGraph );
+    }
     Canvas4a->cd();
-    MGMomentum->Draw ( "AP" );
+    MGMomentum->Draw ( "2AP" );
+    for(const auto& Graph : MomentumGraphs)
+    {
+        for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
+        Graph->Draw("sameP");
+    }
+    Canvas4a->cd();
     MGMomentum->GetXaxis()->SetTitle ( "Muon Momentum [GeV/c]" );
-    MGMomentum->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGMomentum->GetYaxis()->SetTitle ( "Efficiency" );
     MGMomentum->SetMaximum(1.1);
     LegendEfficiency->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas4a->SaveAs ( ( "EffMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
 
     LegendEffInt->SetX1NDC ( 0.65 );
@@ -948,22 +1036,37 @@ void HistoProducerMC()
 
     TCanvas *Canvas4aInt = new TCanvas ( "Interaction Efficiency Momentum", "Interaction Efficiency Momentum", 1400, 1000 );
     TMultiGraph *MGMomentumInt = new TMultiGraph();
+    std::vector<TGraphAsymmErrors*> MomentumGraphsInt;
     EffMomentum.at ( 2 )->SetLineWidth ( 2 );
-    EffMomentum.at ( 2 )->SetLineColor ( 46 );
+    EffMomentum.at ( 2 )->SetFillColorAlpha (  ColorMap.at ( 0 ),0.5 );
+    EffMomentum.at ( 2 )->SetLineColor (  ColorMap.at ( 0 ) );
     EffMomentum.at ( 3 )->SetLineWidth ( 2 );
-    EffMomentum.at ( 3 )->SetLineColor ( 42 );
+    EffMomentum.at ( 3 )->SetFillColorAlpha (  ColorMap.at ( 1 ),0.5 );
+    EffMomentum.at ( 3 )->SetLineColor (  ColorMap.at ( 1 ) );
     EffMomentum.at ( 4 )->SetLineWidth ( 2 );
-    EffMomentum.at ( 4 )->SetLineColor ( 30 );
-    MGMomentumInt->Add ( EffMomentum.at ( 2 )->CreateGraph() );
-    MGMomentumInt->Add ( EffMomentum.at ( 3 )->CreateGraph() );
-    MGMomentumInt->Add ( EffMomentum.at ( 4 )->CreateGraph() );
+    EffMomentum.at ( 4 )->SetFillColorAlpha (  ColorMap.at ( 2 ),0.5 );
+    EffMomentum.at ( 4 )->SetLineColor (  ColorMap.at ( 2 ) );
+    MomentumGraphsInt.push_back(EffMomentum.at ( 2 )->CreateGraph());
+    MomentumGraphsInt.push_back(EffMomentum.at ( 3 )->CreateGraph());
+    MomentumGraphsInt.push_back(EffMomentum.at ( 4 )->CreateGraph());
+    for(const auto& Graph : MomentumGraphsInt) 
+    {
+        TGraphAsymmErrors* TempGraph = (TGraphAsymmErrors*) Graph->Clone();
+        MGMomentumInt->Add ( TempGraph );
+    }
     Canvas4aInt->cd();
-    MGMomentumInt->Draw ( "AP" );
+    MGMomentumInt->Draw ( "2AP" );
+    for(const auto& Graph : MomentumGraphsInt)
+    {
+        for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
+        Graph->Draw("sameP");
+    }
     MGMomentumInt->GetXaxis()->SetTitle ( "Muon Momentum [GeV/c]" );
-    MGMomentumInt->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGMomentumInt->GetYaxis()->SetTitle ( "Efficiency" );
     MGMomentumInt->SetMaximum(0.25);
     LegendEffInt->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas4aInt->SaveAs ( ( "EffIntMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
 
     LegendEfficiency->SetX1NDC ( 0.57 );
@@ -973,43 +1076,73 @@ void HistoProducerMC()
 
     TCanvas *Canvas3 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Phi-Angle", "Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhi = new TMultiGraph();
+    std::vector<TGraphAsymmErrors*> PhiGraphs;
     EffPhi.at ( 0 )->SetLineWidth ( 2 );
     EffPhi.at ( 0 )->SetLineColor ( 8 );
+    EffPhi.at ( 0 )->SetFillColorAlpha ( 8,0.5 );
     EffPhi.at ( 1 )->SetLineWidth ( 2 );
     EffPhi.at ( 1 )->SetLineColor ( 9 );
-    MGPhi->Add ( EffPhi.at ( 0 )->CreateGraph() );
-    MGPhi->Add ( EffPhi.at ( 1 )->CreateGraph() );
+    EffPhi.at ( 1 )->SetFillColorAlpha ( 9,0.5 );
+    PhiGraphs.push_back(EffPhi.at ( 0 )->CreateGraph());
+    PhiGraphs.push_back(EffPhi.at ( 1 )->CreateGraph());
+    for(const auto& Graph : PhiGraphs) 
+    {
+        TGraphAsymmErrors* TempGraph = (TGraphAsymmErrors*) Graph->Clone();
+        MGPhi->Add ( TempGraph );
+    }
     Canvas3->cd();
-    MGPhi->Draw ( "AP" );
-    MGPhi->GetXaxis()->SetTitle ( "#phi-Angle [rad]" );
-    MGPhi->GetYaxis()->SetTitle ( "Efficiency [ ]" );
+    MGPhi->Draw ( "2AP" );
+    for(const auto& Graph : PhiGraphs)
+    {
+        for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
+        Graph->Draw("sameP");
+    }
+    MGPhi->GetXaxis()->SetTitle ( "#phi-angle [rad]" );
+    MGPhi->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEfficiency->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas3->SaveAs ( ( "EffMCPhi"+SelectionLabel+"."+FileType ).c_str() );
 
-    LegendEffInt->SetX1NDC ( 0.57 );
-    LegendEffInt->SetY1NDC ( 0.65 );
-    LegendEffInt->SetX2NDC ( 0.77 );
-    LegendEffInt->SetY2NDC ( 0.85 );
+    LegendEffInt->SetX1NDC ( 0.12 );
+    LegendEffInt->SetY1NDC ( 0.12 );
+    LegendEffInt->SetX2NDC ( 0.32 );
+    LegendEffInt->SetY2NDC ( 0.32 );
 
     TCanvas *Canvas3Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhiInt = new TMultiGraph();
+    std::vector<TGraphAsymmErrors*> PhiGraphsInt;
     EffPhi.at ( 2 )->SetLineWidth ( 2 );
-    EffPhi.at ( 2 )->SetLineColor ( 46 );
+    EffPhi.at ( 2 )->SetFillColorAlpha (  ColorMap.at ( 0 ),0.5 );
+    EffPhi.at ( 2 )->SetLineColor (  ColorMap.at ( 0 ) );
     EffPhi.at ( 3 )->SetLineWidth ( 2 );
-    EffPhi.at ( 3 )->SetLineColor ( 42 );
+    EffPhi.at ( 3 )->SetFillColorAlpha (  ColorMap.at ( 1 ),0.5 );
+    EffPhi.at ( 3 )->SetLineColor (  ColorMap.at ( 1 ) );
     EffPhi.at ( 4 )->SetLineWidth ( 2 );
-    EffPhi.at ( 4 )->SetLineColor ( 30 );
-    MGPhiInt->Add ( EffPhi.at ( 2 )->CreateGraph() );
-    MGPhiInt->Add ( EffPhi.at ( 3 )->CreateGraph() );
-    MGPhiInt->Add ( EffPhi.at ( 4 )->CreateGraph() );
+    EffPhi.at ( 4 )->SetFillColorAlpha (  ColorMap.at ( 2 ),0.5 );
+    EffPhi.at ( 4 )->SetLineColor (  ColorMap.at ( 2 ) );
+    PhiGraphsInt.push_back(EffPhi.at ( 2 )->CreateGraph());
+    PhiGraphsInt.push_back(EffPhi.at ( 3 )->CreateGraph());
+    PhiGraphsInt.push_back(EffPhi.at ( 4 )->CreateGraph());
+    for(const auto& Graph : PhiGraphsInt) 
+    {
+        TGraphAsymmErrors* TempGraph = (TGraphAsymmErrors*) Graph->Clone();
+        MGPhiInt->Add ( TempGraph );
+    }
     Canvas3Int->cd();
-    MGPhiInt->Draw ( "AP" );
-    MGPhiInt->GetXaxis()->SetTitle ( "#phi-Angle [rad]" );
-    MGPhiInt->GetYaxis()->SetTitle ( "Efficiency [ ]" );
-    MGPhiInt->SetMaximum(0.22);
+    MGPhiInt->Draw ( "2AP" );
+    for(const auto& Graph : PhiGraphsInt)
+    {
+        for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
+        Graph->Draw("sameP");
+    }
+    MGPhiInt->GetXaxis()->SetTitle ( "#phi-angle [rad]" );
+    MGPhiInt->GetYaxis()->SetTitle ( "Efficiency" );
+//     MGPhiInt->SetMaximum(0.22);
+    MGPhiInt->SetMinimum(0.0);
     LegendEffInt->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas3Int->SaveAs ( ( "EffIntMCPhi"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas5 = new TCanvas ( "Efficiency OnBeam Minus OffBeam X Start & End Point ", "Efficiency OnBeam Minus OffBeam X Start & End Point ", 1400, 1000 );
@@ -1023,6 +1156,7 @@ void HistoProducerMC()
     EffXTrackStartEnd.at ( 0 )->Draw ( "SAME" );
     LegendEfficiency->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas5->SaveAs ( ( "EffMCXTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas6 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Y Start & End Point ", "Efficiency OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000 );
@@ -1036,6 +1170,7 @@ void HistoProducerMC()
     EffYTrackStartEnd.at ( 0 )->Draw ( "SAME" );
     LegendEfficiency->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas6->SaveAs ( ( "EffMCYTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas7 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Z Start & End Point ", "Efficiency OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000 );
@@ -1061,6 +1196,7 @@ void HistoProducerMC()
     EffXVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffXVtxPosition.at ( 0 )->Draw ( "SAME" );
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     LegendMC->Draw();
 //     Canvas8->SaveAs ( ( "EffMCXVertex"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -1074,6 +1210,7 @@ void HistoProducerMC()
     EffYVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffYVtxPosition.at ( 0 )->Draw ( "SAME" );
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     LegendMC->Draw();
 //     Canvas9->SaveAs ( ( "EffMCYVertex"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -1087,6 +1224,7 @@ void HistoProducerMC()
     EffZVtxPosition.at ( 0 )->SetLineColor ( 8 );
     EffZVtxPosition.at ( 0 )->Draw ( "SAME" );
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     LegendMC->Draw();
 //     Canvas10->SaveAs ( ( "EffMCZVertex"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -1135,6 +1273,7 @@ void HistoProducerMC()
     SelectionTrackRange.at ( 0 )->SetFillColor ( 8 );
     SelectionTrackRange.at ( 0 )->Draw ( "E2SAME" );
     TextSimulation.Draw();
+    TextSelection.Draw();
     LegendMC->Draw();
 //     Canvas11->SaveAs ( ( "MCRange"+SelectionLabel+"."+FileType ).c_str() );
     
@@ -1145,6 +1284,7 @@ void HistoProducerMC()
     SelectionTrackRange.at ( 2 )->SetFillColor ( 46 );
     SelectionTrackRange.at ( 2 )->Draw ( "E2" );
     LegendMCSel->Draw();
+    TextSelection.Draw();
     TextSimulation.Draw();
 //     Canvas11Sel->SaveAs ( ( "MCRangeSel"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -1160,6 +1300,7 @@ void HistoProducerMC()
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
     TextSimulation.Draw();
+    TextSelection.Draw();
     LegendInt->Draw();
 //     Canvas11Int->SaveAs ( ( "MCRange_Int"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -1175,6 +1316,7 @@ void HistoProducerMC()
         SelectionTrackRange.at ( iter )->Draw ( "E2SAME" );
     }
     TextSimulation.Draw();
+    TextSelection.Draw();
     LegendIntTrue->Draw();
 //     Canvas11Int->SaveAs ( ( "MCRange_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -1187,6 +1329,7 @@ void HistoProducerMC()
     SelectionTheta.at ( 0 )->SetFillColor ( 8 );
     SelectionTheta.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
+    TextSelection.Draw();
     TextSimulation.Draw();
 //     Canvas12->SaveAs ( ( "MCTheta"+SelectionLabel+"."+FileType ).c_str() );
 
@@ -1199,13 +1342,14 @@ void HistoProducerMC()
     Canvas12a->cd();
     SelectionTheta.at ( 1 )->SetMaximum ( 1.2*GetMaximum ( SelectionTheta ) );
     SelectionTheta.at ( 1 )->SetMinimum ( 0.0 );
-    SelectionTheta.at ( 1 )->GetYaxis()->SetTitle ( "# Events" );
+    SelectionTheta.at ( 1 )->GetYaxis()->SetTitle ( "No. of events" );
     SelectionTheta.at ( 1 )->SetFillColor ( 9 );
     SelectionTheta.at ( 1 )->Draw ( "E2" );
     SelectionTheta.at ( 0 )->SetFillColor ( 8 );
     SelectionTheta.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas12a->SaveAs ( ( "MCThetaOmega"+SelectionLabel+"."+FileType ).c_str() );
 
 //     LegendMC->SetX1NDC ( 0.2 );
@@ -1223,6 +1367,7 @@ void HistoProducerMC()
     SelectionCosTheta.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas12b->SaveAs ( ( "MCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
     
     TCanvas *Canvas12bSel = new TCanvas ( "OnBeam Minus OffBeam Sel Cos Theta-Angle", "OnBeam Minus OffBeam Sel Cos Theta-Angle", 1400, 1000 );
@@ -1233,6 +1378,7 @@ void HistoProducerMC()
     SelectionCosTheta.at ( 2 )->Draw ( "E2" );
     LegendMCSel->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas12bSel->SaveAs ( ( "MCCosThetaSel"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas12bInt = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle Int", "OnBeam Minus OffBeam Cos Theta-Angle Int", 1400, 1000 );
@@ -1248,6 +1394,7 @@ void HistoProducerMC()
     }
     LegendInt->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas12bInt->SaveAs ( ( "MCCosTheta_Int"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas12bIntTrue = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle Int Ture", "OnBeam Minus OffBeam Cos Theta-Angle Int Ture", 1400, 1000 );
@@ -1263,6 +1410,7 @@ void HistoProducerMC()
     }
     LegendIntTrue->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas12bIntTrue->SaveAs ( ( "MCCosTheta_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
     LegendMC->SetX1NDC ( 0.5 );
@@ -1280,6 +1428,7 @@ void HistoProducerMC()
     SelectionPhi.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas13->SaveAs ( ( "MCPhi"+SelectionLabel+"."+FileType ).c_str() );
     
     LegendMCSel->SetX1NDC ( 0.6 );
@@ -1295,6 +1444,7 @@ void HistoProducerMC()
     SelectionPhi.at ( 2 )->Draw ( "E2" );
     LegendMCSel->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas13Sel->SaveAs ( ( "MCPhiSel"+SelectionLabel+"."+FileType ).c_str() );
 
     LegendInt->SetX1NDC ( 0.5 );
@@ -1315,6 +1465,7 @@ void HistoProducerMC()
     }
     LegendInt->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas13Int->SaveAs ( ( "MCPhi_Int"+SelectionLabel+"."+FileType ).c_str() );
 
     LegendIntTrue->SetX1NDC ( 0.5 );
@@ -1335,6 +1486,7 @@ void HistoProducerMC()
     }
     LegendIntTrue->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas13IntTrue->SaveAs ( ( "MCPhi_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
     LegendMC->SetX1NDC ( 0.5 );
@@ -1352,6 +1504,7 @@ void HistoProducerMC()
     SelectionEnergy.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas14->SaveAs ( ( "MCEnergy"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas14a = new TCanvas ( "Momentum", "Momentum", 1400, 1000 );
@@ -1364,6 +1517,7 @@ void HistoProducerMC()
     SelectionMomentum.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas14a->SaveAs ( ( "MCMomentum"+SelectionLabel+"."+FileType ).c_str() );
     
     LegendMCSel->SetX1NDC ( 0.6 );
@@ -1379,6 +1533,7 @@ void HistoProducerMC()
     SelectionMomentum.at ( 2 )->Draw ( "E2" );
     LegendMCSel->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas14aSel->SaveAs ( ( "MCMomentumSel"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas14aInt = new TCanvas ( "Momentum Int", "Momentum Int", 1400, 1000 );
@@ -1394,6 +1549,7 @@ void HistoProducerMC()
     }
     LegendInt->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas14aInt->SaveAs ( ( "MCMomentum_Int"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas14aIntTrue = new TCanvas ( "Momentum Int Ture", "Momentum Int Ture", 1400, 1000 );
@@ -1409,6 +1565,7 @@ void HistoProducerMC()
     }
     LegendIntTrue->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
     Canvas14aIntTrue->SaveAs ( ( "MCMomentum_Int_True"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas15 = new TCanvas ( "OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000 );
@@ -1421,6 +1578,7 @@ void HistoProducerMC()
     SelXTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas15->SaveAs ( ( "MCXTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas16 = new TCanvas ( "OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000 );
@@ -1433,6 +1591,7 @@ void HistoProducerMC()
     SelYTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas16->SaveAs ( ( "MCYTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas17 = new TCanvas ( "OnBeam Minus OffBeam Z Start & End Point ", "OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000 );
@@ -1445,6 +1604,7 @@ void HistoProducerMC()
     SelZTrackStartEnd.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas17->SaveAs ( ( "MCZTrack"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas18 = new TCanvas ( "OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000 );
@@ -1457,6 +1617,7 @@ void HistoProducerMC()
     SelXVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas18->SaveAs ( ( "MCXVertex"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas19 = new TCanvas ( "OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000 );
@@ -1469,6 +1630,7 @@ void HistoProducerMC()
     SelYVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas19->SaveAs ( ( "MCYVertex"+SelectionLabel+"."+FileType ).c_str() );
 
     TCanvas *Canvas20 = new TCanvas ( "OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000 );
@@ -1481,6 +1643,7 @@ void HistoProducerMC()
     SelZVtxPosition.at ( 0 )->Draw ( "E2SAME" );
     LegendMC->Draw();
     TextSimulation.Draw();
+    TextSelection.Draw();
 //     Canvas20->SaveAs ( ( "MCZVertex"+SelectionLabel+"."+FileType ).c_str() );
 }
 
