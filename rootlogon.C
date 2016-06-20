@@ -27,8 +27,8 @@ void rootlogon()
     gStyle->SetTitleSize(tsize,"y");
     gStyle->SetLabelSize(tsize,"z");
     gStyle->SetTitleSize(tsize,"z");
-    gStyle->SetTitleOffset(1.3,"x");
-    gStyle->SetTitleOffset(1.1,"y");
+    gStyle->SetTitleOffset(1.1,"x");
+    gStyle->SetTitleOffset(1.3,"y");
 
     gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);

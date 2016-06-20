@@ -230,69 +230,58 @@ void HistoProducerNoSys()
 
         SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle of Selected Track",NumberOfBins,0,3.142));
         SelectionTheta.back()->SetStats(0);
-        SelectionTheta.back()->GetXaxis()->SetTitle("#theta-angle [rad]");
+        SelectionTheta.back()->GetXaxis()->SetTitle("#theta angle [rad]");
         SelectionTheta.back()->GetYaxis()->SetTitle("No. of events");
-        SelectionTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1));
         SelectionCosTheta.back()->SetStats(0);
         SelectionCosTheta.back()->GetXaxis()->SetTitle("cos(#theta)");
         SelectionCosTheta.back()->GetYaxis()->SetTitle("No. of events");
-        SelectionCosTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142));
         SelectionPhi.back()->SetStats(0);
-        SelectionPhi.back()->GetXaxis()->SetTitle("#phi-angle [rad]");
+        SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         SelectionPhi.back()->GetYaxis()->SetTitle("No. of events");
-        SelectionPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3));
         SelectionEnergy.back()->SetStats(0);
         SelectionEnergy.back()->GetXaxis()->SetTitle("Muon kinetic energy [MeV]");
         SelectionEnergy.back()->GetYaxis()->SetTitle("No. of events");
-        SelectionEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
         
         SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3));
         SelectionMomentum.back()->SetStats(0);
         SelectionMomentum.back()->GetXaxis()->SetTitle("Muon momentum [GeV/c]");
         SelectionMomentum.back()->GetYaxis()->SetTitle("No. of events");
-        SelectionMomentum.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",NumberOfBins,0,256));
         SelXTrackStartEnd.back()->SetStats(0);
         SelXTrackStartEnd.back()->GetXaxis()->SetTitle("Track start and end x [cm]");
         SelXTrackStartEnd.back()->GetYaxis()->SetTitle("No. of events");
-        SelXTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",NumberOfBins,-233/2,233/2));
         SelYTrackStartEnd.back()->SetStats(0);
         SelYTrackStartEnd.back()->GetXaxis()->SetTitle("Track start and end y [cm]");
         SelYTrackStartEnd.back()->GetYaxis()->SetTitle("No. of events");
-        SelYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8));
         SelZTrackStartEnd.back()->SetStats(0);
         SelZTrackStartEnd.back()->GetXaxis()->SetTitle("Track start and end z [cm]");
         SelZTrackStartEnd.back()->GetYaxis()->SetTitle("No. of events");
-        SelZTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",NumberOfBins,0,256));
         SelXVtxPosition.back()->SetStats(0);
         SelXVtxPosition.back()->GetXaxis()->SetTitle("Vertex x [cm]");
         SelXVtxPosition.back()->GetYaxis()->SetTitle("No. of events");
-        SelXVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",NumberOfBins,-233/2,233/2));
         SelYVtxPosition.back()->SetStats(0);
         SelYVtxPosition.back()->GetXaxis()->SetTitle("Vertex y [cm]");
         SelYVtxPosition.back()->GetYaxis()->SetTitle("No. of events");
-        SelYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8));
         SelZVtxPosition.back()->SetStats(0);
         SelZVtxPosition.back()->GetXaxis()->SetTitle("Vertex z [cm]");
         SelZVtxPosition.back()->GetYaxis()->SetTitle("No. of events");
-        SelZVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
         
         if(Label.at(0) == 'D')
         {
@@ -371,77 +360,66 @@ void HistoProducerNoSys()
         BgrTheta.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrTheta.back()->GetXaxis()->SetTitle("#theta [rad]");
         BgrTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
-        BgrTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1));
         BgrCosTheta.back()->SetStats(0);
         BgrCosTheta.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrCosTheta.back()->GetXaxis()->SetTitle("cos(#theta)");
         BgrCosTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
-        BgrCosTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142));
         BgrPhi.back()->SetStats(0);
         BgrPhi.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         BgrPhi.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
-        BgrPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3));
         BgrEnergy.back()->SetStats(0);
         BgrEnergy.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         BgrEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
-        BgrEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
         
         BgrMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3));
         BgrMomentum.back()->SetStats(0);
         BgrMomentum.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrMomentum.back()->GetXaxis()->SetTitle("Muon Momentum [GeV/c]");
         BgrMomentum.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dp}");
-        BgrMomentum.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",NumberOfBins,0,256));
         BgrXTrackStartEnd.back()->SetStats(0);
         BgrXTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrXTrackStartEnd.back()->GetXaxis()->SetTitle("x [cm]");
         BgrXTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
-        BgrXTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",NumberOfBins,-233/2,233/2));
         BgrYTrackStartEnd.back()->SetStats(0);
         BgrYTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrYTrackStartEnd.back()->GetXaxis()->SetTitle("y [cm]");
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
-        BgrYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8));
         BgrZTrackStartEnd.back()->SetStats(0);
         BgrZTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
         BgrZTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
-        BgrZTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",NumberOfBins,0,256));
         BgrXVtxPosition.back()->SetStats(0);
         BgrXVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrXVtxPosition.back()->GetXaxis()->SetTitle("x [cm]");
         BgrXVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
-        BgrXVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",NumberOfBins,-233/2,233/2));
         BgrYVtxPosition.back()->SetStats(0);
         BgrYVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrYVtxPosition.back()->GetXaxis()->SetTitle("y [cm]");
         BgrYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
-        BgrYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8));
         BgrZVtxPosition.back()->SetStats(0);
         BgrZVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
         BgrZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
-        BgrZVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrCount++;
     }

@@ -173,7 +173,7 @@ void HistoProducerMC()
     MCLabel.push_back ( "MC True Contained Tracks" );
     MCLabel.push_back ( "Selection on MC BNB+Cosmic with Stat. Error" );
 
-    TLegend* LegendInt = new TLegend ( 0.15,0.65,0.5,0.85 );
+    TLegend* LegendInt = new TLegend ( 0.15,0.65,0.55,0.85 );
     LegendInt->SetLineColorAlpha ( 0,0 );
     LegendInt->SetLineStyle ( 0 );
     LegendInt->SetFillStyle ( 0 );
@@ -185,7 +185,7 @@ void HistoProducerMC()
     IntLabel.push_back ( "CCRES events after selection" );
     IntLabel.push_back ( "CCDIS events after selection" );
 
-    TLegend* LegendIntTrue = new TLegend ( 0.15,0.65,0.5,0.85 );
+    TLegend* LegendIntTrue = new TLegend ( 0.15,0.65,0.55,0.85 );
     LegendIntTrue->SetLineColorAlpha ( 0,0 );
     LegendIntTrue->SetLineStyle ( 0 );
     LegendIntTrue->SetFillStyle ( 0 );
@@ -250,69 +250,58 @@ void HistoProducerMC()
 
         SelectionTheta.push_back ( new TH1F ( ( "#theta-Angle"+Label ).c_str(),"#theta-Angle of Selected Track",NumberOfBins,0,3.142 ) );
         SelectionTheta.back()->SetStats ( 0 );
-        SelectionTheta.back()->GetXaxis()->SetTitle ( "#theta-angle [rad]" );
+        SelectionTheta.back()->GetXaxis()->SetTitle ( "#thetaangle [rad]" );
         SelectionTheta.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelectionTheta.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionCosTheta.push_back ( new TH1F ( ( "cos#theta-Angle"+Label ).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1 ) );
         SelectionCosTheta.back()->SetStats ( 0 );
         SelectionCosTheta.back()->GetXaxis()->SetTitle ( "cos(#theta)" );
         SelectionCosTheta.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelectionCosTheta.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionPhi.push_back ( new TH1F ( ( "#phi-Angle"+Label ).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142 ) );
         SelectionPhi.back()->SetStats ( 0 );
-        SelectionPhi.back()->GetXaxis()->SetTitle ( "#phi-angle [rad]" );
+        SelectionPhi.back()->GetXaxis()->SetTitle ( "#phi angle [rad]" );
         SelectionPhi.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelectionPhi.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionEnergy.push_back ( new TH1F ( ( "Energy"+Label ).c_str(),"Energy of Selected Track",NumberOfBins,0,3 ) );
         SelectionEnergy.back()->SetStats ( 0 );
         SelectionEnergy.back()->GetXaxis()->SetTitle ( "Muon Kinetic Energy [MeV]" );
         SelectionEnergy.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelectionEnergy.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelectionMomentum.push_back ( new TH1F ( ( "Momentum"+Label ).c_str(),"Momentum of Selected Track",NumberOfBins,0,3 ) );
         SelectionMomentum.back()->SetStats ( 0 );
         SelectionMomentum.back()->GetXaxis()->SetTitle ( "Muon Momentum [GeV/c]" );
         SelectionMomentum.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelectionMomentum.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelXTrackStartEnd.push_back ( new TH1F ( ( "XTrack"+Label ).c_str(),"X Track Start & End Positions",NumberOfBins,0,256 ) );
         SelXTrackStartEnd.back()->SetStats ( 0 );
         SelXTrackStartEnd.back()->GetXaxis()->SetTitle ( "Track start and end x [cm]" );
         SelXTrackStartEnd.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelXTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelYTrackStartEnd.push_back ( new TH1F ( ( "YTrack"+Label ).c_str(),"Y Track Start & End Positions",NumberOfBins,-233/2,233/2 ) );
         SelYTrackStartEnd.back()->SetStats ( 0 );
         SelYTrackStartEnd.back()->GetXaxis()->SetTitle ( "Track start and end y [cm]" );
         SelYTrackStartEnd.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelYTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelZTrackStartEnd.push_back ( new TH1F ( ( "ZTrack"+Label ).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8 ) );
         SelZTrackStartEnd.back()->SetStats ( 0 );
         SelZTrackStartEnd.back()->GetXaxis()->SetTitle ( "Track start and end z [cm]" );
         SelZTrackStartEnd.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelZTrackStartEnd.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelXVtxPosition.push_back ( new TH1F ( ( "XVertex"+Label ).c_str(),"X Vertex Position",NumberOfBins,0,256 ) );
         SelXVtxPosition.back()->SetStats ( 0 );
         SelXVtxPosition.back()->GetXaxis()->SetTitle ( "Vertex x [cm]" );
         SelXVtxPosition.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelXVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelYVtxPosition.push_back ( new TH1F ( ( "YVertex"+Label ).c_str(),"Y Vertex Position",NumberOfBins,-233/2,233/2 ) );
         SelYVtxPosition.back()->SetStats ( 0 );
         SelYVtxPosition.back()->GetXaxis()->SetTitle ( "Vertex y [cm]" );
         SelYVtxPosition.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelYVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
 
         SelZVtxPosition.push_back ( new TH1F ( ( "ZVertex"+Label ).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8 ) );
         SelZVtxPosition.back()->SetStats ( 0 );
         SelZVtxPosition.back()->GetXaxis()->SetTitle ( "Vertex z [cm]" );
         SelZVtxPosition.back()->GetYaxis()->SetTitle ( "No. of events" );
-        SelZVtxPosition.back()->GetYaxis()->SetTitleOffset ( 1.3 );
     }
 
     int Run;
@@ -909,7 +898,7 @@ void HistoProducerMC()
     MGTheta->Add ( EffTheta.at ( 1 )->CreateGraph() );
     Canvas2->cd();
     MGTheta->Draw ( "AP" );
-    MGTheta->GetXaxis()->SetTitle ( "#theta-Angle [rad]" );
+    MGTheta->GetXaxis()->SetTitle ( "#theta angle [rad]" );
     MGTheta->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEfficiency->Draw();
     TextSimulation.Draw();
@@ -1097,7 +1086,7 @@ void HistoProducerMC()
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
         Graph->Draw("sameP");
     }
-    MGPhi->GetXaxis()->SetTitle ( "#phi-angle [rad]" );
+    MGPhi->GetXaxis()->SetTitle ( "#phi angle [rad]" );
     MGPhi->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEfficiency->Draw();
     TextSimulation.Draw();
@@ -1136,7 +1125,7 @@ void HistoProducerMC()
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
         Graph->Draw("sameP");
     }
-    MGPhiInt->GetXaxis()->SetTitle ( "#phi-angle [rad]" );
+    MGPhiInt->GetXaxis()->SetTitle ( "#phi angle [rad]" );
     MGPhiInt->GetYaxis()->SetTitle ( "Efficiency" );
 //     MGPhiInt->SetMaximum(0.22);
     MGPhiInt->SetMinimum(0.0);
@@ -1447,7 +1436,7 @@ void HistoProducerMC()
     TextSelection.Draw();
     Canvas13Sel->SaveAs ( ( "MCPhiSel"+SelectionLabel+"."+FileType ).c_str() );
 
-    LegendInt->SetX1NDC ( 0.5 );
+    LegendInt->SetX1NDC ( 0.45 );
     LegendInt->SetY1NDC ( 0.65 );
     LegendInt->SetX2NDC ( 0.85 );
     LegendInt->SetY2NDC ( 0.85 );
@@ -1468,7 +1457,7 @@ void HistoProducerMC()
     TextSelection.Draw();
     Canvas13Int->SaveAs ( ( "MCPhi_Int"+SelectionLabel+"."+FileType ).c_str() );
 
-    LegendIntTrue->SetX1NDC ( 0.5 );
+    LegendIntTrue->SetX1NDC ( 0.45 );
     LegendIntTrue->SetY1NDC ( 0.65 );
     LegendIntTrue->SetX2NDC ( 0.85 );
     LegendIntTrue->SetY2NDC ( 0.85 );
