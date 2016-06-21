@@ -561,6 +561,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             int VertexCandidate;
 
             int MCTrackCandidate;
+            int MCVertexCandidate;
             int NuMuCCTrackCandidate;
 
             unsigned int EventsWithFlash = 0;
@@ -591,6 +592,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
             TBranch* BrVtxCand = SelectionTree->Branch("VertexCand",&VertexCandidate,"VertexCand/I");
             TBranch* BrMCTrackCand = SelectionTree->Branch("MCTrackCand",&MCTrackCandidate,"MCTrackCand/I");
+            TBranch* BrMCVtxCand = SelectionTree->Branch("MCVertexCand",&MCVertexCandidate,"MCVertexCand/I");
 
             double TotalPOT = 0.0;
 
@@ -640,6 +642,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                 MCTrackCandidate = -1;
                 NuMuCCTrackCandidate = -1;
                 float MCTrackCandLength = 0;
+                MCVertexCandidate = -1;
 
                 // Loop over all MC neutrino vertices
                 for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
@@ -653,7 +656,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                         // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
                         if( ( abs(PDG_truth[track_no]) == 13 || abs(PDG_truth[track_no]) == 11 ) // Track has to be a muon or a electron
 //                                 && flashtag
-                                && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) // true vertex has to be in FV
+                                && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) // true vertex has to be in FV
                                 && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
 //                                 && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
                                 && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
@@ -663,12 +666,13 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                         {
                             // Fill new length and candidate index
                             MCTrackCandidate = track_no;
+                            MCVertexCandidate = vertex_no
                         }
                     } // MC particle loop
                 } // MC vertex loop
 
                 // Count up the number of contained mc-tracks if there are mc candidates
-                if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && PDG_truth[MCTrackCandidate] == 13)
+                if(MCTrackCandidate > -1 && ccnc_truth[MCVertexCandidate] == 0 && PDG_truth[MCTrackCandidate] == 13)
                 {
                     NumberOfSignalTruth++;
                     NuMuCCTrackCandidate = MCTrackCandidate;
@@ -825,10 +829,10 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             MCEventsTrackLong++;
 
                                         // If the event is a CC interaction and the selected track is of neutrino origin
-                                        if(ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        if(ccnc_truth[MCVertexCandidate] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
                                             // If there is a track candidate
-                                            if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                            if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]))
                                             {
                                                 NumberOfSignalTruthSel++;
                                             }
@@ -840,7 +844,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             {
                                                 NumberOfBgrNueTruthSel++;
                                             }
-                                            else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0])) // if not in fiducial volume
+                                            else if(!inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate])) // if not in fiducial volume
                                             {
                                                 NumberOfBgrNuOutFVSel++;
                                             }
@@ -848,7 +852,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             hSelectionCCPhi->Fill(trkphi[TrackCandidate]);
                                             hSelectionCCTrackRange->Fill(TrackCandLength);
                                         } // if CC interaction
-                                        else if(ccnc_truth[0] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1) // else if NC interaction
+                                        else if(ccnc_truth[MCVertexCandidate] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1) // else if NC interaction
                                         {
                                             NumberOfBgrNCTruthSel++;
                                             hSelectionNCTheta->Fill(trktheta[TrackCandidate]);

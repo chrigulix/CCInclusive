@@ -154,12 +154,14 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
 
     int ntrue = 0;
     int MCTrackCandidate;
+    int MCVertexCandidate;
     
     double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
     
     unsigned int NumberOfSignalTruth;
 
     TBranch* BrMCTrackCand = SelectionTree->Branch("MCTrackCand",&MCTrackCandidate,"MCTrackCand/I");
+    TBranch* BrMCVtxCand = SelectionTree->Branch("MCVertexCand",&MCVertexCandidate,"MCVertexCand/I");
 
     unsigned long int Size = treenc -> GetEntries();
 
@@ -191,7 +193,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
                 // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
                 if( ( abs(PDG_truth[track_no]) == 13 || abs(PDG_truth[track_no]) == 11) // Track has to be a muon or a electron
 //                                 && flashtag
-                        && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) // true vertex has to be in FV
+                        && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) // true vertex has to be in FV
                         && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
 //                                 && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
                         && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
@@ -201,12 +203,13 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
                 {
                     // Fill new length and candidate index
                     MCTrackCandidate = track_no;
+                    MCVertexCandidate = vertex_no;
                 }
             } // MC particle loop
         } // MC vertex loop
 
         // Count up the number of contained mc-tracks if there are mc candidates
-        if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && PDG_truth[MCTrackCandidate] == 13)
+        if(MCTrackCandidate > -1 && ccnc_truth[MCVertexCandidate] == 0 && PDG_truth[MCTrackCandidate] == 13)
         {
 //             if(NumberOfSignalTruth<100)
 //             {

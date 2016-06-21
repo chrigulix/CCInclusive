@@ -616,7 +616,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                 MCTrackCandidate = -1;
                 NuMuCCTrackCandidate = -1;
                 float MCTrackCandRange = 0;
-                int MCVertexCandidate = -1;
+                MCVertexCandidate = -1;
 
                 // Loop over all MC neutrino vertices
                 for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
