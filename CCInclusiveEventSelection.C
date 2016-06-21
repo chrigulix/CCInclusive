@@ -666,7 +666,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                         {
                             // Fill new length and candidate index
                             MCTrackCandidate = track_no;
-                            MCVertexCandidate = vertex_no
+                            MCVertexCandidate = vertex_no;
                         }
                     } // MC particle loop
                 } // MC vertex loop
