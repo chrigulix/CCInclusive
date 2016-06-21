@@ -533,6 +533,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             int VertexCandidate;
 
             int MCTrackCandidate;
+            int MCVertexCandidate;
             int NuMuCCTrackCandidate;
 
             unsigned int EventsWithFlash = 0;
@@ -564,6 +565,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
             TBranch* BrVtxCand = SelectionTree->Branch("VertexCand",&VertexCandidate,"VertexCand/I");
             TBranch* BrMCTrackCand = SelectionTree->Branch("MCTrackCand",&MCTrackCandidate,"MCTrackCand/I");
+            TBranch* BrMCVtxCand = SelectionTree->Branch("MCVertexCand",&MCVertexCandidate,"MCVertexCand/I");
 
             double TotalPOT = 0.0;
 
@@ -844,9 +846,9 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
 
-                                        if(ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        if(ccnc_truth[MCVertexCandidate] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
-                                            if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                            if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]))
                                             {
                                                 NumberOfSignalTruthSel++;
                                             }
@@ -858,7 +860,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                             {
                                                 NumberOfBgrNueTruthSel++;
                                             }
-                                            else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                            else if(!inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]))
                                             {
                                                 NumberOfBgrNuOutFVSel++;
                                             }
@@ -866,7 +868,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                             hSelectionCCPhi->Fill(trkphi[TrackCandidate]);
                                             hSelectionCCTrackRange->Fill(TrackCandLength);
                                         }
-                                        else if(ccnc_truth[0] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        else if(ccnc_truth[MCVertexCandidate] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
                                             NumberOfBgrNCTruthSel++;
                                             hSelectionNCTheta->Fill(trktheta[TrackCandidate]);
