@@ -27,6 +27,8 @@ double FVz = 1036.8;
 double borderx = 10.;
 double bordery = 20.;
 double borderz = 10.;
+double cryoradius = 191.61;
+double cryoz = 1086.49 + 2*67.63;
 
 float GetMaximum(const std::vector<TH1F*>& HistVector);
 void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight);
@@ -37,6 +39,7 @@ bool inDeadRegion(double y, double z);
 std::vector<TSpline5> Systematics();
 void AdjustSysError(std::vector<TH1F*>& HistVector);
 bool inFV(double x, double y, double z);
+bool inCryostat(double x, double y, double z);
 
 void HistoProducerNoSysCuts()
 {
@@ -176,7 +179,8 @@ void HistoProducerNoSysCuts()
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_BITE_v05_08_00"+ SelectionLabel +".root").c_str());
 
     for(const auto& Label : GenLabel)
     {
@@ -399,6 +403,7 @@ void HistoProducerNoSysCuts()
     float ZFlashCenter[5000];
 
     int MCTrkID;
+    int MCVtxID;
     int CCNCFlag[10];
     int TruthMode[10];
     int PDGTruth[5000];
@@ -435,6 +440,8 @@ void HistoProducerNoSysCuts()
     
     unsigned int OnBeamRemain = 0;
     unsigned int OffBeamRemain = 0;
+    unsigned int BNBCosmicRemain = 0;
+    unsigned int BNBTrueMuon = 0;
     
     float OnBeamFactor;
     float OffBeamFactor;
@@ -465,6 +472,7 @@ void HistoProducerNoSysCuts()
         ChainVec.at(file_no) -> SetBranchAddress("flash_zcenter", ZFlashCenter);
 
         ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
+        ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
@@ -546,9 +554,10 @@ void HistoProducerNoSysCuts()
 //             if( YTrackStart[TrkID] < (233./2.-YFVCutValue) && YTrackStart[TrkID] > (-233./2.+YFVCutValue) && YTrackEnd[TrkID] < (233./2.-YFVCutValue) && YTrackEnd[TrkID] > (-233./2.+YFVCutValue) &&
 //                     ZTrackStart[TrkID] < (1036.8-ZFVCutValue) && ZTrackStart[TrkID] > ZFVCutValue && ZTrackEnd[TrkID] < (1036.8-ZFVCutValue) && ZTrackEnd[TrkID] > ZFVCutValue &&
 //                     FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut )
-//             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID]))
-//             if(!(Run < 5750 && Run > 5650) || file_no > 1)
-            if( (TrackPhi[TrkID] < TMath::Pi()/4. && TrackPhi[TrkID] > -TMath::Pi()/4.) || TrackPhi[TrkID] < -TMath::Pi()*3/4. || TrackPhi[TrkID] > TMath::Pi()*3/4. )
+//             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID])) // Dead wire region cut
+//             if(!(Run < 5750 && Run > 5650) || file_no > 1) // Bad Runs with low purity
+//             if( (TrackPhi[TrkID] < TMath::Pi()/4. && TrackPhi[TrkID] > -TMath::Pi()/4.) || TrackPhi[TrkID] < -TMath::Pi()*3/4. || TrackPhi[TrkID] > TMath::Pi()*3/4. ) // Phi cut for janet
+            if(!inCryostat(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID])) // Cryostat cut
 //             if(true)
             {
                 if(file_no == 0)
@@ -559,6 +568,16 @@ void HistoProducerNoSysCuts()
                 else if(file_no == 1)
                 {
                     OffBeamRemain++;
+                }
+                else if(file_no == 2)
+                {
+                    std::cout << MCVtxID << std::endl;
+                    BNBCosmicRemain++;
+                    if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                    {
+                        BNBTrueMuon++;
+                    }
+                    
                 }
 
                 RangeVsPE.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),FlashMax);
@@ -745,6 +764,7 @@ void HistoProducerNoSysCuts()
         
         std::cout << "OnBeam  : " << OnBeamFactor << " " << OnBeamRemain << std::endl;
         std::cout << "OffBeam  : " << OffBeamFactor << " " << OffBeamRemain << std::endl;
+        std::cout << "BNB+Cosmic  : " << BNBCosmicRemain << " " << BNBTrueMuon << std::endl;
 
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
@@ -1320,4 +1340,21 @@ bool inFV(double x, double y, double z)
 {
     if(x < (FVx - borderx) && (x > borderx) && (y < (FVy/2. - bordery)) && (y > (-FVy/2. + bordery)) && (z < (FVz - borderz)) && (z > borderz)) return true;
     else return false;
+}
+
+bool inCryostat(double x, double y, double z)
+{
+    // If out of cylinder axis set false
+    if(z < FVz/2-cryoz/2 || z > FVz/2+cryoz/2)
+    {
+        return false;
+    }
+    else if(sqrt( pow(x-FVx/2,2) + pow(y,2)) > cryoradius)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }

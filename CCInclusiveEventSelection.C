@@ -40,6 +40,23 @@ double FlashTrackDist(double flash, double start, double end) {
     }
 }
 
+bool inCryostat(double x, double y, double z)
+{
+    // If out of cylinder axis set false
+    if(z < FVz/2-cryoz/2 || z > FVz/2+cryoz/2)
+    {
+        return false;
+    }
+    else if(sqrt( pow(x-FVx/2,2) + pow(y,2)) > cryoradius)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 // Main function
 int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned int NumberOfThreads)
 {

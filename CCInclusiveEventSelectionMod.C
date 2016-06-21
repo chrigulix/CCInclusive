@@ -41,6 +41,23 @@ double FlashTrackDist(double flash, double start, double end) {
     }
 }
 
+bool inCryostat(double x, double y, double z)
+{
+    // If out of cylinder axis set false
+    if(z < FVz/2-cryoz/2 || z > FVz/2+cryoz/2)
+    {
+        return false;
+    }
+    else if(sqrt( pow(x-FVx/2,2) + pow(y,2)) > cryoradius)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 // Main function
 int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadNumber, unsigned int NumberOfThreads)
 {
@@ -630,8 +647,9 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                         // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
                         if( ( abs(PDG_truth[track_no]) == 13 || abs(PDG_truth[track_no]) == 11 ) // Track has to be a muon or a electron
 //                                 && flashtag
-                                && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) // true vertex has to be in FV
-                                && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
+//                                 && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) // true vertex has to be in FV
+                                && inCryostat(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no])
+//                                 && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
 //                                 && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
                                 && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
 //                                 && MCTrackLength > lengthcut // Track has to be long
@@ -842,6 +860,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                     // If longest track is longer than 75 cm
                                     if(TrackCandLength > lengthcut)
                                     {
+                                        std::cout << MCVertexCandidate << std::endl;
+                                        
                                         EventsTrackLong++;
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
