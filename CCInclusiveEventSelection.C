@@ -21,6 +21,8 @@ double FVz = 1036.8;
 double borderx = 10.;
 double bordery = 20.;
 double borderz = 10.;
+double cryoradius = 191.61;
+double cryoz = 1086.49 + 2*67.63;
 
 //This function returns if a 3D point is within the fiducial volume
 bool inFV(double x, double y, double z) {
