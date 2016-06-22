@@ -869,6 +869,10 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                     // If longest track is longer than 75 cm
                                     if(TrackCandLength > lengthcut)
                                     {
+                                        EventsTrackLong++;
+                                        if(NuMuCCTrackCandidate > -1)
+                                            MCEventsTrackLong++;
+
                                         // If track origin is neutrino
                                         if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
@@ -880,14 +884,11 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                                 {
                                                     // Store new MCTrackCandidate and MCVertexCandidate
                                                     MCTrackCandidate = track_no;
+                                                    NuMuCCTrackCandidate = track_no;
                                                     MCVertexCandidate = MCTrueIndex[track_no];
                                                 }
                                             } // end MCtrack loop
                                         } // if neutrino origin
-                                        
-                                        EventsTrackLong++;
-                                        if(NuMuCCTrackCandidate > -1)
-                                            MCEventsTrackLong++;
 
                                         if(MCVertexCandidate > -1 && ccnc_truth[MCVertexCandidate] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
