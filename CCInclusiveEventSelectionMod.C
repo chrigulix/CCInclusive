@@ -869,10 +869,6 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                     // If longest track is longer than 75 cm
                                     if(TrackCandLength > lengthcut)
                                     {
-                                        EventsTrackLong++;
-                                        if(NuMuCCTrackCandidate > -1)
-                                            MCEventsTrackLong++;
-
                                         // If track origin is neutrino
                                         if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
@@ -884,11 +880,14 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                                 {
                                                     // Store new MCTrackCandidate and MCVertexCandidate
                                                     MCTrackCandidate = track_no;
-                                                    NuMuCCTrackCandidate = track_no;
                                                     MCVertexCandidate = MCTrueIndex[track_no];
                                                 }
                                             } // end MCtrack loop
                                         } // if neutrino origin
+                                        
+                                        EventsTrackLong++;
+                                        if(NuMuCCTrackCandidate > -1)
+                                            MCEventsTrackLong++;
 
                                         if(MCVertexCandidate > -1 && ccnc_truth[MCVertexCandidate] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
@@ -963,7 +962,10 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
 //                                         if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
 //                                                 ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
 //                                           )
-                                        if( MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
+
+                                        // If the MC vertex candidate is in the FV and the muon of the numu CC interaction was picked
+                                        if(MCVertexCandidate > -1 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]) 
+                                          && PDG_truth[MCTrackCandidate] == 13 && MCTrackID[MCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
                                         {
                                             EventsTruelyReco++;
                                         }
