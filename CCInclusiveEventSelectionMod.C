@@ -581,7 +581,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             unsigned int NumberOfBgrNueTruthSel = 0;
             unsigned int NumberOfBgrCosmicSel = 0;
             unsigned int NumberOfBgrNuOutFVSel = 0;
-
+            unsigned int NumberOfUnknownCCBgr = 0;
+            unsigned int NumberOfUnknownBgr = 0;
 
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
             TBranch* BrVtxCand = SelectionTree->Branch("VertexCand",&VertexCandidate,"VertexCand/I");
@@ -888,38 +889,46 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
 
-                                        if(ccnc_truth[MCVertexCandidate] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        if(MCVertexCandidate > -1 && ccnc_truth[MCVertexCandidate] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
-                                            if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]))
+                                            if(nuPDG_truth[MCVertexCandidate] == 14 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]))
                                             {
                                                 NumberOfSignalTruthSel++;
                                             }
-                                            else if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == -13)
+                                            else if(nuPDG_truth[MCVertexCandidate] == -14) // if anti-neutrino
                                             {
                                                 NumberOfBgrNumuBarTruthSel++;
                                             }
-                                            else if(MCTrackCandidate > -1 && abs(PDG_truth[MCTrackCandidate]) == 11)
+                                            else if(abs(nuPDG_truth[MCVertexCandidate]) == 12) // if electron like neutrino
                                             {
                                                 NumberOfBgrNueTruthSel++;
                                             }
-                                            else if(!inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]))
+                                            else if(!inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate])) // if not in fiducial volume
                                             {
                                                 NumberOfBgrNuOutFVSel++;
+                                            }
+                                            else
+                                            {
+                                                NumberOfUnknownCCBgr++;
                                             }
                                             hSelectionCCTheta->Fill(trktheta[TrackCandidate]);
                                             hSelectionCCPhi->Fill(trkphi[TrackCandidate]);
                                             hSelectionCCTrackRange->Fill(TrackCandLength);
                                         }
-                                        else if(ccnc_truth[MCVertexCandidate] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        else if(MCVertexCandidate > -1 && ccnc_truth[MCVertexCandidate] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1) // else if NC interaction
                                         {
                                             NumberOfBgrNCTruthSel++;
                                             hSelectionNCTheta->Fill(trktheta[TrackCandidate]);
                                             hSelectionNCPhi->Fill(trkphi[TrackCandidate]);
                                             hSelectionNCTrackRange->Fill(TrackCandLength);
                                         }
-                                        else if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] != 1)
+                                        else if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] != 1) // If selected track is not associated to a neutrino
                                         {
                                             NumberOfBgrCosmicSel++;
+                                        }
+                                        else
+                                        {
+                                            NumberOfUnknownBgr++;
                                         }
 
                                         // Fill Selection Plots
@@ -1034,6 +1043,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             std::cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << std::endl;
 //             std::cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << std::endl;
             std::cout << std::endl;
+            std::cout << "number of unknown CC bgr : " <<  NumberOfUnknownCCBgr << std::endl;
+            std::cout << "number of unknown bgr : " <<  NumberOfUnknownBgr << std::endl;
             std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
 
             delete hXVertexPosition;

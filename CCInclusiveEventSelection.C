@@ -607,6 +607,8 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             unsigned int NumberOfBgrNueTruthSel = 0;
             unsigned int NumberOfBgrCosmicSel = 0;
             unsigned int NumberOfBgrNuOutFVSel = 0;
+            unsigned int NumberOfUnknownCCBgr = 0;
+            unsigned int NumberOfUnknownBgr = 0;
 
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
             TBranch* BrVtxCand = SelectionTree->Branch("VertexCand",&VertexCandidate,"VertexCand/I");
@@ -863,24 +865,23 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             } // end MCtrack loop
                                         } // if neutrino origin
                                         
-                                        
                                         EventsTrackLong++;
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
 
                                         // If the event is a CC interaction and the selected track is of neutrino origin
-                                        if(ccnc_truth[MCVertexCandidate] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        if(MCVertexCandidate > -1 && ccnc_truth[MCVertexCandidate] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
                                             // If there is a track candidate
-                                            if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]))
+                                            if(nuPDG_truth[MCVertexCandidate] == 14 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]))
                                             {
                                                 NumberOfSignalTruthSel++;
                                             }
-                                            else if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == -13) // if anti-neutrino
+                                            else if(nuPDG_truth[MCVertexCandidate] == -14) // if anti-neutrino
                                             {
                                                 NumberOfBgrNumuBarTruthSel++;
                                             }
-                                            else if(MCTrackCandidate > -1 && abs(PDG_truth[MCTrackCandidate]) == 11) // if electron like neutrino
+                                            else if(abs(nuPDG_truth[MCVertexCandidate]) == 12) // if electron like neutrino
                                             {
                                                 NumberOfBgrNueTruthSel++;
                                             }
@@ -888,11 +889,15 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             {
                                                 NumberOfBgrNuOutFVSel++;
                                             }
+                                            else
+                                            {
+                                                NumberOfUnknownCCBgr++;
+                                            }
                                             hSelectionCCTheta->Fill(trktheta[TrackCandidate]);
                                             hSelectionCCPhi->Fill(trkphi[TrackCandidate]);
                                             hSelectionCCTrackRange->Fill(TrackCandLength);
                                         } // if CC interaction
-                                        else if(ccnc_truth[MCVertexCandidate] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1) // else if NC interaction
+                                        else if(MCVertexCandidate > -1 && ccnc_truth[MCVertexCandidate] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1) // else if NC interaction
                                         {
                                             NumberOfBgrNCTruthSel++;
                                             hSelectionNCTheta->Fill(trktheta[TrackCandidate]);
@@ -902,6 +907,10 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                         else if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] != 1) // If selected track is not associated to a neutrino
                                         {
                                             NumberOfBgrCosmicSel++;
+                                        }
+                                        else
+                                        {
+                                            NumberOfUnknownBgr++;
                                         }
 
                                         // Fill Selection Plots
