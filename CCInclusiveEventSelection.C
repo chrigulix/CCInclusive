@@ -266,6 +266,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     Float_t	   ZMCTrackEnd[maxtracks];
 
     Int_t          MCTrackID[maxtracks];
+    Int_t          MCTrueIndex[maxtracks];
 
 
     //define cut variables
@@ -336,6 +337,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             treenc -> SetBranchAddress("EndPointy", YMCTrackEnd);
             treenc -> SetBranchAddress("EndPointz", ZMCTrackEnd);
             treenc -> SetBranchAddress("TrackId", MCTrackID);
+            treenc -> SetBranchAddress("MCTruthIndex", MCTrueIndex);
 
             // Product specific stuff
             treenc -> SetBranchAddress(("ntracks_"+TrackingName).c_str(),&ntracks_reco);
@@ -657,9 +659,9 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                 } // flash loop
 
                 MCTrackCandidate = -1;
+                MCVertexCandidate = -1;
                 NuMuCCTrackCandidate = -1;
                 float MCTrackCandLength = 0;
-                MCVertexCandidate = -1;
 
                 // Loop over all MC neutrino vertices
                 for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
@@ -694,6 +696,10 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                     NumberOfSignalTruth++;
                     NuMuCCTrackCandidate = MCTrackCandidate;
                 }
+                
+                // Reset Track and Vertex Candidates
+                MCTrackCandidate = -1;
+                MCVertexCandidate = -1;
 
                 // If there is a POT entry or we are not looking at beam data
 //                 if(potbnb > 0.0 || (GeneratorName != "data_bnb" && GeneratorName !="data_onbeam_bnb"))
@@ -841,6 +847,23 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                     // If longest track is longer than 75 cm
                                     if(TrackCandLength > lengthcut)
                                     {
+                                        // If track origin is neutrino
+                                        if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        {
+                                            // Loop over all MCTracks
+                                            for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
+                                            {
+                                                // If MCTrackID is the same as the back tracked TruthID
+                                                if(MCTrackID[track_no] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
+                                                {
+                                                    // Store new MCTrackCandidate and MCVertexCandidate
+                                                    MCTrackCandidate = track_no;
+                                                    MCVertexCandidate = MCTrueIndex[track_no];
+                                                }
+                                            } // end MCtrack loop
+                                        } // if neutrino origin
+                                        
+                                        
                                         EventsTrackLong++;
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;

@@ -407,13 +407,27 @@ void HistoProducerNoSysCuts()
     int CCNCFlag[10];
     int TruthMode[10];
     int PDGTruth[5000];
+    int NumberOfNuTruthEv;
+    int NumberOfMCTracks;
     float NuEnergyTruth[10];
     float nuvtxx_truth[10]; //true vertex x (in cm)
     float nuvtxy_truth[10];
     float nuvtxz_truth[10];
+    
+    float XMCTrackStart[5000];
+    float YMCTrackStart[5000];
+    float ZMCTrackStart[5000];
+
+    float XMCTrackEnd[5000];
+    float YMCTrackEnd[5000];
+    float ZMCTrackEnd[5000];
+
+    int MCTrackID[5000];
+    int MCTrueIndex[5000];
 
     short TrkBestPlane[5000];
     short TrkOrigin[5000][3];
+    int TrackIDTruth[5000][3];
 
     float TrackTheta[5000];
     float TrackPhi[5000];
@@ -474,13 +488,26 @@ void HistoProducerNoSysCuts()
         ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
         ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
+        ChainVec.at(file_no) -> SetBranchAddress("mcevts_truth", &NumberOfNuTruthEv);
+        ChainVec.at(file_no) -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
         ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
         ChainVec.at(file_no) -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
         ChainVec.at(file_no) -> SetBranchAddress("nuvtxy_truth", nuvtxy_truth);
         ChainVec.at(file_no) -> SetBranchAddress("nuvtxz_truth", nuvtxz_truth);
+        ChainVec.at(file_no) -> SetBranchAddress("StartPointx", XMCTrackStart);
+        ChainVec.at(file_no) -> SetBranchAddress("StartPointy", YMCTrackStart);
+        ChainVec.at(file_no) -> SetBranchAddress("StartPointz", ZMCTrackStart);
+        ChainVec.at(file_no) -> SetBranchAddress("EndPointx", XMCTrackEnd);
+        ChainVec.at(file_no) -> SetBranchAddress("EndPointy", YMCTrackEnd);
+        ChainVec.at(file_no) -> SetBranchAddress("EndPointz", ZMCTrackEnd);
+        
+        ChainVec.at(file_no) -> SetBranchAddress("TrackId", MCTrackID);
+        ChainVec.at(file_no) -> SetBranchAddress("MCTruthIndex", MCTrueIndex);
+        
         ChainVec.at(file_no) -> SetBranchAddress(("trkorigin_"+TrackProdName).c_str(), TrkOrigin);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkidtruth_"+TrackProdName).c_str(),TrackIDTruth);
         ChainVec.at(file_no) -> SetBranchAddress(("trkpidbestplane_"+TrackProdName).c_str(), TrkBestPlane);
 
         ChainVec.at(file_no) -> SetBranchAddress(("trkke_"+TrackProdName).c_str(), KineticEnergy);
@@ -529,6 +556,9 @@ void HistoProducerNoSysCuts()
         float YFVCutValue = 20; //20
         float ZFVCutValue = 10; //10
         float FlashTrackCut = 80; //80
+        
+        int MCTrackCandidate;
+        int MCVertexCandidate;
 
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
@@ -548,6 +578,24 @@ void HistoProducerNoSysCuts()
                 }
             }
             
+            MCTrackCandidate = -1;
+            MCVertexCandidate = -1;
+            
+            if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+            {
+                for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
+                {
+                    if(MCTrackID[track_no] == TrackIDTruth[TrkID][TrkBestPlane[TrkID]])
+                    {
+                        MCTrackCandidate = track_no;
+                        MCVertexCandidate = MCTrueIndex[track_no];
+                        
+                        std::cout << tree_index << " " << MCTrackCandidate << " " << MCVertexCandidate << std::endl;
+                    }
+                }
+                
+            }
+            
             Signal++;
 
 //             if(FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut  && YTrackStart[TrkID] < (233./2.-30) && YTrackStart[TrkID] > (-233./2.+30) && YTrackEnd[TrkID] < (233./2.-30) && YTrackEnd[TrkID] > (-233./2.+30))
@@ -557,7 +605,7 @@ void HistoProducerNoSysCuts()
 //             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID])) // Dead wire region cut
 //             if(!(Run < 5750 && Run > 5650) || file_no > 1) // Bad Runs with low purity
 //             if( (TrackPhi[TrkID] < TMath::Pi()/4. && TrackPhi[TrkID] > -TMath::Pi()/4.) || TrackPhi[TrkID] < -TMath::Pi()*3/4. || TrackPhi[TrkID] > TMath::Pi()*3/4. ) // Phi cut for janet
-            if(!inCryostat(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID])) // Cryostat cut
+            if( !inCryostat(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]) ) // Cryostat cut
 //             if(true)
             {
                 if(file_no == 0)
