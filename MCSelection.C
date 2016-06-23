@@ -102,7 +102,8 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     Float_t        MCTheta[maxtracks];
     Float_t        MCPhi[maxtracks];
     Float_t        MCEnergy[maxtracks];
-    
+    Int_t        MCTrueIndex[maxtracks];
+
     treenc -> SetBranchStatus("*",0);
     treenc -> SetBranchStatus("mcevts_truth", 1);
     treenc -> SetBranchStatus("nuvtxx_truth", 1);
@@ -124,6 +125,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchStatus("theta", 1);
     treenc -> SetBranchStatus("phi", 1);
     treenc -> SetBranchStatus("Eng", 1);
+    treenc -> SetBranchAddress("MCTruthIndex", 1);
 
     treenc -> SetBranchAddress("mcevts_truth", &mcevts_truth);
     treenc -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
@@ -145,8 +147,9 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchAddress("theta", MCPhi);
     treenc -> SetBranchAddress("phi", MCTheta);
     treenc -> SetBranchAddress("Eng", MCEnergy);
-    
-    
+    treenc -> SetBranchAddress("MCTruthIndex", MCTrueIndex);
+
+
     // Open output file
     TFile* OutputFile = new TFile(("rootfiles/Hist_MC_Truth_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
     // Make a clone tree which gets filled
@@ -155,9 +158,9 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     int ntrue = 0;
     int MCTrackCandidate;
     int MCVertexCandidate;
-    
+
     double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
-    
+
     unsigned int NumberOfSignalTruth;
 
     TBranch* BrMCTrackCand = SelectionTree->Branch("MCTrackCand",&MCTrackCandidate,"MCTrackCand/I");
@@ -179,78 +182,44 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
         treenc -> GetEntry(i);
 
         MCTrackCandidate = -1;
-        float MCTrackCandRange = 0;
+        MCVertexCandidate = -1;
 
         // Loop over all MC neutrino vertices
         for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
         {
-            // Loop over all MC particles
-            for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
+            // Check if there is a numuCC vertex in the FV
+            if( nuPDG_truth[vertex_no] == 14 && ccnc_truth[vertex_no] == 0 && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) )
             {
-                // Calculate MCTrack length
-                float MCTrackLength = sqrt(pow(XMCTrackStart[track_no] - XMCTrackEnd[track_no],2) + pow(YMCTrackStart[track_no] - YMCTrackEnd[track_no],2) + pow(ZMCTrackStart[track_no] - ZMCTrackEnd[track_no],2));
-
-                // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
-                if( ( abs(PDG_truth[track_no]) == 13 || abs(PDG_truth[track_no]) == 11) // Track has to be a muon or a electron
-//                                 && flashtag
-                        && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) // true vertex has to be in FV
-                        && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
-//                                 && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
-                        && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
-//                                 && MCTrackLength > lengthcut // Track has to be long
-//                                 && MCTrackLength > MCTrackCandRange // If the current candidate length is shorter than the new length
-                  )
+                // Loop over all MC particles
+                for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
                 {
-                    // Fill new length and candidate index
-                    MCTrackCandidate = track_no;
-                    MCVertexCandidate = vertex_no;
-                }
-            } // MC particle loop
+                    // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
+                    if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no)
+                    {
+                        // Fill track candidate index
+                        MCTrackCandidate = track_no;
+                        MCVertexCandidate = vertex_no;
+                        
+                        // Increase truth count
+                        NumberOfSignalTruth++;
+                        
+                        // Fill selection Tree
+                        SelectionTree->Fill();
+                    }
+                } // MC particle loop
+            } // If numuCC in FV
         } // MC vertex loop
-
-        // Count up the number of contained mc-tracks if there are mc candidates
-        if(MCTrackCandidate > -1 && ccnc_truth[MCVertexCandidate] == 0 && PDG_truth[MCTrackCandidate] == 13)
-        {
-//             if(NumberOfSignalTruth<100)
-//             {
-//                 std::cout << NumberOfSignalTruth << " " << MCTrackCandidate << " " << XMCTrackStart[MCTrackCandidate] << " " << YMCTrackStart[MCTrackCandidate] << " " << ZMCTrackStart[MCTrackCandidate] << std::endl;
-//             }
-            NumberOfSignalTruth++;
-            SelectionTree->Fill();
-        }
-
-
     }//loop over all events
 
     OutputFile->cd();
 
-//             SelectionTree->Print();
     SelectionTree->Write();
 
-//     std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
-//     std::cout << std::endl;
-//     std::cout << "Track Reco Product Name : " << TrackingName << "  Vertex Reco Product Name : " << VertexingName << std::endl;
-//     std::cout << "Total POT : " << TotalPOT*1e12 << std::endl;
-//     std::cout << "number of CC events with vertex in FV : " << ntrue << std::endl;
-//     std::cout << "number of events with flash > 50 PE : " << EventsWithFlash << " " << MCEventsWithFlash << std::endl;
-//     std::cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << " " << MCEventsTrackNearVertex << std::endl;
-//     std::cout << "number of events with vtx in FV : " << EventsVtxInFV << " " << MCEventsVtxInFV << std::endl;
-//     std::cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << " " << MCEventsFlashMatched << std::endl;
-//     std::cout << "number of events with contained tracks : " << EventsTracksInFV << " " << MCEventsTracksInFV << std::endl;
-//     std::cout << "number of events with longest track > 75cm : " << EventsTrackLong << " " << MCEventsTrackLong << std::endl;
-//     std::cout << "number of events with track start end within 5cm to mc-vtx : " << EventsTruelyReco << std::endl;
+    std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << std::endl;
     std::cout << "number of events with true MC tracks : " << NumberOfSignalTruth << std::endl;
-//     std::cout << "number of well selected events : " << NumberOfSignalTruthSel << std::endl;
-//     std::cout << "number of NC events selected : " << NumberOfBgrNCTruthSel << std::endl;
-//     std::cout << "number of anti-Neutrino events selected : " << NumberOfBgrNumuBarTruthSel << std::endl;
-//     std::cout << "number of Nu_e events selected : " << NumberOfBgrNueTruthSel << std::endl;
-//     std::cout << "number of events selected cosmic : " << NumberOfBgrCosmicSel << std::endl;
-//     std::cout << "event selection efficiency : " <<  (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth << std::endl;
-// //             std::cout << "event selection purity : " << (float)NumberOfSignalTruthSel/(float)(NumberOfBgrNCTruthSel+NumberOfBgrNumuBarTruthSel+NumberOfBgrNueTruthSel)
-//     std::cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << std::endl;
-// //             std::cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << std::endl;
-//     std::cout << std::endl;
-//     std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << std::endl;
+    std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
 
 
 

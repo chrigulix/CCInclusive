@@ -342,14 +342,12 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 
             int Size = treenc -> GetEntries();
 
-//             if(Size > 20000) Size = 20000;
-//             Size = 200000;
-
             // Set start and end event number for multiple threads
             unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads;
             unsigned long int EndEvent = Size*ThreadNumber/NumberOfThreads;
 
             std::cout << "number of events used is: " << EndEvent-StartEvent << " of " << Size << std::endl;
+            
             //Event Loop
             for(int i = StartEvent; i < EndEvent; i++)
             {

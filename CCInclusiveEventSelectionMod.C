@@ -124,25 +124,6 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     }
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
-    std::vector<std::string> SelectionNames;
-
-    SelectionNames.push_back("NumberOfEvents_");
-    SelectionNames.push_back("FlashCut_");
-    SelectionNames.push_back("VertexInFV_");
-    SelectionNames.push_back("TrackToVtx_");
-    SelectionNames.push_back("FlashMatch_");
-    SelectionNames.push_back("ContainedTrack_");
-    SelectionNames.push_back("TrackRange_");
-    SelectionNames.push_back("SelectionEfficiency_");
-    SelectionNames.push_back("SelectionCorrectness_");
-    SelectionNames.push_back("N_sig_truth_");
-    SelectionNames.push_back("N_sig_truth_sel_");
-    SelectionNames.push_back("N_bg_NC_sel_");
-    SelectionNames.push_back("N_bg_numubar_sel_");
-    SelectionNames.push_back("N_bg_nue_sel_");
-    SelectionNames.push_back("N_bg_cosmicbnb_sel_");
-
-
     //maximum array sizes
     const int maxentries = 35000;
     const int maxtracks = 10000;
@@ -368,11 +349,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads;
             unsigned long int EndEvent = Size*ThreadNumber/NumberOfThreads;
 
-
-//             if(Size > 20000) Size = 20000;
-//             Size = 200000;
-
             std::cout << "number of events used is: " << EndEvent-StartEvent << " of " << Size << std::endl;
+            
             //Event Loop
             for(int i = StartEvent; i < EndEvent; i++)
             {
