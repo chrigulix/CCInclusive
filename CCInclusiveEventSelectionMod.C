@@ -399,7 +399,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                         {
                             // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
                             if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no
-                                /*&& sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist*/ )
+                                && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist )
                             {
                                 std::cout << "Hello! " << std::endl;
                                 // Fill track candidate index
