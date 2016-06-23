@@ -125,7 +125,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchStatus("theta", 1);
     treenc -> SetBranchStatus("phi", 1);
     treenc -> SetBranchStatus("Eng", 1);
-    treenc -> SetBranchAddress("MCTruthIndex", 1);
+    treenc -> SetBranchStatus("MCTruthIndex", 1);
 
     treenc -> SetBranchAddress("mcevts_truth", &mcevts_truth);
     treenc -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
