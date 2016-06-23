@@ -416,6 +416,7 @@ void HistoProducerMA()
     float ZFlashCenter[5000];
 
     int MCTrkID;
+    int MCVtxID;
     int CCNCFlag[10];
     int TruthMode[10];
     float TrueLeptonMomentum[10];
@@ -480,6 +481,7 @@ void HistoProducerMA()
         ChainVec.at(file_no) -> SetBranchAddress("flash_zcenter", ZFlashCenter);
 
         ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
+        ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
@@ -625,79 +627,79 @@ void HistoProducerMA()
                 {
                     if(PDGTruth[MCTrkID] == 13)
                     {
-                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]/1000,1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]/1000,1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
 
-                        SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelYTrackStartEnd.back()->Fill(YTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelYTrackStartEnd.back()->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelZTrackStartEnd.back()->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelZTrackStartEnd.back()->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelXVtxPosition.back()->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
-                        SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYTrackStartEnd.back()->Fill(YTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYTrackStartEnd.back()->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZTrackStartEnd.back()->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZTrackStartEnd.back()->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelXVtxPosition.back()->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
                     }
                     else if(PDGTruth[MCTrkID] == -13)
                     {
-                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]/1000,1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]/1000,1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
 
-                        SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelYTrackStartEnd.back()->Fill(YTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelYTrackStartEnd.back()->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelZTrackStartEnd.back()->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelZTrackStartEnd.back()->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelXVtxPosition.back()->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
-                        SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYTrackStartEnd.back()->Fill(YTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYTrackStartEnd.back()->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZTrackStartEnd.back()->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZTrackStartEnd.back()->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelXVtxPosition.back()->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
                     }
                     else if(PDGTruth[MCTrkID] == 11)
                     {
-                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]/1000,1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]/1000,1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
 
-                        SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelYTrackStartEnd.back()->Fill(YTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelYTrackStartEnd.back()->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelZTrackStartEnd.back()->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelZTrackStartEnd.back()->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelXVtxPosition.back()->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
-                        SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYTrackStartEnd.back()->Fill(YTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYTrackStartEnd.back()->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZTrackStartEnd.back()->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZTrackStartEnd.back()->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelXVtxPosition.back()->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
                     }
                     else if(PDGTruth[MCTrkID] == -11)
                     {
-                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]/1000,1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]/1000,1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
 
-                        SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelYTrackStartEnd.back()->Fill(YTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelYTrackStartEnd.back()->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelZTrackStartEnd.back()->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelZTrackStartEnd.back()->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelXVtxPosition.back()->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
-                        SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYTrackStartEnd.back()->Fill(YTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYTrackStartEnd.back()->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZTrackStartEnd.back()->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZTrackStartEnd.back()->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelXVtxPosition.back()->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
+                        SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
                     }
                 }
                 else if(file_no == 2)
@@ -721,9 +723,9 @@ void HistoProducerMA()
                 }
 
                 // Fill Bgr
-                if(file_no == 2 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    if(MCTrkID > -1 && PDGTruth[MCTrkID] == -13)
+                    if(PDGTruth[MCTrkID] == -13)
                     {
                         nubar++;
                         BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -742,7 +744,7 @@ void HistoProducerMA()
                         BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(MCTrkID > -1 && abs(PDGTruth[MCTrkID]) == 11)
+                    else if(abs(PDGTruth[MCTrkID]) == 11)
                     {
                         nue++;
                         BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -761,7 +763,7 @@ void HistoProducerMA()
                         BgrYVtxPosition.at(1)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(1)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                    else if(!inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]))
                     {
                         outFV++;
                         BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -780,24 +782,24 @@ void HistoProducerMA()
                         BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 0)
+                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[MCVtxID] == 0)
                     {
                         nuQE++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 1)
+                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[MCVtxID] == 1)
                     {
                         nuRES++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 2)
+                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[MCVtxID] == 2)
                     {
                         nuDIS++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 3)
+                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[MCVtxID] == 3)
                     {
                         nuCOH++;
                     }
                 }
-                else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                else if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
                     NCnu++;
                     BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));

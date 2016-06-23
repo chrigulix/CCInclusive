@@ -605,7 +605,7 @@ void HistoProducerNoSysCuts()
 //             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID])) // Dead wire region cut
 //             if(!(Run < 5750 && Run > 5650) || file_no > 1) // Bad Runs with low purity
 //             if( (TrackPhi[TrkID] < TMath::Pi()/4. && TrackPhi[TrkID] > -TMath::Pi()/4.) || TrackPhi[TrkID] < -TMath::Pi()*3/4. || TrackPhi[TrkID] > TMath::Pi()*3/4. ) // Phi cut for janet
-            if( !inCryostat(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]) ) // Cryostat cut
+            if( inCryostat(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]) ) // Cryostat cut
 //             if(true)
             {
                 if(file_no == 0)
@@ -619,7 +619,6 @@ void HistoProducerNoSysCuts()
                 }
                 else if(file_no == 2)
                 {
-                    std::cout << MCVtxID << std::endl;
                     BNBCosmicRemain++;
                     if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                     {
@@ -674,9 +673,9 @@ void HistoProducerNoSysCuts()
                 }
 
                 // Fill Bgr
-                if(file_no == 2 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    if(MCTrkID > -1 && PDGTruth[MCTrkID] == -13)
+                    if(PDGTruth[MCTrkID] == -13)
                     {
                         nubar++;
                         BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -695,7 +694,7 @@ void HistoProducerNoSysCuts()
                         BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(MCTrkID > -1 && abs(PDGTruth[MCTrkID]) == 11)
+                    else if(abs(PDGTruth[MCTrkID]) == 11)
                     {
                         nue++;
                         BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -714,7 +713,7 @@ void HistoProducerNoSysCuts()
                         BgrYVtxPosition.at(1)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(1)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                    else if(!inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]))
                     {
                         outFV++;
                         BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -733,24 +732,24 @@ void HistoProducerNoSysCuts()
                         BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 0)
+                    else if(file_no == 2 && inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]) && TruthMode[MCVtxID] == 0)
                     {
                         nuQE++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 1)
+                    else if(file_no == 2 && inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]) && TruthMode[MCVtxID] == 1)
                     {
                         nuRES++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 2)
+                    else if(file_no == 2 && inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]) && TruthMode[MCVtxID] == 2)
                     {
                         nuDIS++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 3)
+                    else if(file_no == 2 && inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]) && TruthMode[MCVtxID] == 3)
                     {
                         nuCOH++;
                     }
                 }
-                else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                else if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
                     NCnu++;
                     BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));

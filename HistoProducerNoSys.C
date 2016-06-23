@@ -438,6 +438,7 @@ void HistoProducerNoSys()
     float ZFlashCenter[5000];
 
     int MCTrkID;
+    int MCVtxID;
     int CCNCFlag[10];
     int TruthMode[10];
     int PDGTruth[5000];
@@ -498,6 +499,7 @@ void HistoProducerNoSys()
         ChainVec.at(file_no) -> SetBranchAddress("flash_zcenter", ZFlashCenter);
 
         ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
+        ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
@@ -631,9 +633,9 @@ void HistoProducerNoSys()
                 }
 
                 // Fill Bgr
-                if(file_no == 2 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    if(MCTrkID > -1 && PDGTruth[MCTrkID] == -13)
+                    if(PDGTruth[MCTrkID] == -13)
                     {
                         SignalFlag = false;
                         nubar++;
@@ -653,7 +655,7 @@ void HistoProducerNoSys()
                         BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(MCTrkID > -1 && abs(PDGTruth[MCTrkID]) == 11)
+                    else if(abs(PDGTruth[MCTrkID]) == 11)
                     {
                         SignalFlag = false;
                         nue++;
@@ -673,7 +675,7 @@ void HistoProducerNoSys()
                         BgrYVtxPosition.at(1)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(1)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                    else if(!inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]))
                     {
                         SignalFlag = false;
                         outFV++;
@@ -693,24 +695,24 @@ void HistoProducerNoSys()
                         BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 0)
+                    else if(file_no == 2 && TruthMode[MCVtxID] == 0)
                     {
                         nuQE++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 1)
+                    else if(file_no == 2 && TruthMode[MCVtxID] == 1)
                     {
                         nuRES++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 2)
+                    else if(file_no == 2 && TruthMode[MCVtxID] == 2)
                     {
                         nuDIS++;
                     }
-                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 3)
+                    else if(file_no == 2 && TruthMode[MCVtxID] == 3)
                     {
                         nuCOH++;
                     }
                 }
-                else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                else if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
                     SignalFlag = false;
                     NCnu++;

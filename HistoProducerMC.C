@@ -562,7 +562,7 @@ void HistoProducerMC()
                 }
 
 
-                if ( inFV ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV ( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
+                if ( inFV ( MCTrkID > -1 && XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV ( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
                 {
                     ContainedTracks++;
 
