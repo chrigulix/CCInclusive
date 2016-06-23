@@ -102,7 +102,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     Float_t        MCTheta[maxtracks];
     Float_t        MCPhi[maxtracks];
     Float_t        MCEnergy[maxtracks];
-    Int_t        MCTrueIndex[maxtracks];
+    Int_t          MCTrueIndex[maxtracks];
 
     treenc -> SetBranchStatus("*",0);
     treenc -> SetBranchStatus("mcevts_truth", 1);
