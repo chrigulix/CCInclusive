@@ -392,7 +392,6 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                     {
                         // Increase truth count
                         NumberOfSignalTruth++;
-                        std::cout << "Found one you like! " << std::endl;
                         
                         // Loop over all MC particles
                         for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
@@ -401,7 +400,6 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                             if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no
                                 && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist )
                             {
-                                std::cout << "Hello! " << std::endl;
                                 // Fill track candidate index
                                 NuMuCCTrackCandidate = track_no;
                             }
