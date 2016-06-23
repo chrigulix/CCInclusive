@@ -102,7 +102,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     {
         FileNumberStr = "";
     }
-    
+
     std::cout << "Data Sample : " << GeneratorName << std::endl;
 
     TChain *treenc = new TChain("analysistree/anatree");
@@ -114,7 +114,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
 
         std::string FileName;
 
-        while(std::getline(FileNames,FileName)) 
+        while(std::getline(FileNames,FileName))
         {
             std::cout << FileName << std::endl;
             treenc -> Add((FileName).c_str());
@@ -127,7 +127,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
 
         std::string FileName;
 
-        while(std::getline(FileNames,FileName)) 
+        while(std::getline(FileNames,FileName))
         {
             std::cout << FileName << std::endl;
             treenc -> Add((FileName).c_str());
@@ -244,7 +244,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     Float_t	   XMCTrackEnd[maxtracks];
     Float_t	   YMCTrackEnd[maxtracks];
     Float_t	   ZMCTrackEnd[maxtracks];
-    
+
     Int_t          MCTrackID[maxtracks];
     Int_t          MCTrueIndex[maxtracks];
 
@@ -643,29 +643,23 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                 // Loop over all MC neutrino vertices
                 for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
                 {
-                    // Loop over all MC particles
-                    for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
+                    // Check if there is a numuCC vertex in the FV
+                    if( nuPDG_truth[vertex_no] == 14 && ccnc_truth[vertex_no] == 0 && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) )
                     {
-                        // Calculate MCTrack length
-                        float MCTrackLength = sqrt(pow(XMCTrackStart[track_no] - XMCTrackEnd[track_no],2) + pow(YMCTrackStart[track_no] - YMCTrackEnd[track_no],2) + pow(ZMCTrackStart[track_no] - ZMCTrackEnd[track_no],2));
-
-                        // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
-                        if( ( abs(PDG_truth[track_no]) == 13 || abs(PDG_truth[track_no]) == 11 ) // Track has to be a muon or a electron
-//                                 && flashtag
-                                && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) // true vertex has to be in FV
-//                                 && inCryostat(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no])
-//                                 && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
-//                                 && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
-                                && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
-//                                 && MCTrackLength > lengthcut // Track has to be long
-//                                 && MCTrackLength > MCTrackCandRange // If the current candidate length is shorter than the new length
-                          )
+                        std::cout << "Vertex in FV found!" << std::endl;
+                        // Loop over all MC particles
+                        for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
                         {
-                            // Fill new length and candidate index
-                            MCTrackCandidate = track_no;
-                            MCVertexCandidate = vertex_no;
-                        }
-                    } // MC particle loop
+                            // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
+                            if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no)
+                            {
+                                std::cout << "Track found : " << MCTrueIndex[track_no] << " " << track_no << std::endl;
+                                // Fill new length and candidate index
+                                MCTrackCandidate = track_no;
+                                MCVertexCandidate = vertex_no;
+                            }
+                        } // MC particle loop
+                    } // If numuCC in FV
                 } // MC vertex loop
 
                 // Count up the number of contained mc-tracks if there are mc candidates
@@ -674,7 +668,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                     NumberOfSignalTruth++;
                     NuMuCCTrackCandidate = MCTrackCandidate;
                 }
-                
+
                 // Reset Track and Vertex Candidates
                 MCTrackCandidate = -1;
                 MCVertexCandidate = -1;
@@ -884,7 +878,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                                 }
                                             } // end MCtrack loop
                                         } // if neutrino origin
-                                        
+
                                         EventsTrackLong++;
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
@@ -964,8 +958,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
 //                                           )
 
                                         // If the MC vertex candidate is in the FV and the muon of the numu CC interaction was picked
-                                        if(MCVertexCandidate > -1 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]) 
-                                          && PDG_truth[MCTrackCandidate] == 13 && MCTrackID[MCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
+                                        if(MCVertexCandidate > -1 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate])
+                                                && PDG_truth[MCTrackCandidate] == 13 && MCTrackID[MCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
                                         {
                                             EventsTruelyReco++;
                                         }
