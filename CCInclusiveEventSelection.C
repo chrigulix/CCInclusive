@@ -71,49 +71,6 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
         FileNumberStr = "";
     }
 
-    std::vector<string> SelectionNames;
-
-    SelectionNames.push_back("NumberOfEvents_");
-    SelectionNames.push_back("FlashCut_");
-    SelectionNames.push_back("VertexInFV_");
-    SelectionNames.push_back("TrackToVtx_");
-    SelectionNames.push_back("FlashMatch_");
-    SelectionNames.push_back("ContainedTrack_");
-    SelectionNames.push_back("TrackRange_");
-    SelectionNames.push_back("SelectionEfficiency_");
-    SelectionNames.push_back("SelectionCorrectness_");
-    SelectionNames.push_back("N_sig_truth_");
-    SelectionNames.push_back("N_sig_truth_sel_");
-    SelectionNames.push_back("N_bg_NC_sel_");
-    SelectionNames.push_back("N_bg_numubar_sel_");
-    SelectionNames.push_back("N_bg_nue_sel_");
-    SelectionNames.push_back("N_bg_cosmicbnb_sel_");
-
-
-    // Initialize table file vector
-    std::vector<ofstream*> EventSelectionCuts;
-
-//     // Create files and write first line
-    for(const auto& SelName : SelectionNames)
-    {
-        // Fill vector of fstreams
-        EventSelectionCuts.push_back(new ofstream("cvsfiles/"+SelName+GeneratorName+"_"+Version+".cvs",ios::trunc));
-
-        // Fill Title
-        *EventSelectionCuts.back() << SelName + GeneratorName << "\n";
-
-        // Fill corner entry
-        *EventSelectionCuts.back() << "track\\vertex";
-
-        // Fill vertexing column labels
-        for(const auto& VertexingName : VertexProdNameVec)
-        {
-            *EventSelectionCuts.back() << "," + VertexingName;
-        }
-        // Jump to next line
-        *EventSelectionCuts.back() << "\n";
-    } // Table file loop
-
     std::cout << "Data Sample : " << GeneratorName << std::endl;
 
 
@@ -272,12 +229,6 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     // Loop over all product names
     for(const auto& TrackingName : TrackProdNameVec)
     {
-        // Write tracking methode to files, first column
-        for(auto& SelectionCut : EventSelectionCuts)
-        {
-            *SelectionCut << TrackingName;
-        }
-
         for(const auto& VertexingName : VertexProdNameVec)
         {
             // Open output file
@@ -446,7 +397,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                             if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no)
                             {
                                 // Fill track candidate index
-                                NuMuCCTrackCandidate = MCTrackCandidate;
+                                NuMuCCTrackCandidate = track_no;
                                 // Increase truth count
                                 NumberOfSignalTruth++;
                             }
@@ -674,23 +625,6 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             std::cout << std::endl;
             std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
 
-            // Write numbers to cvs File
-            *EventSelectionCuts.at(0)  << "," << ntrue;
-            *EventSelectionCuts.at(1)  << "," << EventsWithFlash;
-            *EventSelectionCuts.at(2)  << "," << EventsVtxInFV;
-            *EventSelectionCuts.at(3)  << "," << EventsTrackNearVertex;
-            *EventSelectionCuts.at(4)  << "," << EventsFlashMatched;
-            *EventSelectionCuts.at(5)  << "," << EventsTracksInFV;
-            *EventSelectionCuts.at(6)  << "," << EventsTrackLong;
-            *EventSelectionCuts.at(7)  << "," << (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth;
-            *EventSelectionCuts.at(8)  << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
-            *EventSelectionCuts.at(9)  << "," << NumberOfSignalTruth;
-            *EventSelectionCuts.at(10) << "," << NumberOfSignalTruthSel;
-            *EventSelectionCuts.at(11) << "," << NumberOfBgrNCTruthSel;
-            *EventSelectionCuts.at(12) << "," << NumberOfBgrNumuBarTruthSel;
-            *EventSelectionCuts.at(13) << "," << NumberOfBgrNueTruthSel;
-            *EventSelectionCuts.at(14) << "," << NumberOfBgrCosmicSel;
-
             delete BrMCTrackCand;
             delete BrTrackCand;
             delete BrVtxCand;
@@ -704,19 +638,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             treenc -> ResetBranchAddresses();
 
         } // Loop over all vertexing data products
-
-        // Go to next line in files
-        for(auto& SelectionCut : EventSelectionCuts)
-        {
-            *SelectionCut << "\n";
-        }
     } // Loop over all tracking data products
-
-    // Close selection table files
-    for(auto& SelectionCut : EventSelectionCuts)
-    {
-        SelectionCut->close();
-    }
 
     return 0;
 

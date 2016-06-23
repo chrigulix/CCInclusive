@@ -419,7 +419,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                             if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no)
                             {
                                 // Fill track candidate index
-                                NuMuCCTrackCandidate = MCTrackCandidate;
+                                NuMuCCTrackCandidate = track_no;
                                 // Increase truth count
                                 NumberOfSignalTruth++;
                             }
