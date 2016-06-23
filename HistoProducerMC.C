@@ -648,7 +648,7 @@ void HistoProducerMC()
                     }
                 }
             }
-            else if ( file_no == 1 && TrkID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && nuPDGTruth[MCVtxID] == 14 )
+            else if ( file_no == 1 && TrkID > -1 && MCVtxID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && nuPDGTruth[MCVtxID] == 14 && inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) )
             {
                 SelectionTrackRange.at ( 2 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                 SelectionTheta.at ( 2 )->Fill ( MCTheta[MCTrkID] );
