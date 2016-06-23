@@ -420,7 +420,7 @@ void HistoProducerMC()
         ChainVec.at ( file_no ) -> SetBranchAddress ( "MCVertexCand", &MCVtxID );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "ccnc_truth", CCNCFlag );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "mode_truth", TruthMode );
-        ChainVec.at(file_no) -> SetBranchAddress("nuPDG_truth", NuPDGTruth);
+        ChainVec.at ( file_no ) -> SetBranchAddress ( "nuPDG_truth", NuPDGTruth );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "pdg", PDGTruth );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "enu_truth", NuEnergyTruth );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "lep_mom_truth", TrueLeptonMomentum );
@@ -564,7 +564,7 @@ void HistoProducerMC()
                 }
 
 
-                if ( inFV ( MCTrkID > -1 && XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV ( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
+                if ( inFV ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV ( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
                 {
                     ContainedTracks++;
 
