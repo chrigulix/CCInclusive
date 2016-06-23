@@ -478,8 +478,6 @@ void HistoProducerMC()
 //             std::cout << MCTrkID << " " << inFV( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) << " " << XMCTrackStart[MCTrkID] << " " << YMCTrackStart[MCTrkID] << " " << ZMCTrackStart[MCTrkID] << std::endl;
 //             if(MCTrkID > NumberOfMCTracks) std::cout << MCTrkID << " " << NumberOfMCTracks << std::endl;
             
-            std::cout << MCVtxID << " " << nuPDGTruth[MCVtxID] << " " << TruthMode[MCVtxID] << std::endl;
-
             if ( file_no == 0 && MCTrkID > -1 && nuPDGTruth[MCVtxID] == 14 )
             {
                 SelectionTrackRange.at ( 0 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
