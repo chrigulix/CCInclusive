@@ -419,6 +419,7 @@ void HistoProducerMA()
     int MCVtxID;
     int CCNCFlag[10];
     int TruthMode[10];
+    int NuPDGTruth[10];
     float TrueLeptonMomentum[10];
     float NuEnergyTruth[10];
     float nuvtxx_truth[10]; //true vertex x (in cm)
@@ -484,6 +485,7 @@ void HistoProducerMA()
         ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
+        ChainVec.at(file_no) -> SetBranchAddress("nuPDG_truth", NuPDGTruth);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
         ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
         ChainVec.at(file_no) -> SetBranchAddress("lep_mom_truth", TrueLeptonMomentum);
@@ -625,7 +627,7 @@ void HistoProducerMA()
                 // Fill systematic errors independet of CC or NC
                 if(file_no == 2 && MCTrkID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    if(PDGTruth[MCTrkID] == 13)
+                    if(NuPDGTruth[MCVtxID] == 14)
                     {
                         SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
                         SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
@@ -644,7 +646,7 @@ void HistoProducerMA()
                         SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
                         SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[MCVtxID]));
                     }
-                    else if(PDGTruth[MCTrkID] == -13)
+                    else if(NuPDGTruth[MCVtxID] == -14)
                     {
                         SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
                         SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
@@ -663,7 +665,7 @@ void HistoProducerMA()
                         SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
                         SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[MCVtxID]));
                     }
-                    else if(PDGTruth[MCTrkID] == 11)
+                    else if(NuPDGTruth[MCVtxID] == 12)
                     {
                         SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
                         SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
@@ -682,7 +684,7 @@ void HistoProducerMA()
                         SelYVtxPosition.back()->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
                         SelZVtxPosition.back()->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[MCVtxID]));
                     }
-                    else if(PDGTruth[MCTrkID] == -11)
+                    else if(NuPDGTruth[MCVtxID] == -12)
                     {
                         SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
                         SelectionTheta.back()->Fill(TrackTheta[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[MCVtxID]));
@@ -725,7 +727,7 @@ void HistoProducerMA()
                 // Fill Bgr
                 if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    if(PDGTruth[MCTrkID] == -13)
+                    if(NuPDGTruth[MCVtxID] == -14)
                     {
                         nubar++;
                         BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -744,7 +746,7 @@ void HistoProducerMA()
                         BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(abs(PDGTruth[MCTrkID]) == 11)
+                    else if(abs(NuPDGTruth[MCVtxID]) == 12)
                     {
                         nue++;
                         BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));

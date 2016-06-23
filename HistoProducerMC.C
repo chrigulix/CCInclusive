@@ -320,6 +320,7 @@ void HistoProducerMC()
     int MCVtxID;
     int CCNCFlag[10];
     int TruthMode[10];
+    int NuPDGTruth[10];
     int PDGTruth[5000];
     float NuEnergyTruth[10];
     float TrueLeptonMomentum[10];
@@ -419,6 +420,7 @@ void HistoProducerMC()
         ChainVec.at ( file_no ) -> SetBranchAddress ( "MCVertexCand", &MCVtxID );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "ccnc_truth", CCNCFlag );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "mode_truth", TruthMode );
+        ChainVec.at(file_no) -> SetBranchAddress("nuPDG_truth", NuPDGTruth);
         ChainVec.at ( file_no ) -> SetBranchAddress ( "pdg", PDGTruth );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "enu_truth", NuEnergyTruth );
         ChainVec.at ( file_no ) -> SetBranchAddress ( "lep_mom_truth", TrueLeptonMomentum );
@@ -478,7 +480,7 @@ void HistoProducerMC()
 //             std::cout << MCTrkID << " " << inFV( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) << " " << XMCTrackStart[MCTrkID] << " " << YMCTrackStart[MCTrkID] << " " << ZMCTrackStart[MCTrkID] << std::endl;
 //             if(MCTrkID > NumberOfMCTracks) std::cout << MCTrkID << " " << NumberOfMCTracks << std::endl;
 
-            if ( file_no == 0 && MCTrkID > -1 && PDGTruth[MCTrkID] == 13 )
+            if ( file_no == 0 && MCTrkID > -1 && NuPDGTruth[MCVtxID] == 14 )
             {
                 SelectionTrackRange.at ( 0 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                 SelectionTheta.at ( 0 )->Fill ( MCTheta[MCTrkID] );
@@ -648,7 +650,7 @@ void HistoProducerMC()
                     }
                 }
             }
-            else if ( file_no == 1 && TrkID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && PDGTruth[MCTrkID] == 13 )
+            else if ( file_no == 1 && TrkID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && NuPDGTruth[MCVtxID] == 14 )
             {
                 SelectionTrackRange.at ( 2 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                 SelectionTheta.at ( 2 )->Fill ( MCTheta[MCTrkID] );

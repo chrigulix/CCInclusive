@@ -626,8 +626,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                     double TrkEndMCStartDist = sqrt(pow(XMCTrackStart[MCTrackCandidate] - trkendx[TrackCandidate],2) + pow(YMCTrackStart[MCTrackCandidate] - trkendy[TrackCandidate],2) + pow(ZMCTrackStart[MCTrackCandidate] - trkendz[TrackCandidate],2));
 
                                     // If the MC vertex candidate is in the FV and the muon of the numu CC interaction was picked
-                                    if(MCVertexCandidate > -1 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate])
-                                            && PDG_truth[MCTrackCandidate] == 13 && MCTrackID[MCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
+                                    if( MCVertexCandidate > -1 && inFV(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate])
+                                            && PDG_truth[MCTrackCandidate] == 13 && MCTrackID[MCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] )
                                     {
                                         EventsTruelyReco++;
                                     }

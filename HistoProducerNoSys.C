@@ -93,6 +93,8 @@ void HistoProducerNoSys()
     std::vector<TH1F*> SelXVtxPosition;
     std::vector<TH1F*> SelYVtxPosition;
     std::vector<TH1F*> SelZVtxPosition;
+    
+    std::vector<TH1I*> SelTrackMultip;
 
     std::vector<TH1F*> BgrTrackRange;
     std::vector<TH1F*> BgrEnergy;
@@ -108,6 +110,8 @@ void HistoProducerNoSys()
     std::vector<TH1F*> BgrXVtxPosition;
     std::vector<TH1F*> BgrYVtxPosition;
     std::vector<TH1F*> BgrZVtxPosition;
+    
+    std::vector<TH1I*> BgrTrackMultip;
 
     std::vector<TH2F*> PhiVsTheta;
     std::vector<TH2F*> PhiVsXPos;
@@ -284,6 +288,11 @@ void HistoProducerNoSys()
         SelZVtxPosition.back()->GetXaxis()->SetTitle("Vertex z [cm]");
         SelZVtxPosition.back()->GetYaxis()->SetTitle("No. of events");
         
+        SelTrackMultip.push_back(new TH1I(("TrackMultiplicity"+Label).c_str(),"Track Multiplicity",10,1,10));
+        SelTrackMultip.back()->SetStats(0);
+        SelTrackMultip.back()->GetXaxis()->SetTitle("No. of tracks at vertex");
+        SelTrackMultip.back()->GetYaxis()->SetTitle("No. of events");
+        
         if(Label.at(0) == 'D')
         {
             SelectionTrackRange.back()->SetMarkerStyle(8);
@@ -298,7 +307,7 @@ void HistoProducerNoSys()
             SelXVtxPosition.back()->SetMarkerStyle(8);
             SelYVtxPosition.back()->SetMarkerStyle(8);
             SelZVtxPosition.back()->SetMarkerStyle(8);
-            
+            SelTrackMultip.back()->SetMarkerStyle(8);
         }
 
         PhiVsTheta.push_back(new TH2F(("PhiVsTheta"+Label).c_str(),"Phi Vs. Theta",NumberOf2DBins,-3.142,3.142,NumberOf2DBins,0,3.142));
@@ -421,6 +430,12 @@ void HistoProducerNoSys()
         BgrZVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
         BgrZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
+        
+        BgrTrackMultip.push_back(new TH1I(("TrackMultiplicity"+Label).c_str(),"Track Multiplicity",10,1,10));
+        BgrTrackMultip.back()->SetStats(0);
+        BgrTrackMultip.back()->SetFillColor(ColorMap.at(BgrCount));
+        BgrTrackMultip.back()->GetXaxis()->SetTitle("No. of tracks at vertex");
+        BgrTrackMultip.back()->GetYaxis()->SetTitle("No. of events");
 
         BgrCount++;
     }
@@ -441,6 +456,7 @@ void HistoProducerNoSys()
     int MCVtxID;
     int CCNCFlag[10];
     int TruthMode[10];
+    int NuPDGTruth[10];
     int PDGTruth[5000];
     float NuEnergyTruth[10];
     float nuvtxx_truth[10]; //true vertex x (in cm)
@@ -502,6 +518,7 @@ void HistoProducerNoSys()
         ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
+        ChainVec.at(file_no) -> SetBranchAddress("nuPDG_truth", NuPDGTruth);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
         ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
         ChainVec.at(file_no) -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
@@ -610,6 +627,7 @@ void HistoProducerNoSys()
                 SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID]);
                 SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
                 SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
+//                 SelTrackMultip.at(file_no)->Fill(ZVertexPosition[VtxID]);
 
                 PhiVsTheta.at(file_no)->Fill(TrackPhi[TrkID],TrackTheta[TrkID]);
                 PhiVsXPos.at(file_no)->Fill(TrackPhi[TrkID],XTrackStart[TrkID]);
@@ -635,7 +653,7 @@ void HistoProducerNoSys()
                 // Fill Bgr
                 if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    if(PDGTruth[MCTrkID] == -13)
+                    if(NuPDGTruth[MCVtxID] == -14)
                     {
                         SignalFlag = false;
                         nubar++;
@@ -655,7 +673,7 @@ void HistoProducerNoSys()
                         BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(abs(PDGTruth[MCTrkID]) == 11)
+                    else if(abs(NuPDGTruth[MCVtxID]) == 12)
                     {
                         SignalFlag = false;
                         nue++;

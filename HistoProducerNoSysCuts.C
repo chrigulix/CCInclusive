@@ -406,6 +406,7 @@ void HistoProducerNoSysCuts()
     int MCVtxID;
     int CCNCFlag[10];
     int TruthMode[10];
+    int NuPDGTruth[10];
     int PDGTruth[5000];
     int NumberOfNuTruthEv;
     int NumberOfMCTracks;
@@ -489,6 +490,7 @@ void HistoProducerNoSysCuts()
         ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("mcevts_truth", &NumberOfNuTruthEv);
+        ChainVec.at(file_no) -> SetBranchAddress("nuPDG_truth", NuPDGTruth);
         ChainVec.at(file_no) -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
@@ -605,8 +607,8 @@ void HistoProducerNoSysCuts()
 //             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID])) // Dead wire region cut
 //             if(!(Run < 5750 && Run > 5650) || file_no > 1) // Bad Runs with low purity
 //             if( (TrackPhi[TrkID] < TMath::Pi()/4. && TrackPhi[TrkID] > -TMath::Pi()/4.) || TrackPhi[TrkID] < -TMath::Pi()*3/4. || TrackPhi[TrkID] > TMath::Pi()*3/4. ) // Phi cut for janet
-            if( inCryostat(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]) ) // Cryostat cut
-//             if(true)
+//             if( inCryostat(nuvtxx_truth[MCVertexCandidate],nuvtxy_truth[MCVertexCandidate],nuvtxz_truth[MCVertexCandidate]) ) // Cryostat cut
+            if(true)
             {
                 if(file_no == 0)
                 {
@@ -675,7 +677,7 @@ void HistoProducerNoSysCuts()
                 // Fill Bgr
                 if(file_no == 2 && MCTrkID > -1 && CCNCFlag[MCVtxID] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    if(PDGTruth[MCTrkID] == -13)
+                    if(NuPDGTruth[MCVtxID] == -14)
                     {
                         nubar++;
                         BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -694,7 +696,7 @@ void HistoProducerNoSysCuts()
                         BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(abs(PDGTruth[MCTrkID]) == 11)
+                    else if(abs(NuPDGTruth[MCVtxID]) == 12)
                     {
                         nue++;
                         BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -732,19 +734,19 @@ void HistoProducerNoSysCuts()
                         BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(file_no == 2 && inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]) && TruthMode[MCVtxID] == 0)
+                    else if(file_no == 2 && TruthMode[MCVtxID] == 0)
                     {
                         nuQE++;
                     }
-                    else if(file_no == 2 && inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]) && TruthMode[MCVtxID] == 1)
+                    else if(file_no == 2  && TruthMode[MCVtxID] == 1)
                     {
                         nuRES++;
                     }
-                    else if(file_no == 2 && inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]) && TruthMode[MCVtxID] == 2)
+                    else if(file_no == 2 && TruthMode[MCVtxID] == 2)
                     {
                         nuDIS++;
                     }
-                    else if(file_no == 2 && inFV(nuvtxx_truth[MCVtxID],nuvtxy_truth[MCVtxID],nuvtxz_truth[MCVtxID]) && TruthMode[MCVtxID] == 3)
+                    else if(file_no == 2 && TruthMode[MCVtxID] == 3)
                     {
                         nuCOH++;
                     }
@@ -787,7 +789,7 @@ void HistoProducerNoSysCuts()
                     BgrYVtxPosition.at(4)->Fill(YVertexPosition[VtxID]);
                     BgrZVtxPosition.at(4)->Fill(ZVertexPosition[VtxID]);
 
-                    if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == -1)
+                    if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == -1 || TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 0)
                     {
                         UnknownOrigin++;
                     }
