@@ -159,7 +159,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     int MCTrackCandidate;
     int MCVertexCandidate;
 
-    double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
+    double MCTrackToMCVtxDist = 0.5; //cm. distance between mc track start and mc vertex
 
     unsigned int NumberOfSignalTruth;
 
@@ -190,18 +190,19 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
             // Check if there is a numuCC vertex in the FV
             if( nuPDG_truth[vertex_no] == 14 && ccnc_truth[vertex_no] == 0 && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) )
             {
+                // Increase truth count
+                NumberOfSignalTruth++;
+
                 // Loop over all MC particles
                 for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
                 {
                     // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
-                    if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no)
+                    if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no
+                        && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist )
                     {
                         // Fill track candidate index
                         MCTrackCandidate = track_no;
                         MCVertexCandidate = vertex_no;
-                        
-                        // Increase truth count
-                        NumberOfSignalTruth++;
                         
                         // Fill selection Tree
                         SelectionTree->Fill();

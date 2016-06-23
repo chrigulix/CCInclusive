@@ -204,7 +204,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     double beammin = 3.55/*-0.36*/; //us. Beam window start
     double beammax = 5.15/*-0.36*/; //us. Beam window end
     double PEthresh = 50; //PE
-    double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
+    double MCTrackToMCVtxDist = 0.5; //cm. distance between mc track start and mc vertex
     double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
 
     if(GeneratorName == "data_bnb" || GeneratorName == "data_onbeam_bnb")
@@ -388,16 +388,18 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                     // Check if there is a numuCC vertex in the FV
                     if( nuPDG_truth[vertex_no] == 14 && ccnc_truth[vertex_no] == 0 && inFV(nuvtxx_truth[vertex_no],nuvtxy_truth[vertex_no],nuvtxz_truth[vertex_no]) )
                     {
+                        // Increase truth count
+                        NumberOfSignalTruth++;
+                        
                         // Loop over all MC particles
                         for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
                         {
                             // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
-                            if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no)
+                            if( PDG_truth[track_no] == 13 
+                                && MCTrueIndex[track_no] == vertex_no&& sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist )
                             {
                                 // Fill track candidate index
                                 NuMuCCTrackCandidate = track_no;
-                                // Increase truth count
-                                NumberOfSignalTruth++;
                             }
                         } // MC particle loop
                     } // If numuCC in FV
@@ -620,6 +622,9 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 //             std::cout << "event selection purity : " << (float)NumberOfSignalTruthSel/(float)(NumberOfBgrNCTruthSel+NumberOfBgrNumuBarTruthSel+NumberOfBgrNueTruthSel)
             std::cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << std::endl;
 //             std::cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << std::endl;
+            std::cout << std::endl;
+            std::cout << "number of unknown CC bgr : " <<  NumberOfUnknownCCBgr << std::endl;
+            std::cout << "number of unknown bgr : " <<  NumberOfUnknownBgr << std::endl;
             std::cout << std::endl;
             std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
 
