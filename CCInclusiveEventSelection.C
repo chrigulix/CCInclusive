@@ -447,23 +447,12 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                             {
                                 // Fill track candidate index
                                 NuMuCCTrackCandidate = MCTrackCandidate;
-                                MCTrackCandidate = track_no;
-                                MCVertexCandidate = vertex_no;
+                                // Increase truth count
+                                NumberOfSignalTruth++;
                             }
                         } // MC particle loop
                     } // If numuCC in FV
                 } // MC vertex loop
-
-                // Count up the number of contained mc-tracks if there are mc candidates
-                if(MCTrackCandidate > -1 && ccnc_truth[MCVertexCandidate] == 0 && PDG_truth[MCTrackCandidate] == 13)
-                {
-                    NumberOfSignalTruth++;
-                    NuMuCCTrackCandidate = MCTrackCandidate;
-                }
-
-                // Reset Track and Vertex Candidates
-                MCTrackCandidate = -1;
-                MCVertexCandidate = -1;
 
                 // If the flash tag is ture and we have POT
                 if(flashtag)

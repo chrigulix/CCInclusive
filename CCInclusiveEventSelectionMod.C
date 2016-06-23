@@ -420,8 +420,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                             {
                                 // Fill track candidate index
                                 NuMuCCTrackCandidate = MCTrackCandidate;
-                                MCTrackCandidate = track_no;
-                                MCVertexCandidate = vertex_no;
+                                // Increase truth count
+                                NumberOfSignalTruth++;
                             }
                         } // MC particle loop
                     } // If numuCC in FV
