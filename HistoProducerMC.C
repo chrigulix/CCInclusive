@@ -648,7 +648,7 @@ void HistoProducerMC()
                     }
                 }
             }
-            else if ( file_no == 1 && TrkID > -1 && MCVtxID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && nuPDGTruth[MCVtxID] == 14 && inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) )
+            else if ( file_no == 1 && TrkID > -1 && MCVtxID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && PDGTruth[MCTrkID] == 13 && nuPDGTruth[MCVtxID] == 14 && CCNCFlag[MCVtxID] == 0 && inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) )
             {
                 SelectionTrackRange.at ( 2 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                 SelectionTheta.at ( 2 )->Fill ( MCTheta[MCTrkID] );
@@ -878,6 +878,8 @@ void HistoProducerMC()
     }
     Canvas1Int->cd();
     MGTrackRangeInt->Draw ( "2AP" );
+    MGTrackRangeInt->SetMaximum(1);
+    MGTrackRangeInt->SetMinimum(0);
     for(const auto& Graph : TrackRangeGraphsInt)
     {
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
@@ -925,6 +927,8 @@ void HistoProducerMC()
     }
     Canvas2b->cd();
     MGCosTheta->Draw ( "2AP" );
+    MGCosTheta->SetMaximum(1);
+    MGCosTheta->SetMinimum(0);
     for(const auto& Graph : CosThetaGraphs)
     {
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
@@ -959,6 +963,8 @@ void HistoProducerMC()
     }
     Canvas2bInt->cd();
     MGCosThetaInt->Draw ( "2AP" );
+    MGCosThetaInt->SetMaximum(1);
+    MGCosThetaInt->SetMinimum(0);
     for(const auto& Graph : CosThetaGraphsInt)
     {
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
@@ -1006,6 +1012,8 @@ void HistoProducerMC()
     }
     Canvas4a->cd();
     MGMomentum->Draw ( "2AP" );
+    MGMomentum->SetMaximum(1);
+    MGMomentum->SetMinimum(0);
     for(const auto& Graph : MomentumGraphs)
     {
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
@@ -1020,10 +1028,10 @@ void HistoProducerMC()
     TextSelection.Draw();
     Canvas4a->SaveAs ( ( "EffMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
 
-    LegendEffInt->SetX1NDC ( 0.65 );
-    LegendEffInt->SetY1NDC ( 0.65 );
-    LegendEffInt->SetX2NDC ( 0.85 );
-    LegendEffInt->SetY2NDC ( 0.85 );
+//     LegendEffInt->SetX1NDC ( 0.65 );
+//     LegendEffInt->SetY1NDC ( 0.65 );
+//     LegendEffInt->SetX2NDC ( 0.85 );
+//     LegendEffInt->SetY2NDC ( 0.85 );
 
     TCanvas *Canvas4aInt = new TCanvas ( "Interaction Efficiency Momentum", "Interaction Efficiency Momentum", 1400, 1000 );
     TMultiGraph *MGMomentumInt = new TMultiGraph();
@@ -1047,6 +1055,8 @@ void HistoProducerMC()
     }
     Canvas4aInt->cd();
     MGMomentumInt->Draw ( "2AP" );
+    MGMomentumInt->SetMaximum(1);
+    MGMomentumInt->SetMinimum(0);
     for(const auto& Graph : MomentumGraphsInt)
     {
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
@@ -1060,10 +1070,10 @@ void HistoProducerMC()
     TextSelection.Draw();
     Canvas4aInt->SaveAs ( ( "EffIntMCMomentum"+SelectionLabel+"."+FileType ).c_str() );
 
-    LegendEfficiency->SetX1NDC ( 0.57 );
-    LegendEfficiency->SetY1NDC ( 0.33 );
-    LegendEfficiency->SetX2NDC ( 0.87 );
-    LegendEfficiency->SetY2NDC ( 0.53 );
+//     LegendEfficiency->SetX1NDC ( 0.57 );
+//     LegendEfficiency->SetY1NDC ( 0.33 );
+//     LegendEfficiency->SetX2NDC ( 0.87 );
+//     LegendEfficiency->SetY2NDC ( 0.53 );
 
     TCanvas *Canvas3 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Phi-Angle", "Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhi = new TMultiGraph();
@@ -1083,6 +1093,8 @@ void HistoProducerMC()
     }
     Canvas3->cd();
     MGPhi->Draw ( "2AP" );
+    MGPhi->SetMaximum(1);
+    MGPhi->SetMinimum(0);
     for(const auto& Graph : PhiGraphs)
     {
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
@@ -1095,10 +1107,10 @@ void HistoProducerMC()
     TextSelection.Draw();
     Canvas3->SaveAs ( ( "EffMCPhi"+SelectionLabel+"."+FileType ).c_str() );
 
-    LegendEffInt->SetX1NDC ( 0.12 );
-    LegendEffInt->SetY1NDC ( 0.12 );
-    LegendEffInt->SetX2NDC ( 0.32 );
-    LegendEffInt->SetY2NDC ( 0.32 );
+//     LegendEffInt->SetX1NDC ( 0.12 );
+//     LegendEffInt->SetY1NDC ( 0.12 );
+//     LegendEffInt->SetX2NDC ( 0.32 );
+//     LegendEffInt->SetY2NDC ( 0.32 );
 
     TCanvas *Canvas3Int = new TCanvas ( "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", "Interaction Efficiency OnBeam Minus OffBeam Phi-Angle", 1400, 1000 );
     TMultiGraph *MGPhiInt = new TMultiGraph();
@@ -1122,6 +1134,8 @@ void HistoProducerMC()
     }
     Canvas3Int->cd();
     MGPhiInt->Draw ( "2AP" );
+    MGPhiInt->SetMaximum(1);
+    MGPhiInt->SetMinimum(0);
     for(const auto& Graph : PhiGraphsInt)
     {
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
@@ -1328,6 +1342,9 @@ void HistoProducerMC()
     {
         ThetaHistogram->Divide ( SinTheta,1. );
     }
+    
+    LegendMCSel->SetX1NDC ( 0.2 );
+    LegendMCSel->SetX2NDC ( 0.4 );
 
     TCanvas *Canvas12a = new TCanvas ( "OnBeam Minus OffBeam Theta-Angle Omega", "OnBeam Minus OffBeam Theta-Angle Omega", 1400, 1000 );
     Canvas12a->cd();
@@ -1343,10 +1360,10 @@ void HistoProducerMC()
     TextSelection.Draw();
 //     Canvas12a->SaveAs ( ( "MCThetaOmega"+SelectionLabel+"."+FileType ).c_str() );
 
-//     LegendMC->SetX1NDC ( 0.2 );
-//     LegendMC->SetY1NDC ( 0.6 );
-//     LegendMC->SetX2NDC ( 0.5 );
-//     LegendMC->SetY2NDC ( 0.8 );
+    LegendMC->SetX1NDC ( 0.2 );
+    LegendMC->SetY1NDC ( 0.6 );
+    LegendMC->SetX2NDC ( 0.5 );
+    LegendMC->SetY2NDC ( 0.8 );
 
     TCanvas *Canvas12b = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000 );
     Canvas12b->cd();
@@ -1361,6 +1378,9 @@ void HistoProducerMC()
     TextSelection.Draw();
     Canvas12b->SaveAs ( ( "MCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
     
+    LegendMCSel->SetX1NDC ( 0.6 );
+    LegendMCSel->SetX2NDC ( 0.8 );
+    
     TCanvas *Canvas12bSel = new TCanvas ( "OnBeam Minus OffBeam Sel Cos Theta-Angle", "OnBeam Minus OffBeam Sel Cos Theta-Angle", 1400, 1000 );
     Canvas12bSel->cd();
     SelectionCosTheta.at ( 2 )->SetMaximum ( 1.2*SelectionCosTheta.at ( 2 )->GetBinContent(SelectionCosTheta.at ( 2 )->GetMaximumBin()) );
@@ -1371,6 +1391,11 @@ void HistoProducerMC()
     TextSimulation.Draw();
     TextSelection.Draw();
     Canvas12bSel->SaveAs ( ( "MCCosThetaSel"+SelectionLabel+"."+FileType ).c_str() );
+    
+    LegendMC->SetX1NDC ( 0.5 );
+    LegendMC->SetY1NDC ( 0.6 );
+    LegendMC->SetX2NDC ( 0.8 );
+    LegendMC->SetY2NDC ( 0.8 );
 
     TCanvas *Canvas12bInt = new TCanvas ( "OnBeam Minus OffBeam Cos Theta-Angle Int", "OnBeam Minus OffBeam Cos Theta-Angle Int", 1400, 1000 );
     Canvas12bInt->cd();
