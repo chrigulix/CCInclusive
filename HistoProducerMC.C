@@ -965,7 +965,7 @@ void HistoProducerMC()
     }
     Canvas2bInt->cd();
     MGCosThetaInt->Draw ( "2AP" );
-    MGCosThetaInt->SetMaximum(1);
+    MGCosThetaInt->SetMaximum(0.5);
     MGCosThetaInt->SetMinimum(0);
     for(const auto& Graph : CosThetaGraphsInt)
     {
@@ -1063,7 +1063,7 @@ void HistoProducerMC()
     }
     MGMomentumInt->GetXaxis()->SetTitle ( "Muon Momentum [GeV/c]" );
     MGMomentumInt->GetYaxis()->SetTitle ( "Efficiency" );
-    MGMomentumInt->SetMaximum(1);
+    MGMomentumInt->SetMaximum(0.5);
     MGMomentumInt->SetMinimum(0);
     LegendEffInt->Draw();
     TextSimulation.Draw();
@@ -1134,8 +1134,6 @@ void HistoProducerMC()
     }
     Canvas3Int->cd();
     MGPhiInt->Draw ( "2AP" );
-    MGPhiInt->SetMaximum(1);
-    MGPhiInt->SetMinimum(0);
     for(const auto& Graph : PhiGraphsInt)
     {
         for(int n = 0; n<Graph->GetN(); n++) Graph->SetPointError(n,Graph->GetErrorXlow(n),Graph->GetErrorXhigh(n),0,0);
@@ -1143,7 +1141,7 @@ void HistoProducerMC()
     }
     MGPhiInt->GetXaxis()->SetTitle ( "#phi angle [rad]" );
     MGPhiInt->GetYaxis()->SetTitle ( "Efficiency" );
-//     MGPhiInt->SetMaximum(0.22);
+    MGPhiInt->SetMaximum(0.5);
     MGPhiInt->SetMinimum(0.0);
     LegendEffInt->Draw();
     TextSimulation.Draw();
