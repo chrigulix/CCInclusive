@@ -120,7 +120,7 @@ void HistoProducerMC()
     
     TPaveText TextSimulation(0.5,0.92,0.9,0.96,"nbNDC");
     TextSimulation.AddText("MicroBooNE Simulation, Preliminary");
-    TextSimulation.SetTextSize(0.04);
+    TextSimulation.SetTextSize(0.05);
     TextSimulation.SetTextColor(12);
     TextSimulation.SetLineColorAlpha(0,0);
     TextSimulation.SetFillColorAlpha(0,0);
@@ -128,7 +128,7 @@ void HistoProducerMC()
     
     TPaveText TextPreliminary(0.6,0.92,0.9,0.96,"nbNDC");
     TextPreliminary.AddText("MicroBooNE Preliminary");
-    TextPreliminary.SetTextSize(0.04);
+    TextPreliminary.SetTextSize(0.05);
     TextPreliminary.SetTextColor(12);
     TextPreliminary.SetLineColorAlpha(0,0);
     TextPreliminary.SetFillColorAlpha(0,0);
@@ -136,7 +136,7 @@ void HistoProducerMC()
     
     TPaveText TextSelection(0.1,0.92,0.3,0.96,"nbNDC");
     TextSelection.AddText("Selection I");
-    TextSelection.SetTextSize(0.04);
+    TextSelection.SetTextSize(0.05);
     TextSelection.SetTextColor(1);
     TextSelection.SetLineColorAlpha(0,0);
     TextSelection.SetFillColorAlpha(0,0);
@@ -975,7 +975,7 @@ void HistoProducerMC()
     MGCosThetaInt->GetXaxis()->SetTitle ( "cos(#theta)" );
     MGCosThetaInt->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEffInt->Draw();
-    TextSimulation.Draw();
+//     TextSimulation.Draw();
     TextSelection.Draw();
     Canvas2bInt->SaveAs ( ( "EffIntMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
 
