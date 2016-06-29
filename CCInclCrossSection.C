@@ -38,13 +38,13 @@ void CCInclCrossSection()
 {
     // Data input file vector
     std::vector<TChain*> ChainVec;
-    
+
     // Histogram Vectors
     std::vector<TH1F*> SelectionTrackRange;
     std::vector<TH1F*> SelectionCosTheta;
     std::vector<TH1F*> SelectionPhi;
     std::vector<TH1F*> SelectionMomentum;
-    
+
     // Unsemaring Matrix
     TH2F* UMatrixTrackRange;
     TH2F* UMatrixCosTheta;
@@ -52,15 +52,15 @@ void CCInclCrossSection()
     TH2F* UMatrixMomentum;
 
     size_t NumberOfBins = 20;
-    
+
     double MCPOT = 2.3e23;
     double DataPOT = 4.95e19;
-    
+
     int TrkID;
     int VtxID;
     int MCTrkID;
     int MCVtxID;
-    
+
     int CCNCFlag[10];
     int TruthMode[10];
     int NuPDGTruth[10];
@@ -88,7 +88,7 @@ void CCInclCrossSection()
     float XVertexPosition[500];
     float YVertexPosition[500];
     float ZVertexPosition[500];
-    
+
     //MC truth
     int mcevts_truth; //neutrino interactions per event
     float XnuVtxTruth[10]; //true vertex x (in cm)
@@ -110,10 +110,10 @@ void CCInclCrossSection()
     float MCPhi[5000];
     float MCEnergy[5000];
 
-    
+
     // Name vector
     std::vector<std::string> GenLabel;
-    
+
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1_Mod.root");
     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2_Mod.root");
@@ -125,17 +125,17 @@ void CCInclCrossSection()
 
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root");
-    
+
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
-    
+
     GenLabel.push_back("Data On-Beam BNB");
     GenLabel.push_back("Data Off-Beam BNBEXT");
     GenLabel.push_back("MC Selection");
     GenLabel.push_back("MC Selection Backgrounds");
     GenLabel.push_back("MC Selection Truth");
     GenLabel.push_back("MC Truth");
-    
+
     // Loop over all generation labels
     for(const auto& Label : GenLabel)
     {
@@ -143,23 +143,23 @@ void CCInclCrossSection()
         SelectionTrackRange.back()->SetStats(0);
         SelectionTrackRange.back()->GetXaxis()->SetTitle("Track range [cm]");
         SelectionTrackRange.back()->GetYaxis()->SetTitle("No. of events");
-        
+
         SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta",NumberOfBins,-1,1));
         SelectionCosTheta.back()->SetStats(0);
         SelectionCosTheta.back()->GetXaxis()->SetTitle("cos(#theta)");
         SelectionCosTheta.back()->GetYaxis()->SetTitle("No. of events");
-        
+
         SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle",NumberOfBins,-3.142,3.142));
         SelectionPhi.back()->SetStats(0);
         SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         SelectionPhi.back()->GetYaxis()->SetTitle("No. of events");
-        
+
         SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum",NumberOfBins,0,3));
         SelectionMomentum.back()->SetStats(0);
         SelectionMomentum.back()->GetXaxis()->SetTitle("Muon momentum [GeV/c]");
         SelectionMomentum.back()->GetYaxis()->SetTitle("No. of events");
     } // loop over generation label
-    
+
     // Loop over all files
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
@@ -168,24 +168,24 @@ void CCInclCrossSection()
         {
             ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
             ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
-       
+
             ChainVec.at(file_no) -> SetBranchAddress("trkmomrange_pandoraNu", TrackMomentum);
             ChainVec.at(file_no) -> SetBranchAddress("trktheta_pandoraNu", TrackTheta);
             ChainVec.at(file_no) -> SetBranchAddress("trkphi_pandoraNu",TrackPhi);
-       
+
             ChainVec.at(file_no) -> SetBranchAddress("trkstartx_pandoraNu",XTrackStart);
             ChainVec.at(file_no) -> SetBranchAddress("trkstarty_pandoraNu",YTrackStart);
             ChainVec.at(file_no) -> SetBranchAddress("trkstartz_pandoraNu",ZTrackStart);
-        
+
             ChainVec.at(file_no) -> SetBranchAddress("trkendx_pandoraNu",XTrackEnd);
             ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",YTrackEnd);
             ChainVec.at(file_no) -> SetBranchAddress("trkendz_pandoraNu",ZTrackEnd);
-       
+
             ChainVec.at(file_no) -> SetBranchAddress("vtxx_pandoraNu", XVertexPosition);
             ChainVec.at(file_no) -> SetBranchAddress("vtxy_pandoraNu", YVertexPosition);
             ChainVec.at(file_no) -> SetBranchAddress("vtxz_pandoraNu", ZVertexPosition);
         }
-        
+
         // MC entities just for non-data files
         if(file_no > 1)
         {
@@ -214,7 +214,7 @@ void CCInclCrossSection()
             ChainVec.at(file_no) -> SetBranchAddress("trkorigin_pandoraNu", TrkOrigin);
             ChainVec.at(file_no) -> SetBranchAddress("trkpidbestplane_pandoraNu", TrkBestPlane);
         }
-        
+
         // Loop over all events
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
@@ -223,55 +223,55 @@ void CCInclCrossSection()
 
             // Get tree entry for this event
             ChainVec.at(file_no)->GetEntry(tree_index);
-        
-        // if there are reco products
-        if(file_no <= 2)
-        {
-            // Fill histograms as usual
-            SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-            SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
-            SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
-            SelectionMomentum.at(file_no)->Fill(TrackMomentum[TrkID]);
-        }
-        
-        // if we are looking at the mc selection file
-        if(file_no == 2)
-        {
-            // if event is background
-            if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1 || nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) || PDGTruth[MCTrkID] != 13)
+
+            // if there are reco products
+            if(file_no <= 2)
+            {
+                // Fill histograms as usual
+                SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
+                SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
+                SelectionMomentum.at(file_no)->Fill(TrackMomentum[TrkID]);
+            }
+
+            // if we are looking at the mc selection file
+            if(file_no == 2)
+            {
+                // if event is background
+                if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1 || nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) || PDGTruth[MCTrkID] != 13)
+                {
+                    // Fill background histograms
+                    SelectionTrackRange.at(file_no+1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                    SelectionCosTheta.at(file_no+1)->Fill(cos(TrackTheta[TrkID]));
+                    SelectionPhi.at(file_no+1)->Fill(TrackPhi[TrkID]);
+                    SelectionMomentum.at(file_no+1)->Fill(TrackMomentum[TrkID]);
+                }
+                else // if event is signal and truth
+                {
+                    // Fill background histograms
+                    SelectionTrackRange.at(file_no+2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                    SelectionCosTheta.at(file_no+2)->Fill(cos(TrackTheta[TrkID]));
+                    SelectionPhi.at(file_no+2)->Fill(TrackPhi[TrkID]);
+                    SelectionMomentum.at(file_no+2)->Fill(TrackMomentum[TrkID]);
+                }
+            } // if mc selection file
+            else if(file_no == 3)
             {
                 // Fill background histograms
-                SelectionTrackRange.at(file_no+1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                SelectionCosTheta.at(file_no+1)->Fill(cos(TrackTheta[TrkID]));
-                SelectionPhi.at(file_no+1)->Fill(TrackPhi[TrkID]);
-                SelectionMomentum.at(file_no+1)->Fill(TrackMomentum[TrkID]);
+                SelectionTrackRange.at(file_no+2)->Fill(CalcLength(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
+                SelectionCosTheta.at(file_no+2)->Fill(cos(MCTheta[MCTrkID]));
+                SelectionPhi.at(file_no+2)->Fill(MCPhi[MCTrkID]);
+                SelectionMomentum.at(file_no+2)->Fill(TrueLeptonMomentum[MCVtxID]);
             }
-            else // if event is signal and truth
-            {
-                // Fill background histograms
-                SelectionTrackRange.at(file_no+2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                SelectionCosTheta.at(file_no+2)->Fill(cos(TrackTheta[TrkID]));
-                SelectionPhi.at(file_no+2)->Fill(TrackPhi[TrkID]);
-                SelectionMomentum.at(file_no+2)->Fill(TrackMomentum[TrkID]);
-            }
-        } // if mc selection file
-        else if(file_no == 3)
-        {
-            // Fill background histograms
-            SelectionTrackRange.at(file_no+2)->Fill(CalcLength(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
-            SelectionCosTheta.at(file_no+2)->Fill(cos(MCTheta[MCTrkID]));
-            SelectionPhi.at(file_no+2)->Fill(MCPhi[MCTrkID]);
-            SelectionMomentum.at(file_no+2)->Fill(TrueLeptonMomentum[MCVtxID]);
-        }
-        
+
         } // Event loop
-        
+
         // Reset branch addresses to avoid problems
         ChainVec.at(file_no)->ResetBranchAddresses();
-        
+
     } // file loop
-    
-    
+
+
 }
 
 float CalcRange(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2)
@@ -279,7 +279,7 @@ float CalcRange(const float& x_1, const float& y_1, const float& z_1, const floa
     return sqrt(pow(x_1-x_2, 2) + pow(y_1-y_2, 2) + pow(z_1-z_2, 2));
 }
 
-bool inFV(double x, double y, double z) 
+bool inFV(double x, double y, double z)
 {
     if(x < (FVx - borderx) && (x > borderx) && (y < (FVy/2. - bordery)) && (y > (-FVy/2. + bordery)) && (z < (FVz - borderz)) && (z > borderz)) return true;
     else return false;
