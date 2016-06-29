@@ -215,6 +215,15 @@ void CCInclCrossSection()
             ChainVec.at(file_no) -> SetBranchAddress("trkpidbestplane_pandoraNu", TrkBestPlane);
         }
         
+        // Loop over all events
+        for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
+        {
+            // Progress indicator
+            if(!(tree_index % 1000)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
+
+            // Get tree entry for this event
+            ChainVec.at(file_no)->GetEntry(tree_index);
+        
         // if there are reco products
         if(file_no <= 2)
         {
@@ -255,6 +264,7 @@ void CCInclCrossSection()
             SelectionMomentum.at(file_no+2)->Fill(TrueLeptonMomentum[MCVtxID]);
         }
         
+        } // Event loop
         
         // Reset branch addresses to avoid problems
         ChainVec.at(file_no)->ResetBranchAddresses();
