@@ -20,6 +20,20 @@
 #include <TAxis.h>
 #include <TSpline.h>
 
+//This defines our current settings for the fiducial volume
+double FVx = 256.35;
+double FVy = 233;
+double FVz = 1036.8;
+double borderx = 10.;
+double bordery = 20.;
+double borderz = 10.;
+
+// Function which calculates the distance between two points
+float CalcRange(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2);
+
+// Function which checks if a point is in the FV
+bool inFV(double x, double y, double z);
+
 void CCInclCrossSection()
 {
     // Data input file vector
@@ -30,8 +44,17 @@ void CCInclCrossSection()
     std::vector<TH1F*> SelectionCosTheta;
     std::vector<TH1F*> SelectionPhi;
     std::vector<TH1F*> SelectionMomentum;
+    
+    // Unsemaring Matrix
+    TH2F* UMatrixTrackRange;
+    TH2F* UMatrixCosTheta;
+    TH2F* UMatrixPhi;
+    TH2F* UMatrixMomentum;
 
     size_t NumberOfBins = 20;
+    
+    double MCPOT = 2.3e23;
+    double DataPOT = 4.95e19;
     
     int TrkID;
     int VtxID;
@@ -65,6 +88,27 @@ void CCInclCrossSection()
     float XVertexPosition[500];
     float YVertexPosition[500];
     float ZVertexPosition[500];
+    
+    //MC truth
+    int mcevts_truth; //neutrino interactions per event
+    float XnuVtxTruth[10]; //true vertex x (in cm)
+    float YnuVtxTruth[10];
+    float ZnuVtxTruth[10];
+    int nuPDGTruth[10]; //true neutrino pdg code. numu = 14
+
+    int NumberOfMCTracks;
+
+    float XMCTrackStart[5000];
+    float YMCTrackStart[5000];
+    float ZMCTrackStart[5000];
+
+    float XMCTrackEnd[5000];
+    float YMCTrackEnd[5000];
+    float ZMCTrackEnd[5000];
+
+    float MCTheta[5000];
+    float MCPhi[5000];
+    float MCEnergy[5000];
 
     
     // Name vector
@@ -88,67 +132,145 @@ void CCInclCrossSection()
     GenLabel.push_back("Data On-Beam BNB");
     GenLabel.push_back("Data Off-Beam BNBEXT");
     GenLabel.push_back("MC Selection");
-    GenLabel.push_back("MC Backgrounds");
+    GenLabel.push_back("MC Selection Backgrounds");
+    GenLabel.push_back("MC Selection Truth");
     GenLabel.push_back("MC Truth");
     
-    // Loop over all generated
+    // Loop over all generation labels
     for(const auto& Label : GenLabel)
     {
-        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",NumberOfBins,0,1036.8));
+        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range",NumberOfBins,0,1036.8));
         SelectionTrackRange.back()->SetStats(0);
         SelectionTrackRange.back()->GetXaxis()->SetTitle("Track range [cm]");
         SelectionTrackRange.back()->GetYaxis()->SetTitle("No. of events");
         
-        SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1));
+        SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta",NumberOfBins,-1,1));
         SelectionCosTheta.back()->SetStats(0);
         SelectionCosTheta.back()->GetXaxis()->SetTitle("cos(#theta)");
         SelectionCosTheta.back()->GetYaxis()->SetTitle("No. of events");
         
-        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142));
+        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle",NumberOfBins,-3.142,3.142));
         SelectionPhi.back()->SetStats(0);
         SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         SelectionPhi.back()->GetYaxis()->SetTitle("No. of events");
         
-        SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3));
+        SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum",NumberOfBins,0,3));
         SelectionMomentum.back()->SetStats(0);
         SelectionMomentum.back()->GetXaxis()->SetTitle("Muon momentum [GeV/c]");
         SelectionMomentum.back()->GetYaxis()->SetTitle("No. of events");
-    }
+    } // loop over generation label
     
+    // Loop over all files
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
-        ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
-        ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
-
-        ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
-        ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
-        ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
-        ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
-        ChainVec.at(file_no) -> SetBranchAddress("nuPDG_truth", NuPDGTruth);
-        ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
-        ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
-        ChainVec.at(file_no) -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
-        ChainVec.at(file_no) -> SetBranchAddress("nuvtxy_truth", nuvtxy_truth);
-        ChainVec.at(file_no) -> SetBranchAddress("nuvtxz_truth", nuvtxz_truth);
-        ChainVec.at(file_no) -> SetBranchAddress("trkorigin_pandoraNu", TrkOrigin);
-        ChainVec.at(file_no) -> SetBranchAddress("trkpidbestplane_pandoraNu", TrkBestPlane);
-
-        ChainVec.at(file_no) -> SetBranchAddress("trkmomrange_pandoraNu", TrackMomentum);
-        ChainVec.at(file_no) -> SetBranchAddress("trktheta_pandoraNu", TrackTheta);
-        ChainVec.at(file_no) -> SetBranchAddress("trkphi_pandoraNu",TrackPhi);
-
-        ChainVec.at(file_no) -> SetBranchAddress("trkstartx_pandoraNu",XTrackStart);
-        ChainVec.at(file_no) -> SetBranchAddress("trkstarty_pandoraNu",YTrackStart);
-        ChainVec.at(file_no) -> SetBranchAddress("trkstartz_pandoraNu",ZTrackStart);
-
-        ChainVec.at(file_no) -> SetBranchAddress("trkendx_pandoraNu",XTrackEnd);
-        ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",YTrackEnd);
-        ChainVec.at(file_no) -> SetBranchAddress("trkendz_pandoraNu",ZTrackEnd);
-
-        ChainVec.at(file_no) -> SetBranchAddress("vtxx_pandoraNu", XVertexPosition);
-        ChainVec.at(file_no) -> SetBranchAddress("vtxy_pandoraNu", YVertexPosition);
-        ChainVec.at(file_no) -> SetBranchAddress("vtxz_pandoraNu", ZVertexPosition);
-    }
+        // Reco entities for all files except truth
+        if(file_no != ChainVec.size()-1)
+        {
+            ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
+            ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
+       
+            ChainVec.at(file_no) -> SetBranchAddress("trkmomrange_pandoraNu", TrackMomentum);
+            ChainVec.at(file_no) -> SetBranchAddress("trktheta_pandoraNu", TrackTheta);
+            ChainVec.at(file_no) -> SetBranchAddress("trkphi_pandoraNu",TrackPhi);
+       
+            ChainVec.at(file_no) -> SetBranchAddress("trkstartx_pandoraNu",XTrackStart);
+            ChainVec.at(file_no) -> SetBranchAddress("trkstarty_pandoraNu",YTrackStart);
+            ChainVec.at(file_no) -> SetBranchAddress("trkstartz_pandoraNu",ZTrackStart);
+        
+            ChainVec.at(file_no) -> SetBranchAddress("trkendx_pandoraNu",XTrackEnd);
+            ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",YTrackEnd);
+            ChainVec.at(file_no) -> SetBranchAddress("trkendz_pandoraNu",ZTrackEnd);
+       
+            ChainVec.at(file_no) -> SetBranchAddress("vtxx_pandoraNu", XVertexPosition);
+            ChainVec.at(file_no) -> SetBranchAddress("vtxy_pandoraNu", YVertexPosition);
+            ChainVec.at(file_no) -> SetBranchAddress("vtxz_pandoraNu", ZVertexPosition);
+        }
+        
+        // MC entities just for non-data files
+        if(file_no > 1)
+        {
+            ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
+            ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
+            ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
+            ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
+            ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
+            ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
+            ChainVec.at(file_no) -> SetBranchAddress("lep_mom_truth", TrueLeptonMomentum);
+            ChainVec.at(file_no) -> SetBranchAddress("mcevts_truth", &mcevts_truth);
+            ChainVec.at(file_no) -> SetBranchAddress("nuvtxx_truth", XnuVtxTruth);
+            ChainVec.at(file_no) -> SetBranchAddress("nuvtxy_truth", YnuVtxTruth);
+            ChainVec.at(file_no) -> SetBranchAddress("nuvtxz_truth", ZnuVtxTruth);
+            ChainVec.at(file_no) -> SetBranchAddress("nuPDG_truth", nuPDGTruth);
+            ChainVec.at(file_no) -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
+            ChainVec.at(file_no) -> SetBranchAddress("StartPointx", XMCTrackStart);
+            ChainVec.at(file_no) -> SetBranchAddress("StartPointz", ZMCTrackStart);
+            ChainVec.at(file_no) -> SetBranchAddress("EndPointx", XMCTrackEnd);
+            ChainVec.at(file_no) -> SetBranchAddress("EndPointy", YMCTrackEnd);
+            ChainVec.at(file_no) -> SetBranchAddress("EndPointz", ZMCTrackEnd);
+            ChainVec.at(file_no) -> SetBranchAddress("theta", MCTheta);
+            ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
+            ChainVec.at(file_no) -> SetBranchAddress("phi", MCPhi);
+            ChainVec.at(file_no) -> SetBranchAddress("Eng", MCEnergy);
+            ChainVec.at(file_no) -> SetBranchAddress("trkorigin_pandoraNu", TrkOrigin);
+            ChainVec.at(file_no) -> SetBranchAddress("trkpidbestplane_pandoraNu", TrkBestPlane);
+        }
+        
+        // if there are reco products
+        if(file_no <= 2)
+        {
+            // Fill histograms as usual
+            SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+            SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
+            SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
+            SelectionMomentum.at(file_no)->Fill(TrackMomentum[TrkID]);
+        }
+        
+        // if we are looking at the mc selection file
+        if(file_no == 2)
+        {
+            // if event is background
+            if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1 || nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) || PDGTruth[MCTrkID] != 13)
+            {
+                // Fill background histograms
+                SelectionTrackRange.at(file_no+1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                SelectionCosTheta.at(file_no+1)->Fill(cos(TrackTheta[TrkID]));
+                SelectionPhi.at(file_no+1)->Fill(TrackPhi[TrkID]);
+                SelectionMomentum.at(file_no+1)->Fill(TrackMomentum[TrkID]);
+            }
+            else // if event is signal and truth
+            {
+                // Fill background histograms
+                SelectionTrackRange.at(file_no+2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                SelectionCosTheta.at(file_no+2)->Fill(cos(TrackTheta[TrkID]));
+                SelectionPhi.at(file_no+2)->Fill(TrackPhi[TrkID]);
+                SelectionMomentum.at(file_no+2)->Fill(TrackMomentum[TrkID]);
+            }
+        } // if mc selection file
+        else if(file_no == 3)
+        {
+            // Fill background histograms
+            SelectionTrackRange.at(file_no+2)->Fill(CalcLength(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
+            SelectionCosTheta.at(file_no+2)->Fill(cos(MCTheta[MCTrkID]));
+            SelectionPhi.at(file_no+2)->Fill(MCPhi[MCTrkID]);
+            SelectionMomentum.at(file_no+2)->Fill(TrueLeptonMomentum[MCVtxID]);
+        }
+        
+        
+        // Reset branch addresses to avoid problems
+        ChainVec.at(file_no)->ResetBranchAddresses();
+        
+    } // file loop
     
     
+}
+
+float CalcRange(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2)
+{
+    return sqrt(pow(x_1-x_2, 2) + pow(y_1-y_2, 2) + pow(z_1-z_2, 2));
+}
+
+bool inFV(double x, double y, double z) 
+{
+    if(x < (FVx - borderx) && (x > borderx) && (y < (FVy/2. - bordery)) && (y > (-FVy/2. + bordery)) && (z < (FVz - borderz)) && (z > borderz)) return true;
+    else return false;
 }

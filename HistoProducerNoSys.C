@@ -458,6 +458,7 @@ void HistoProducerNoSys()
     int TruthMode[10];
     int NuPDGTruth[10];
     int PDGTruth[5000];
+    float TrueLeptonMomentum[10];
     float NuEnergyTruth[10];
     float nuvtxx_truth[10]; //true vertex x (in cm)
     float nuvtxy_truth[10];
