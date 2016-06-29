@@ -34,6 +34,10 @@ float CalcRange(const float& x_1, const float& y_1, const float& z_1, const floa
 // Function which checks if a point is in the FV
 bool inFV(double x, double y, double z);
 
+// Add two histogramms with indices First and Last and weight
+void AddHistograms(std::vector<TH1F*>& HistVector, unsigned int First, unsigned int Last, float Weight, bool EraseLast = false);
+
+
 void CCInclCrossSection()
 {
     // Data input file vector
@@ -64,6 +68,7 @@ void CCInclCrossSection()
     int CCNCFlag[10];
     int TruthMode[10];
     int NuPDGTruth[10];
+    float TrueLeptonMomentum[10];
     float NuEnergyTruth[10];
     float nuvtxx_truth[10]; //true vertex x (in cm)
     float nuvtxy_truth[10];
@@ -140,24 +145,24 @@ void CCInclCrossSection()
     for(const auto& Label : GenLabel)
     {
         SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range",NumberOfBins,0,1036.8));
-        SelectionTrackRange.back()->SetStats(0);
-        SelectionTrackRange.back()->GetXaxis()->SetTitle("Track range [cm]");
-        SelectionTrackRange.back()->GetYaxis()->SetTitle("No. of events");
+        SelectionTrackRange.back() -> SetStats(0);
+        SelectionTrackRange.back() -> GetXaxis() -> SetTitle("Track range [cm]");
+        SelectionTrackRange.back() -> GetYaxis() -> SetTitle("No. of events");
 
         SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta",NumberOfBins,-1,1));
-        SelectionCosTheta.back()->SetStats(0);
-        SelectionCosTheta.back()->GetXaxis()->SetTitle("cos(#theta)");
-        SelectionCosTheta.back()->GetYaxis()->SetTitle("No. of events");
+        SelectionCosTheta.back() -> SetStats(0);
+        SelectionCosTheta.back() -> GetXaxis() -> SetTitle("cos(#theta)");
+        SelectionCosTheta.back() -> GetYaxis() -> SetTitle("No. of events");
 
         SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle",NumberOfBins,-3.142,3.142));
-        SelectionPhi.back()->SetStats(0);
-        SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
-        SelectionPhi.back()->GetYaxis()->SetTitle("No. of events");
+        SelectionPhi.back() -> SetStats(0);
+        SelectionPhi.back() -> GetXaxis() -> SetTitle("#phi angle [rad]");
+        SelectionPhi.back() -> GetYaxis() -> SetTitle("No. of events");
 
         SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum",NumberOfBins,0,3));
-        SelectionMomentum.back()->SetStats(0);
-        SelectionMomentum.back()->GetXaxis()->SetTitle("Muon momentum [GeV/c]");
-        SelectionMomentum.back()->GetYaxis()->SetTitle("No. of events");
+        SelectionMomentum.back() -> SetStats(0);
+        SelectionMomentum.back() -> GetXaxis() -> SetTitle("Muon momentum [GeV/c]");
+        SelectionMomentum.back() -> GetYaxis() -> SetTitle("No. of events");
     } // loop over generation label
 
     // Loop over all files
@@ -216,22 +221,22 @@ void CCInclCrossSection()
         }
 
         // Loop over all events
-        for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
+        for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no) -> GetEntries(); tree_index++)
         {
             // Progress indicator
-            if(!(tree_index % 1000)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
+            if(!(tree_index % 1000)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no) -> GetEntries() << std::endl;
 
             // Get tree entry for this event
-            ChainVec.at(file_no)->GetEntry(tree_index);
+            ChainVec.at(file_no) -> GetEntry(tree_index);
 
             // if there are reco products
             if(file_no <= 2)
             {
                 // Fill histograms as usual
-                SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
-                SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
-                SelectionMomentum.at(file_no)->Fill(TrackMomentum[TrkID]);
+                SelectionTrackRange.at(file_no) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                SelectionCosTheta.at(file_no) -> Fill(cos(TrackTheta[TrkID]));
+                SelectionPhi.at(file_no) -> Fill(TrackPhi[TrkID]);
+                SelectionMomentum.at(file_no) -> Fill(TrackMomentum[TrkID]);
             }
 
             // if we are looking at the mc selection file
@@ -241,33 +246,33 @@ void CCInclCrossSection()
                 if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1 || nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) || PDGTruth[MCTrkID] != 13)
                 {
                     // Fill background histograms
-                    SelectionTrackRange.at(file_no+1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    SelectionCosTheta.at(file_no+1)->Fill(cos(TrackTheta[TrkID]));
-                    SelectionPhi.at(file_no+1)->Fill(TrackPhi[TrkID]);
-                    SelectionMomentum.at(file_no+1)->Fill(TrackMomentum[TrkID]);
+                    SelectionTrackRange.at(file_no+1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                    SelectionCosTheta.at(file_no+1) -> Fill(cos(TrackTheta[TrkID]));
+                    SelectionPhi.at(file_no+1) -> Fill(TrackPhi[TrkID]);
+                    SelectionMomentum.at(file_no+1) -> Fill(TrackMomentum[TrkID]);
                 }
                 else // if event is signal and truth
                 {
                     // Fill background histograms
-                    SelectionTrackRange.at(file_no+2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    SelectionCosTheta.at(file_no+2)->Fill(cos(TrackTheta[TrkID]));
-                    SelectionPhi.at(file_no+2)->Fill(TrackPhi[TrkID]);
-                    SelectionMomentum.at(file_no+2)->Fill(TrackMomentum[TrkID]);
+                    SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                    SelectionCosTheta.at(file_no+2) -> Fill(cos(TrackTheta[TrkID]));
+                    SelectionPhi.at(file_no+2) -> Fill(TrackPhi[TrkID]);
+                    SelectionMomentum.at(file_no+2) -> Fill(TrackMomentum[TrkID]);
                 }
             } // if mc selection file
             else if(file_no == 3)
             {
                 // Fill background histograms
-                SelectionTrackRange.at(file_no+2)->Fill(CalcLength(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
-                SelectionCosTheta.at(file_no+2)->Fill(cos(MCTheta[MCTrkID]));
-                SelectionPhi.at(file_no+2)->Fill(MCPhi[MCTrkID]);
-                SelectionMomentum.at(file_no+2)->Fill(TrueLeptonMomentum[MCVtxID]);
+                SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
+                SelectionCosTheta.at(file_no+2) -> Fill(cos(MCTheta[MCTrkID]));
+                SelectionPhi.at(file_no+2) -> Fill(MCPhi[MCTrkID]);
+                SelectionMomentum.at(file_no+2) -> Fill(TrueLeptonMomentum[MCVtxID]);
             }
 
         } // Event loop
 
         // Reset branch addresses to avoid problems
-        ChainVec.at(file_no)->ResetBranchAddresses();
+        ChainVec.at(file_no) -> ResetBranchAddresses();
 
     } // file loop
 
@@ -283,4 +288,25 @@ bool inFV(double x, double y, double z)
 {
     if(x < (FVx - borderx) && (x > borderx) && (y < (FVy/2. - bordery)) && (y > (-FVy/2. + bordery)) && (z < (FVz - borderz)) && (z > borderz)) return true;
     else return false;
+}
+
+void AddHistograms(std::vector<TH1F*>& HistVector, unsigned int First, unsigned int Last, float Weight, bool EraseLast)
+{
+    // Check if there is something to be added
+    if (HistVector.size() >= Last && First < Last)
+    {
+        // Add histograms
+        HistVector.at(First) -> Add(HistVector.at(Last), Weight);
+        
+        // Erase last histogram if flag is set
+        if(EraseLast)
+        {
+            delete HistVector.at(Last);
+            HistVector.erase(HistVector.begin() + Last);
+        }
+    }
+    else // if nothing can be added
+    {
+        std::cout << "Histograms not added!" << std::endl;
+    }
 }
