@@ -103,9 +103,13 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     Float_t        MCPhi[maxtracks];
     Float_t        MCEnergy[maxtracks];
     Int_t          MCTrueIndex[maxtracks];
+    
+    // Open output file
+    TFile* OutputFile = new TFile(("rootfiles/Hist_MC_Truth_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
 
     treenc -> SetBranchStatus("*",0);
     treenc -> SetBranchStatus("mcevts_truth", 1);
+    treenc -> SetBranchStatus("geant_list_size", 1);
     treenc -> SetBranchStatus("nuvtxx_truth", 1);
     treenc -> SetBranchStatus("nuvtxy_truth", 1);
     treenc -> SetBranchStatus("nuvtxz_truth", 1);
@@ -115,7 +119,6 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchStatus("mode_truth", 1);
     treenc -> SetBranchStatus("enu_truth", 1);
     treenc -> SetBranchStatus("lep_mom_truth", 1);
-    treenc -> SetBranchStatus("geant_list_size", 1);
     treenc -> SetBranchStatus("StartPointx", 1);
     treenc -> SetBranchStatus("StartPointy", 1);
     treenc -> SetBranchStatus("StartPointz", 1);
@@ -128,6 +131,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchStatus("MCTruthIndex", 1);
 
     treenc -> SetBranchAddress("mcevts_truth", &mcevts_truth);
+    treenc -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
     treenc -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
     treenc -> SetBranchAddress("nuvtxy_truth", nuvtxy_truth);
     treenc -> SetBranchAddress("nuvtxz_truth", nuvtxz_truth);
@@ -137,7 +141,6 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchAddress("mode_truth", mode_truth);
     treenc -> SetBranchAddress("enu_truth", NuEnergyTruth);
     treenc -> SetBranchAddress("lep_mom_truth", TrueLeptonMomentum);
-    treenc -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
     treenc -> SetBranchAddress("StartPointx", XMCTrackStart);
     treenc -> SetBranchAddress("StartPointy", YMCTrackStart);
     treenc -> SetBranchAddress("StartPointz", ZMCTrackStart);
@@ -148,10 +151,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchAddress("phi", MCTheta);
     treenc -> SetBranchAddress("Eng", MCEnergy);
     treenc -> SetBranchAddress("MCTruthIndex", MCTrueIndex);
-
-
-    // Open output file
-    TFile* OutputFile = new TFile(("rootfiles/Hist_MC_Truth_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
+    
     // Make a clone tree which gets filled
     TTree *SelectionTree = treenc->CloneTree(0);
 
