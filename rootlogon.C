@@ -85,6 +85,15 @@ void rootlogon()
     TextPreliminary->SetFillColorAlpha(0,0);
     TextPreliminary->SetTextAlign(33);
     
+    // The following specifies the "MicroBooNE" text box
+    TPaveText* TextUBooNE = new TPaveText(0.6,0.92,0.9,0.96,"nbNDC");
+    TextUBooNE->AddText("MicroBooNE");
+    TextUBooNE->SetTextSize(0.05);
+    TextUBooNE->SetTextColor(12);
+    TextUBooNE->SetLineColorAlpha(0,0);
+    TextUBooNE->SetFillColorAlpha(0,0);
+    TextUBooNE->SetTextAlign(33);
+    
 //     TPad* Pad = (TPad*) gPad;
     
     // Choose wich text box you want to have by activating either of these
