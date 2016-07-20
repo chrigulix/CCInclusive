@@ -19,14 +19,18 @@
 #include <TLine.h>
 #include <TAxis.h>
 #include <TSpline.h>
+#include <TGraphAsymmErrors.h>
 
 //This defines our current settings for the fiducial volume
-double FVx = 256.35;
-double FVy = 233;
-double FVz = 1036.8;
-double borderx = 10.;
-double bordery = 20.;
-double borderz = 10.;
+const double FVx = 256.35;
+const double FVy = 233;
+const double FVz = 1036.8;
+const double borderx = 10.;
+const double bordery = 20.;
+const double borderz = 10.;
+const double Avogadro = 6.022140857e23; //mol^-1
+const double NucleonNo = 39.948; // u
+const double Density = 1.39; // g/cm^3
 
 // Function which calculates the distance between two points
 float CalcRange(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2);
@@ -47,6 +51,8 @@ void SelectionUnsmearing(TH2F*& UMatrix, TH1F*& SVector);
 // CC inlcusive cross section function (main) 
 void CCInclCrossSection()
 {
+    float NumberOfTargets = (FVx - 2*borderx) * (FVy - 2*bordery) * (FVz - 2*borderz) * Density * Avogadro; 
+    
     // Output file file type
     std::string FileType = "pdf";
 
@@ -64,6 +70,12 @@ void CCInclCrossSection()
     TH2F* UMatrixCosTheta;
     TH2F* UMatrixPhi;
     TH2F* UMatrixMomentum;
+    
+    // Efficiency graphs
+    TH1F* EffTrackRange;
+    TH1F* EffCosTheta;
+    TH1F* EffPhi;
+    TH1F* EffMomentum;
 
     size_t NumberOfBins = 20;
 
@@ -76,7 +88,7 @@ void CCInclCrossSection()
     ScalingFactors.push_back(DataPOT/MCPOT);
     ScalingFactors.push_back(DataPOT/MCPOT);
     ScalingFactors.push_back(DataPOT/MCPOT);
-//     ScalingFactors.push_back(1);
+    ScalingFactors.push_back(1);
 
     int TrkID;
     int VtxID;
@@ -132,7 +144,21 @@ void CCInclCrossSection()
     float MCTheta[5000];
     float MCPhi[5000];
     float MCEnergy[5000];
-
+    
+    TH1D* TempNuMuFlux;
+    TH1F* NuMuFlux = new TH1F("NuMuFlux","NuMuFlux",NumberOfBins,0,3);
+    
+    TFile* BNBFlux = new TFile("/lheppc46/data/uBData/bnbflux/numode_bnb_470m_r200.root");
+    
+    TempNuMuFlux = (TH1D*) BNBFlux->Get("numu");
+    
+    TempNuMuFlux->Rebin(3);
+    
+    for(unsigned int bin_no = 1; bin_no <= NuMuFlux->GetNbinsX(); bin_no++)
+    {
+        NuMuFlux->SetBinContent(bin_no, TempNuMuFlux->GetBinContent(bin_no));
+        NuMuFlux->SetBinError(bin_no, TempNuMuFlux->GetBinError(bin_no));
+    }
 
     // Name vector
     std::vector<std::string> GenLabel;
@@ -158,6 +184,7 @@ void CCInclCrossSection()
     GenLabel.push_back("MC Selection Backgrounds");
     GenLabel.push_back("MC Selection Truth");
     GenLabel.push_back("MC Truth");
+    GenLabel.push_back("Efficiency");
 
     // Loop over all generation labels
     for(const auto& Label : GenLabel)
@@ -336,6 +363,16 @@ void CCInclCrossSection()
         SelectionMomentum.at(scale_no)->Scale(ScalingFactors.at(scale_no));
     } // scaling loop
     
+    SelectionTrackRange.back()->Divide(SelectionTrackRange.at(4),SelectionTrackRange.at(5));
+    SelectionCosTheta.back()->Divide(SelectionCosTheta.at(4),SelectionCosTheta.at(5));
+    SelectionPhi.back()->Divide(SelectionPhi.at(4),SelectionPhi.at(5));
+    SelectionMomentum.back()->Divide(SelectionMomentum.at(4),SelectionMomentum.at(5));
+    
+//     EffTrackRange.BayesDivide(SelectionTrackRange.at(3),SelectionTrackRange.at(2));
+//     EffCosTheta.BayesDivide(SelectionCosTheta.at(3),SelectionCosTheta.at(2));
+//     EffPhi.BayesDivide(SelectionPhi.at(3),SelectionPhi.at(2));
+//     EffMomentum.BayesDivide(SelectionMomentum.at(3),SelectionMomentum.at(2));
+    
     // Normalize matrices by row
     NormMatrixByRow(UMatrixTrackRange);
     NormMatrixByRow(UMatrixCosTheta);
@@ -367,7 +404,23 @@ void CCInclCrossSection()
         SelectionUnsmearing(UMatrixCosTheta,SelectionCosTheta.at(hist_no));
         SelectionUnsmearing(UMatrixPhi,SelectionPhi.at(hist_no));
         SelectionUnsmearing(UMatrixMomentum,SelectionMomentum.at(hist_no));
+        
+        SelectionTrackRange.at(hist_no)->Divide(SelectionTrackRange.back());
+        SelectionCosTheta.at(hist_no)->Divide(SelectionCosTheta.back());
+        SelectionPhi.at(hist_no)->Divide(SelectionPhi.back());
+        SelectionMomentum.at(hist_no)->Divide(SelectionMomentum.back());
+        
+        SelectionTrackRange.at(hist_no)->Scale(1/NumberOfTargets);
+        SelectionCosTheta.at(hist_no)->Scale(1/NumberOfTargets);
+        SelectionPhi.at(hist_no)->Scale(1/NumberOfTargets);
+        SelectionMomentum.at(hist_no)->Scale(1/NumberOfTargets);
+        
+        SelectionMomentum.at(hist_no)->Divide(NuMuFlux);
     }
+    
+    TCanvas *Canvas0 = new TCanvas("Test", "Test", 1400, 1000);
+    Canvas0->cd();
+    NuMuFlux->Draw();
 
     // Draw histogram
     TCanvas *Canvas1 = new TCanvas("Range", "Range", 1400, 1000);
