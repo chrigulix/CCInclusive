@@ -20,6 +20,7 @@
 #include <TAxis.h>
 #include <TSpline.h>
 #include <TGraphAsymmErrors.h>
+#include <TEfficiency.h>
 
 //This defines our current settings for the fiducial volume
 const double FVx = 256.35;
@@ -51,7 +52,7 @@ void SelectionUnsmearing(TH2F*& UMatrix, TH1F*& SVector);
 // CC inlcusive cross section function (main) 
 void CCInclCrossSection()
 {
-    float NumberOfTargets = (FVx - 2*borderx) * (FVy - 2*bordery) * (FVz - 2*borderz) * Density * Avogadro; 
+    float NumberOfTargets = (FVx - 2*borderx) * (FVy - 2*bordery) * (FVz - 2*borderz) * Density * Avogadro;
     
     // Output file file type
     std::string FileType = "pdf";
@@ -72,23 +73,15 @@ void CCInclCrossSection()
     TH2F* UMatrixMomentum;
     
     // Efficiency graphs
-    TH1F* EffTrackRange;
-    TH1F* EffCosTheta;
-    TH1F* EffPhi;
-    TH1F* EffMomentum;
+    //TH1F* EffTrackRange;
+    //TH1F* EffCosTheta;
+    //TH1F* EffPhi;
+    //TH1F* EffMomentum;
 
     size_t NumberOfBins = 20;
 
     double MCPOT = 2.3e20;
     double DataPOT = 4.95e19;
-
-    std::vector<float> ScalingFactors;
-    ScalingFactors.push_back(1);
-    ScalingFactors.push_back(1.2300);
-    ScalingFactors.push_back(DataPOT/MCPOT);
-    ScalingFactors.push_back(DataPOT/MCPOT);
-    ScalingFactors.push_back(DataPOT/MCPOT);
-    ScalingFactors.push_back(1);
 
     int TrkID;
     int VtxID;
@@ -159,7 +152,9 @@ void CCInclCrossSection()
         NuMuFlux->SetBinContent(bin_no, TempNuMuFlux->GetBinContent(bin_no));
         NuMuFlux->SetBinError(bin_no, TempNuMuFlux->GetBinError(bin_no));
     }
-
+    
+    NuMuFlux->Scale(DataPOT/1e20);
+    
     // Name vector
     std::vector<std::string> GenLabel;
 
@@ -185,6 +180,15 @@ void CCInclCrossSection()
     GenLabel.push_back("MC Selection Truth");
     GenLabel.push_back("MC Truth");
     GenLabel.push_back("Efficiency");
+    
+    std::vector<float> ScalingFactors;
+    ScalingFactors.push_back(1);
+    ScalingFactors.push_back(1.2300);
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    ScalingFactors.push_back(1);
 
     // Loop over all generation labels
     for(const auto& Label : GenLabel)
@@ -304,7 +308,7 @@ void CCInclCrossSection()
             if(file_no == 2)
             {
                 // if event is background
-                if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1 || nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) || PDGTruth[MCTrkID] != 13)
+                if(TrkID < 0 || MCVtxID < 0 || TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1 || nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) || PDGTruth[MCTrkID] != 13)
                 {
                     // Fill background histograms
                     SelectionTrackRange.at(file_no+1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -327,7 +331,7 @@ void CCInclCrossSection()
                     UMatrixMomentum -> Fill( TrueLeptonMomentum[MCVtxID],TrackMomentum[TrkID] );
                 }
             } // if mc selection file
-            else if(file_no == 3)
+            else if(file_no == 3 && MCTrkID > -1 && nuPDGTruth[MCVtxID] == 14)
             {
                 // Fill background histograms
                 SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
@@ -367,6 +371,8 @@ void CCInclCrossSection()
     SelectionCosTheta.back()->Divide(SelectionCosTheta.at(4),SelectionCosTheta.at(5));
     SelectionPhi.back()->Divide(SelectionPhi.at(4),SelectionPhi.at(5));
     SelectionMomentum.back()->Divide(SelectionMomentum.at(4),SelectionMomentum.at(5));
+    
+    TEfficiency* EffMomentum = new TEfficiency( *SelectionMomentum.at(4),*SelectionMomentum.at(5) );
     
 //     EffTrackRange.BayesDivide(SelectionTrackRange.at(3),SelectionTrackRange.at(2));
 //     EffCosTheta.BayesDivide(SelectionCosTheta.at(3),SelectionCosTheta.at(2));
@@ -410,17 +416,21 @@ void CCInclCrossSection()
         SelectionPhi.at(hist_no)->Divide(SelectionPhi.back());
         SelectionMomentum.at(hist_no)->Divide(SelectionMomentum.back());
         
+        SelectionMomentum.at(hist_no)->Divide(NuMuFlux);
+        
         SelectionTrackRange.at(hist_no)->Scale(1/NumberOfTargets);
         SelectionCosTheta.at(hist_no)->Scale(1/NumberOfTargets);
         SelectionPhi.at(hist_no)->Scale(1/NumberOfTargets);
-        SelectionMomentum.at(hist_no)->Scale(1/NumberOfTargets);
-        
-        SelectionMomentum.at(hist_no)->Divide(NuMuFlux);
+        SelectionMomentum.at(hist_no)->Scale(1/NumberOfTargets/SelectionMomentum.at(hist_no)->GetBinWidth(1));
     }
     
     TCanvas *Canvas0 = new TCanvas("Test", "Test", 1400, 1000);
     Canvas0->cd();
-    NuMuFlux->Draw();
+    EffMomentum->Draw("AP");
+    
+    TCanvas *Canvas0a = new TCanvas("Test1", "Test1", 1400, 1000);
+    Canvas0a->cd();
+    SelectionMomentum.back()->Draw();
 
     // Draw histogram
     TCanvas *Canvas1 = new TCanvas("Range", "Range", 1400, 1000);
