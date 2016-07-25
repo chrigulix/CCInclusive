@@ -226,7 +226,7 @@ void CCInclCrossSection()
         SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum",NumberOfBins,0,3));
         SelectionMomentum.back() -> SetStats(0);
         SelectionMomentum.back() -> GetXaxis() -> SetTitle("Muon momentum p [GeV/c]");
-        SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/rad]");
+        SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
     } // loop over generation label
     
     // Initialize unsmearing matrices
@@ -541,7 +541,7 @@ void CCInclCrossSection()
     
     TCanvas *Canvas5 = new TCanvas("Momentum", "Momentum", 1400, 1000);
     Canvas5->cd();
-    SelectionMomentum.at(1)->SetMaximum(1.2*SelectionMomentum.at(0)->GetBinContent(SelectionMomentum.at(0)->GetMaximumBin()));
+    SelectionMomentum.at(1)->SetMaximum(1.5*SelectionMomentum.at(0)->GetBinContent(SelectionMomentum.at(0)->GetMaximumBin()));
     SelectionMomentum.at(1)->SetMinimum(0.0);
     SelectionMomentum.at(1)->SetFillColor(46);
     SelectionMomentum.at(1)->Draw("E2");
