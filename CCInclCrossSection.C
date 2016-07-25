@@ -205,36 +205,46 @@ void CCInclCrossSection()
     {
         SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range",NumberOfBins,0,1036.8));
         SelectionTrackRange.back() -> SetStats(0);
-        SelectionTrackRange.back() -> GetXaxis() -> SetTitle("Track range [cm]");
-        SelectionTrackRange.back() -> GetYaxis() -> SetTitle("No. of events");
+        SelectionTrackRange.back() -> GetXaxis() -> SetTitle("Muon track range [cm]");
+        SelectionTrackRange.back() -> GetYaxis() -> SetTitle("d#sigma/dl [cm^{2}/cm]");
 
         SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta",NumberOfBins,-1,1));
         SelectionCosTheta.back() -> SetStats(0);
-        SelectionCosTheta.back() -> GetXaxis() -> SetTitle("cos(#theta)");
-        SelectionCosTheta.back() -> GetYaxis() -> SetTitle("No. of events");
+        SelectionCosTheta.back() -> GetXaxis() -> SetTitle("Muon cos(#theta)");
+        SelectionCosTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d(cos#theta) [cm^{2}/cos(#theta)]");
         
         SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta",NumberOfBins,0,3.142));
         SelectionTheta.back() -> SetStats(0);
-        SelectionTheta.back() -> GetXaxis() -> SetTitle("#theta [rad]");
-        SelectionTheta.back() -> GetYaxis() -> SetTitle("No. of events");
+        SelectionTheta.back() -> GetXaxis() -> SetTitle("Muon #theta angle [rad]");
+        SelectionTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad]");
 
         SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle",NumberOfBins,-3.142,3.142));
         SelectionPhi.back() -> SetStats(0);
-        SelectionPhi.back() -> GetXaxis() -> SetTitle("#phi angle [rad]");
-        SelectionPhi.back() -> GetYaxis() -> SetTitle("No. of events");
+        SelectionPhi.back() -> GetXaxis() -> SetTitle("Muon #phi angle [rad]");
+        SelectionPhi.back() -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/rad]");
 
         SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum",NumberOfBins,0,3));
         SelectionMomentum.back() -> SetStats(0);
-        SelectionMomentum.back() -> GetXaxis() -> SetTitle("Muon momentum [GeV/c]");
-        SelectionMomentum.back() -> GetYaxis() -> SetTitle("No. of events");
+        SelectionMomentum.back() -> GetXaxis() -> SetTitle("Muon momentum p [GeV/c]");
+        SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/rad]");
     } // loop over generation label
     
     // Initialize unsmearing matrices
     UMatrixTrackRange = new TH2F("Unsmering Matrix Track Range","Unsmering Matrix Track Range",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
+    UMatrixTrackRange -> GetXaxis() -> SetTitle("Muon track length (truth) [cm]");
+    UMatrixTrackRange -> GetYaxis() -> SetTitle("Muon track length (reco) [cm]");
     UMatrixCosTheta = new TH2F("Unsmering Matrix CosTheta","Unsmering Matrix CosTheta",NumberOfBins,0,-1,NumberOfBins,0,-1);
+    UMatrixCosTheta -> GetXaxis() -> SetTitle("Muon cos(#theta) (truth)");
+    UMatrixCosTheta -> GetYaxis() -> SetTitle("Muon cos(#theta) (reco)");
     UMatrixTheta = new TH2F("Unsmering Matrix Theta","Unsmering Matrix Theta",NumberOfBins,0,3.142,NumberOfBins,0,3.142);
+    UMatrixTheta -> GetXaxis() -> SetTitle("Muon #theta angle (truth) [rad]");
+    UMatrixTheta -> GetYaxis() -> SetTitle("Muon #theta angle (reco) [rad]");
     UMatrixPhi = new TH2F("Unsmering Matrix Phi","Unsmering Matrix Phi",NumberOfBins,0,-3.142,NumberOfBins,0,3.142);
+    UMatrixPhi -> GetXaxis() -> SetTitle("Muon #phi angle (truth) [rad]");
+    UMatrixPhi -> GetYaxis() -> SetTitle("Muon #phi angle (reco) [rad]");
     UMatrixMomentum = new TH2F("Unsmering Matrix Momentum","Unsmering Matrix Momentum",NumberOfBins,0,3,NumberOfBins,0,3);
+    UMatrixMomentum -> GetXaxis() -> SetTitle("Muon momentum (truth) [rad]");
+    UMatrixMomentum -> GetYaxis() -> SetTitle("Muon momentum (reco) [rad]");
 
     // Loop over all files
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
@@ -431,21 +441,24 @@ void CCInclCrossSection()
     AddHistograms(SelectionTheta,1,2,-1,1);
     AddHistograms(SelectionMomentum,1,2,-1,1);
     
-    // Unsmearing loop
+    // Selection data/MC loop
     for(unsigned int hist_no = 0; hist_no < 2; hist_no++)
     {
+        // Unsmearing of data
         SelectionUnsmearing(UMatrixTrackRange,SelectionTrackRange.at(hist_no));
         SelectionUnsmearing(UMatrixCosTheta,SelectionCosTheta.at(hist_no));
         SelectionUnsmearing(UMatrixTheta,SelectionTheta.at(hist_no));
         SelectionUnsmearing(UMatrixPhi,SelectionPhi.at(hist_no));
         SelectionUnsmearing(UMatrixMomentum,SelectionMomentum.at(hist_no));
         
+        // Efficiency unfolding
         SelectionTrackRange.at(hist_no)->Divide(SelectionTrackRange.back());
         SelectionCosTheta.at(hist_no)->Divide(SelectionCosTheta.back());
         SelectionTheta.at(hist_no)->Divide(SelectionTheta.back());
         SelectionPhi.at(hist_no)->Divide(SelectionPhi.back());
         SelectionMomentum.at(hist_no)->Divide(SelectionMomentum.back());
         
+        // Scaling to flux number of target nucleons and bin width
         SelectionTrackRange.at(hist_no)->Scale(1/NumberOfTargets/SelectionTrackRange.at(hist_no)->GetBinWidth(1)/IntegratedFlux);
         SelectionCosTheta.at(hist_no)->Scale(1/NumberOfTargets/SelectionCosTheta.at(hist_no)->GetBinWidth(1)/IntegratedFlux);
         SelectionTheta.at(hist_no)->Scale(1/NumberOfTargets/SelectionTheta.at(hist_no)->GetBinWidth(1)/IntegratedFlux);

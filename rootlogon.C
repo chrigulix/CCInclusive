@@ -38,7 +38,7 @@ void rootlogon()
     
     // Set axis title offsets
     gStyle->SetTitleOffset(1.,"x");
-    gStyle->SetTitleOffset(1.04,"y");
+    gStyle->SetTitleOffset(1.,"y");
 
     // Supress title and statistics in canvas
     gStyle->SetOptTitle(0);
