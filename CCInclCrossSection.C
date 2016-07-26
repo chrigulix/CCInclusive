@@ -420,6 +420,27 @@ void CCInclCrossSection()
     AddHistograms(SelectionPhi,0,1,-1,1);
     AddHistograms(SelectionMomentum,0,1,-1,1);
     
+    // Normalize matrices by row
+    NormMatrixByRow(UMatrixTrackRange);
+    NormMatrixByRow(UMatrixCosTheta);
+    NormMatrixByRow(UMatrixTheta);
+    NormMatrixByRow(UMatrixPhi);
+    NormMatrixByRow(UMatrixMomentum);
+
+    // Subtract backgrounds from data
+    AddHistograms(SelectionTrackRange,0,2,-1);
+    AddHistograms(SelectionCosTheta,0,2,-1);
+    AddHistograms(SelectionTheta,0,2,-1);
+    AddHistograms(SelectionPhi,0,2,-1);
+    AddHistograms(SelectionMomentum,0,2,-1);
+    
+    // Subtract backgrounds from mc selection and erase bgr
+    AddHistograms(SelectionTrackRange,1,2,-1,1);
+    AddHistograms(SelectionPhi,1,2,-1,1);
+    AddHistograms(SelectionCosTheta,1,2,-1,1);
+    AddHistograms(SelectionTheta,1,2,-1,1);
+    AddHistograms(SelectionMomentum,1,2,-1,1);
+    
     // Draw histogram
     TCanvas *Canvas1a = new TCanvas("Range a", "Range", 1400, 1000);
     Canvas1a->cd();
@@ -481,27 +502,6 @@ void CCInclCrossSection()
     SelectionMomentum.at(0)->Draw("SAME");
     Canvas5a->SaveAs(("ScaledOn-OffBeamSelMomentum."+FileType).c_str());
     
-    // Normalize matrices by row
-    NormMatrixByRow(UMatrixTrackRange);
-    NormMatrixByRow(UMatrixCosTheta);
-    NormMatrixByRow(UMatrixTheta);
-    NormMatrixByRow(UMatrixPhi);
-    NormMatrixByRow(UMatrixMomentum);
-
-    // Subtract backgrounds from data
-    AddHistograms(SelectionTrackRange,0,2,-1);
-    AddHistograms(SelectionCosTheta,0,2,-1);
-    AddHistograms(SelectionTheta,0,2,-1);
-    AddHistograms(SelectionPhi,0,2,-1);
-    AddHistograms(SelectionMomentum,0,2,-1);
-    
-    // Subtract backgrounds from mc selection and erase bgr
-    AddHistograms(SelectionTrackRange,1,2,-1,1);
-    AddHistograms(SelectionPhi,1,2,-1,1);
-    AddHistograms(SelectionCosTheta,1,2,-1,1);
-    AddHistograms(SelectionTheta,1,2,-1,1);
-    AddHistograms(SelectionMomentum,1,2,-1,1);
-    
     // Selection data/MC loop
     for(unsigned int hist_no = 0; hist_no < 2; hist_no++)
     {
@@ -511,6 +511,13 @@ void CCInclCrossSection()
         SelectionUnsmearing(UMatrixTheta,SelectionTheta.at(hist_no));
         SelectionUnsmearing(UMatrixPhi,SelectionPhi.at(hist_no));
         SelectionUnsmearing(UMatrixMomentum,SelectionMomentum.at(hist_no));
+        
+        // Efficiency unfolding
+        SelectionTrackRange.at(hist_no)->Divide(SelectionTrackRange.back());
+        SelectionCosTheta.at(hist_no)->Divide(SelectionCosTheta.back());
+        SelectionTheta.at(hist_no)->Divide(SelectionTheta.back());
+        SelectionPhi.at(hist_no)->Divide(SelectionPhi.back());
+        SelectionMomentum.at(hist_no)->Divide(SelectionMomentum.back());
     }
     
     // Draw histogram
@@ -576,13 +583,6 @@ void CCInclCrossSection()
     
     for(unsigned int hist_no = 0; hist_no < 2; hist_no++)
     {
-        // Efficiency unfolding
-        SelectionTrackRange.at(hist_no)->Divide(SelectionTrackRange.back());
-        SelectionCosTheta.at(hist_no)->Divide(SelectionCosTheta.back());
-        SelectionTheta.at(hist_no)->Divide(SelectionTheta.back());
-        SelectionPhi.at(hist_no)->Divide(SelectionPhi.back());
-        SelectionMomentum.at(hist_no)->Divide(SelectionMomentum.back());
-        
         // Scaling to flux number of target nucleons and bin width
         SelectionTrackRange.at(hist_no)->Scale(1/NumberOfTargets/SelectionTrackRange.at(hist_no)->GetBinWidth(1)/IntegratedFlux);
         SelectionCosTheta.at(hist_no)->Scale(1/NumberOfTargets/SelectionCosTheta.at(hist_no)->GetBinWidth(1)/IntegratedFlux);
@@ -601,7 +601,7 @@ void CCInclCrossSection()
     SelectionTrackRange.at(1)->SetMaximum(1.2*SelectionTrackRange.at(0)->GetBinContent(SelectionTrackRange.at(0)->GetMaximumBin()));
     SelectionTrackRange.at(1)->SetMinimum(0.0);
     SelectionTrackRange.at(1)->SetFillColor(46);
-    SelectionTrackRange.at(1) -> GetYaxis() -> SetTitle("d#sigma/dl [cm^{2}/cm]");
+    SelectionTrackRange.at(1) -> GetYaxis() -> SetTitle("d#sigma/dl [cm^{2}/cm/Nucleon]");
     SelectionTrackRange.at(1)->Draw("E2");
     SelectionTrackRange.at(0)->SetLineWidth(2);
     SelectionTrackRange.at(0)->SetLineColor(1);
@@ -614,7 +614,7 @@ void CCInclCrossSection()
     SelectionCosTheta.at(1)->SetMaximum(1.2*SelectionCosTheta.at(0)->GetBinContent(SelectionCosTheta.at(0)->GetMaximumBin()));
     SelectionCosTheta.at(1)->SetMinimum(0.0);
     SelectionCosTheta.at(1)->SetFillColor(46);
-    SelectionCosTheta.at(1) -> GetYaxis() -> SetTitle("d#sigma/d(cos#theta) [cm^{2}/cos(#theta)]");
+    SelectionCosTheta.at(1) -> GetYaxis() -> SetTitle("d#sigma/d(cos#theta) [cm^{2}/cos(#theta)/Nucleon]");
     SelectionCosTheta.at(1)->Draw("E2");
     SelectionCosTheta.at(0)->SetLineWidth(2);
     SelectionCosTheta.at(0)->SetLineColor(1);
@@ -627,7 +627,7 @@ void CCInclCrossSection()
     SelectionTheta.at(1)->SetMaximum(1.2*SelectionTheta.at(0)->GetBinContent(SelectionTheta.at(0)->GetMaximumBin()));
     SelectionTheta.at(1)->SetMinimum(0.0);
     SelectionTheta.at(1)->SetFillColor(46);
-    SelectionTheta.at(1) -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad]");
+    SelectionTheta.at(1) -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad/Nucleon]");
     SelectionTheta.at(1)->Draw("E2");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
@@ -640,7 +640,7 @@ void CCInclCrossSection()
     SelectionPhi.at(1)->SetMaximum(1.2*SelectionPhi.at(0)->GetBinContent(SelectionPhi.at(0)->GetMaximumBin()));
     SelectionPhi.at(1)->SetMinimum(0.0);
     SelectionPhi.at(1)->SetFillColor(46);
-    SelectionPhi.at(1) -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/rad]");
+    SelectionPhi.at(1) -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/rad/Nucleon]");
     SelectionPhi.at(1)->Draw("E2");
     SelectionPhi.at(0)->SetLineWidth(2);
     SelectionPhi.at(0)->SetLineColor(1);
@@ -653,7 +653,7 @@ void CCInclCrossSection()
     SelectionMomentum.at(1)->SetMaximum(1.5*SelectionMomentum.at(0)->GetBinContent(SelectionMomentum.at(0)->GetMaximumBin()));
     SelectionMomentum.at(1)->SetMinimum(0.0);
     SelectionMomentum.at(1)->SetFillColor(46);
-    SelectionMomentum.at(1) -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
+    SelectionMomentum.at(1) -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)/Nucleon]");
     SelectionMomentum.at(1)->Draw("E2");
     SelectionMomentum.at(0)->SetLineWidth(2);
     SelectionMomentum.at(0)->SetLineColor(1);
