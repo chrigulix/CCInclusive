@@ -56,7 +56,8 @@ void CCInclCrossSection()
     float NumberOfTargets = (FVx - 2*borderx) * (FVy - 2*bordery) * (FVz - 2*borderz) * Density * Avogadro/ArMass*NoNucleons;
     
     // Output file file type
-    std::string FileType = "pdf";
+//     std::string FileType = "pdf";
+    std::string FileType = "png";
 
     // Data input file vector
     std::vector<TChain*> ChainVec;
@@ -206,27 +207,32 @@ void CCInclCrossSection()
         SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range",NumberOfBins,0,1036.8));
         SelectionTrackRange.back() -> SetStats(0);
         SelectionTrackRange.back() -> GetXaxis() -> SetTitle("Muon track range [cm]");
-        SelectionTrackRange.back() -> GetYaxis() -> SetTitle("d#sigma/dl [cm^{2}/cm]");
+        SelectionTrackRange.back() -> GetYaxis() -> SetTitle("No. of events");
+//         SelectionTrackRange.back() -> GetYaxis() -> SetTitle("d#sigma/dl [cm^{2}/cm]");
 
         SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta",NumberOfBins,-1,1));
         SelectionCosTheta.back() -> SetStats(0);
         SelectionCosTheta.back() -> GetXaxis() -> SetTitle("Muon cos(#theta)");
-        SelectionCosTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d(cos#theta) [cm^{2}/cos(#theta)]");
+        SelectionCosTheta.back() -> GetYaxis() -> SetTitle("No. of events");
+//         SelectionCosTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d(cos#theta) [cm^{2}/cos(#theta)]");
         
         SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta",NumberOfBins,0,3.142));
         SelectionTheta.back() -> SetStats(0);
         SelectionTheta.back() -> GetXaxis() -> SetTitle("Muon #theta angle [rad]");
-        SelectionTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad]");
+        SelectionTheta.back() -> GetYaxis() -> SetTitle("No. of events");
+//         SelectionTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad]");
 
         SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle",NumberOfBins,-3.142,3.142));
         SelectionPhi.back() -> SetStats(0);
         SelectionPhi.back() -> GetXaxis() -> SetTitle("Muon #phi angle [rad]");
-        SelectionPhi.back() -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/rad]");
+        SelectionPhi.back() -> GetYaxis() -> SetTitle("No. of events");
+//         SelectionPhi.back() -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/rad]");
 
         SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum",NumberOfBins,0,3));
         SelectionMomentum.back() -> SetStats(0);
         SelectionMomentum.back() -> GetXaxis() -> SetTitle("Muon momentum p [GeV/c]");
-        SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
+        SelectionMomentum.back() -> GetYaxis() -> SetTitle("No. of events");
+//         SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
     } // loop over generation label
     
     // Initialize unsmearing matrices
@@ -400,25 +406,12 @@ void CCInclCrossSection()
         SelectionMomentum.at(scale_no)->Scale(ScalingFactors.at(scale_no));
     } // scaling loop
     
+    // Fill efficiency
     SelectionTrackRange.back()->Divide(SelectionTrackRange.at(4),SelectionTrackRange.at(5));
     SelectionCosTheta.back()->Divide(SelectionCosTheta.at(4),SelectionCosTheta.at(5));
     SelectionTheta.back()->Divide(SelectionTheta.at(4),SelectionTheta.at(5));
     SelectionPhi.back()->Divide(SelectionPhi.at(4),SelectionPhi.at(5));
     SelectionMomentum.back()->Divide(SelectionMomentum.at(4),SelectionMomentum.at(5));
-    
-//     TEfficiency* EffMomentum = new TEfficiency( *SelectionMomentum.at(4),*SelectionMomentum.at(5) );
-    
-//     EffTrackRange.BayesDivide(SelectionTrackRange.at(3),SelectionTrackRange.at(2));
-//     EffCosTheta.BayesDivide(SelectionCosTheta.at(3),SelectionCosTheta.at(2));
-//     EffPhi.BayesDivide(SelectionPhi.at(3),SelectionPhi.at(2));
-//     EffMomentum.BayesDivide(SelectionMomentum.at(3),SelectionMomentum.at(2));
-    
-    // Normalize matrices by row
-    NormMatrixByRow(UMatrixTrackRange);
-    NormMatrixByRow(UMatrixCosTheta);
-    NormMatrixByRow(UMatrixTheta);
-    NormMatrixByRow(UMatrixPhi);
-    NormMatrixByRow(UMatrixMomentum);
 
     // Subtract offbeam from onbeam data, overwrite onbeam- and erase offbeam histogram
     AddHistograms(SelectionTrackRange,0,1,-1,1);
@@ -427,6 +420,74 @@ void CCInclCrossSection()
     AddHistograms(SelectionPhi,0,1,-1,1);
     AddHistograms(SelectionMomentum,0,1,-1,1);
     
+    // Draw histogram
+    TCanvas *Canvas1a = new TCanvas("Range a", "Range", 1400, 1000);
+    Canvas1a->cd();
+    SelectionTrackRange.at(1)->SetMaximum(1.2*SelectionTrackRange.at(0)->GetBinContent(SelectionTrackRange.at(0)->GetMaximumBin()));
+    SelectionTrackRange.at(1)->SetMinimum(0.0);
+    SelectionTrackRange.at(1)->SetFillColor(46);
+    SelectionTrackRange.at(1)->Draw("E2");
+    SelectionTrackRange.at(0)->SetLineWidth(2);
+    SelectionTrackRange.at(0)->SetLineColor(1);
+    SelectionTrackRange.at(0)->SetMarkerColor(1);
+    SelectionTrackRange.at(0)->Draw("SAME");
+    Canvas1a->SaveAs(("ScaledOn-OffBeamSelRange."+FileType).c_str());
+    
+    TCanvas *Canvas2a = new TCanvas("CosTheta a", "CosTheta", 1400, 1000);
+    Canvas2a->cd();
+    SelectionCosTheta.at(1)->SetMaximum(1.2*SelectionCosTheta.at(0)->GetBinContent(SelectionCosTheta.at(0)->GetMaximumBin()));
+    SelectionCosTheta.at(1)->SetMinimum(0.0);
+    SelectionCosTheta.at(1)->SetFillColor(46);
+    SelectionCosTheta.at(1)->Draw("E2");
+    SelectionCosTheta.at(0)->SetLineWidth(2);
+    SelectionCosTheta.at(0)->SetLineColor(1);
+    SelectionCosTheta.at(0)->SetMarkerColor(1);
+    SelectionCosTheta.at(0)->Draw("SAME");
+    Canvas2a->SaveAs(("ScaledOn-OffBeamSelCosTheta."+FileType).c_str());
+    
+    TCanvas *Canvas3a = new TCanvas("Theta a", "Theta", 1400, 1000);
+    Canvas3a->cd();
+    SelectionTheta.at(1)->SetMaximum(1.2*SelectionTheta.at(0)->GetBinContent(SelectionTheta.at(0)->GetMaximumBin()));
+    SelectionTheta.at(1)->SetMinimum(0.0);
+    SelectionTheta.at(1)->SetFillColor(46);
+    SelectionTheta.at(1)->Draw("E2");
+    SelectionTheta.at(0)->SetLineWidth(2);
+    SelectionTheta.at(0)->SetLineColor(1);
+    SelectionTheta.at(0)->SetMarkerColor(1);
+    SelectionTheta.at(0)->Draw("SAME");
+    Canvas3a->SaveAs(("ScaledOn-OffBeamSelTheta."+FileType).c_str());
+    
+    TCanvas *Canvas4a = new TCanvas("Phi a", "Phi", 1400, 1000);
+    Canvas4a->cd();
+    SelectionPhi.at(1)->SetMaximum(1.2*SelectionPhi.at(0)->GetBinContent(SelectionPhi.at(0)->GetMaximumBin()));
+    SelectionPhi.at(1)->SetMinimum(0.0);
+    SelectionPhi.at(1)->SetFillColor(46);
+    SelectionPhi.at(1)->Draw("E2");
+    SelectionPhi.at(0)->SetLineWidth(2);
+    SelectionPhi.at(0)->SetLineColor(1);
+    SelectionPhi.at(0)->SetMarkerColor(1);
+    SelectionPhi.at(0)->Draw("SAME");
+    Canvas4a->SaveAs(("ScaledOn-OffBeamSelPhi."+FileType).c_str());
+    
+    TCanvas *Canvas5a = new TCanvas("Momentum a", "Momentum", 1400, 1000);
+    Canvas5a->cd();
+    SelectionMomentum.at(1)->SetMaximum(1.5*SelectionMomentum.at(0)->GetBinContent(SelectionMomentum.at(0)->GetMaximumBin()));
+    SelectionMomentum.at(1)->SetMinimum(0.0);
+    SelectionMomentum.at(1)->SetFillColor(46);
+    SelectionMomentum.at(1)->Draw("E2");
+    SelectionMomentum.at(0)->SetLineWidth(2);
+    SelectionMomentum.at(0)->SetLineColor(1);
+    SelectionMomentum.at(0)->SetMarkerColor(1);
+    SelectionMomentum.at(0)->Draw("SAME");
+    Canvas5a->SaveAs(("ScaledOn-OffBeamSelMomentum."+FileType).c_str());
+    
+    // Normalize matrices by row
+    NormMatrixByRow(UMatrixTrackRange);
+    NormMatrixByRow(UMatrixCosTheta);
+    NormMatrixByRow(UMatrixTheta);
+    NormMatrixByRow(UMatrixPhi);
+    NormMatrixByRow(UMatrixMomentum);
+
     // Subtract backgrounds from data
     AddHistograms(SelectionTrackRange,0,2,-1);
     AddHistograms(SelectionCosTheta,0,2,-1);
@@ -450,7 +511,71 @@ void CCInclCrossSection()
         SelectionUnsmearing(UMatrixTheta,SelectionTheta.at(hist_no));
         SelectionUnsmearing(UMatrixPhi,SelectionPhi.at(hist_no));
         SelectionUnsmearing(UMatrixMomentum,SelectionMomentum.at(hist_no));
-        
+    }
+    
+    // Draw histogram
+    TCanvas *Canvas1b = new TCanvas("Range b", "Range", 1400, 1000);
+    Canvas1b->cd();
+    SelectionTrackRange.at(1)->SetMaximum(1.2*SelectionTrackRange.at(0)->GetBinContent(SelectionTrackRange.at(0)->GetMaximumBin()));
+    SelectionTrackRange.at(1)->SetMinimum(0.0);
+    SelectionTrackRange.at(1)->SetFillColor(46);
+    SelectionTrackRange.at(1)->Draw("E2");
+    SelectionTrackRange.at(0)->SetLineWidth(2);
+    SelectionTrackRange.at(0)->SetLineColor(1);
+    SelectionTrackRange.at(0)->SetMarkerColor(1);
+    SelectionTrackRange.at(0)->Draw("SAME");
+    Canvas1b->SaveAs(("UnsmearedNoBGRRange."+FileType).c_str());
+    
+    TCanvas *Canvas2b = new TCanvas("CosTheta b", "CosTheta", 1400, 1000);
+    Canvas2b->cd();
+    SelectionCosTheta.at(1)->SetMaximum(1.2*SelectionCosTheta.at(0)->GetBinContent(SelectionCosTheta.at(0)->GetMaximumBin()));
+    SelectionCosTheta.at(1)->SetMinimum(0.0);
+    SelectionCosTheta.at(1)->SetFillColor(46);
+    SelectionCosTheta.at(1)->Draw("E2");
+    SelectionCosTheta.at(0)->SetLineWidth(2);
+    SelectionCosTheta.at(0)->SetLineColor(1);
+    SelectionCosTheta.at(0)->SetMarkerColor(1);
+    SelectionCosTheta.at(0)->Draw("SAME");
+    Canvas2b->SaveAs(("UnsmearedNoBGRCosTheta."+FileType).c_str());
+    
+    TCanvas *Canvas3b = new TCanvas("Theta b", "Theta", 1400, 1000);
+    Canvas3b->cd();
+    SelectionTheta.at(1)->SetMaximum(1.2*SelectionTheta.at(0)->GetBinContent(SelectionTheta.at(0)->GetMaximumBin()));
+    SelectionTheta.at(1)->SetMinimum(0.0);
+    SelectionTheta.at(1)->SetFillColor(46);
+    SelectionTheta.at(1)->Draw("E2");
+    SelectionTheta.at(0)->SetLineWidth(2);
+    SelectionTheta.at(0)->SetLineColor(1);
+    SelectionTheta.at(0)->SetMarkerColor(1);
+    SelectionTheta.at(0)->Draw("SAME");
+    Canvas3b->SaveAs(("UnsmearedNoBGRTheta."+FileType).c_str());
+    
+    TCanvas *Canvas4b = new TCanvas("Phi b", "Phi", 1400, 1000);
+    Canvas4b->cd();
+    SelectionPhi.at(1)->SetMaximum(1.2*SelectionPhi.at(0)->GetBinContent(SelectionPhi.at(0)->GetMaximumBin()));
+    SelectionPhi.at(1)->SetMinimum(0.0);
+    SelectionPhi.at(1)->SetFillColor(46);
+    SelectionPhi.at(1)->Draw("E2");
+    SelectionPhi.at(0)->SetLineWidth(2);
+    SelectionPhi.at(0)->SetLineColor(1);
+    SelectionPhi.at(0)->SetMarkerColor(1);
+    SelectionPhi.at(0)->Draw("SAME");
+    Canvas4b->SaveAs(("UnsmearedNoBGRSelPhi."+FileType).c_str());
+    
+    TCanvas *Canvas5b = new TCanvas("Momentum b", "Momentum", 1400, 1000);
+    Canvas5b->cd();
+    SelectionMomentum.at(1)->SetMaximum(1.5*SelectionMomentum.at(0)->GetBinContent(SelectionMomentum.at(0)->GetMaximumBin()));
+    SelectionMomentum.at(1)->SetMinimum(0.0);
+    SelectionMomentum.at(1)->SetFillColor(46);
+    SelectionMomentum.at(1)->Draw("E2");
+    SelectionMomentum.at(0)->SetLineWidth(2);
+    SelectionMomentum.at(0)->SetLineColor(1);
+    SelectionMomentum.at(0)->SetMarkerColor(1);
+    SelectionMomentum.at(0)->Draw("SAME");
+    Canvas5b->SaveAs(("UnsmearedNoBGRMomentum."+FileType).c_str());
+    
+    for(unsigned int hist_no = 0; hist_no < 2; hist_no++)
+    {
         // Efficiency unfolding
         SelectionTrackRange.at(hist_no)->Divide(SelectionTrackRange.back());
         SelectionCosTheta.at(hist_no)->Divide(SelectionCosTheta.back());
@@ -476,85 +601,65 @@ void CCInclCrossSection()
     SelectionTrackRange.at(1)->SetMaximum(1.2*SelectionTrackRange.at(0)->GetBinContent(SelectionTrackRange.at(0)->GetMaximumBin()));
     SelectionTrackRange.at(1)->SetMinimum(0.0);
     SelectionTrackRange.at(1)->SetFillColor(46);
+    SelectionTrackRange.at(1) -> GetYaxis() -> SetTitle("d#sigma/dl [cm^{2}/cm]");
     SelectionTrackRange.at(1)->Draw("E2");
-//     StackBgrTrackRange->Draw("SAME");
     SelectionTrackRange.at(0)->SetLineWidth(2);
     SelectionTrackRange.at(0)->SetLineColor(1);
     SelectionTrackRange.at(0)->SetMarkerColor(1);
     SelectionTrackRange.at(0)->Draw("SAME");
-//     LegendMC->Draw();
-//     LegendBGR->Draw();
-//     TextPreliminary.Draw();
-//     TextSelection.Draw();
-    Canvas1->SaveAs(("ScaledOn-OffBeamSelRange."+FileType).c_str());
+    Canvas1->SaveAs(("DiffCrossSectionRange."+FileType).c_str());
     
     TCanvas *Canvas2 = new TCanvas("CosTheta", "CosTheta", 1400, 1000);
     Canvas2->cd();
     SelectionCosTheta.at(1)->SetMaximum(1.2*SelectionCosTheta.at(0)->GetBinContent(SelectionCosTheta.at(0)->GetMaximumBin()));
     SelectionCosTheta.at(1)->SetMinimum(0.0);
     SelectionCosTheta.at(1)->SetFillColor(46);
+    SelectionCosTheta.at(1) -> GetYaxis() -> SetTitle("d#sigma/d(cos#theta) [cm^{2}/cos(#theta)]");
     SelectionCosTheta.at(1)->Draw("E2");
-//     StackBgrTrackRange->Draw("SAME");
     SelectionCosTheta.at(0)->SetLineWidth(2);
     SelectionCosTheta.at(0)->SetLineColor(1);
     SelectionCosTheta.at(0)->SetMarkerColor(1);
     SelectionCosTheta.at(0)->Draw("SAME");
-//     LegendMC->Draw();
-//     LegendBGR->Draw();
-//     TextPreliminary.Draw();
-//     TextSelection.Draw();
-    Canvas2->SaveAs(("ScaledOn-OffBeamSelCosTheta."+FileType).c_str());
+    Canvas2->SaveAs(("DiffCrossSectionCosTheta."+FileType).c_str());
     
     TCanvas *Canvas3 = new TCanvas("Theta", "Theta", 1400, 1000);
     Canvas3->cd();
     SelectionTheta.at(1)->SetMaximum(1.2*SelectionTheta.at(0)->GetBinContent(SelectionTheta.at(0)->GetMaximumBin()));
     SelectionTheta.at(1)->SetMinimum(0.0);
     SelectionTheta.at(1)->SetFillColor(46);
+    SelectionTheta.at(1) -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad]");
     SelectionTheta.at(1)->Draw("E2");
-//     StackBgrTrackRange->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->SetMarkerColor(1);
     SelectionTheta.at(0)->Draw("SAME");
-//     LegendMC->Draw();
-//     LegendBGR->Draw();
-//     TextPreliminary.Draw();
-//     TextSelection.Draw();
-    Canvas3->SaveAs(("ScaledOn-OffBeamSelTheta."+FileType).c_str());
+    Canvas3->SaveAs(("DiffCrossSectionTheta."+FileType).c_str());
     
     TCanvas *Canvas4 = new TCanvas("Phi", "Phi", 1400, 1000);
     Canvas4->cd();
     SelectionPhi.at(1)->SetMaximum(1.2*SelectionPhi.at(0)->GetBinContent(SelectionPhi.at(0)->GetMaximumBin()));
     SelectionPhi.at(1)->SetMinimum(0.0);
     SelectionPhi.at(1)->SetFillColor(46);
+    SelectionPhi.at(1) -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/rad]");
     SelectionPhi.at(1)->Draw("E2");
-//     StackBgrTrackRange->Draw("SAME");
     SelectionPhi.at(0)->SetLineWidth(2);
     SelectionPhi.at(0)->SetLineColor(1);
     SelectionPhi.at(0)->SetMarkerColor(1);
     SelectionPhi.at(0)->Draw("SAME");
-//     LegendMC->Draw();
-//     LegendBGR->Draw();
-//     TextPreliminary.Draw();
-//     TextSelection.Draw();
-    Canvas4->SaveAs(("ScaledOn-OffBeamSelPhi."+FileType).c_str());
+    Canvas4->SaveAs(("DiffCrossSectionPhi."+FileType).c_str());
     
     TCanvas *Canvas5 = new TCanvas("Momentum", "Momentum", 1400, 1000);
     Canvas5->cd();
     SelectionMomentum.at(1)->SetMaximum(1.5*SelectionMomentum.at(0)->GetBinContent(SelectionMomentum.at(0)->GetMaximumBin()));
     SelectionMomentum.at(1)->SetMinimum(0.0);
     SelectionMomentum.at(1)->SetFillColor(46);
+    SelectionMomentum.at(1) -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
     SelectionMomentum.at(1)->Draw("E2");
-//     StackBgrTrackRange->Draw("SAME");
     SelectionMomentum.at(0)->SetLineWidth(2);
     SelectionMomentum.at(0)->SetLineColor(1);
     SelectionMomentum.at(0)->SetMarkerColor(1);
     SelectionMomentum.at(0)->Draw("SAME");
-//     LegendMC->Draw();
-//     LegendBGR->Draw();
-//     TextPreliminary.Draw();
-//     TextSelection.Draw();
-    Canvas5->SaveAs(("ScaledOn-OffBeamSelMomentum."+FileType).c_str());
+    Canvas5->SaveAs(("DiffCrossSectionMomentum."+FileType).c_str());
     
     // Draw unsmearing matrix
     TCanvas *Canvas6 = new TCanvas("Unsmearing Range", "Unsmearing Range", 1400, 1000);
