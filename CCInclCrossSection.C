@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <boost/concept_check.hpp>
 
 #include <TChain.h>
 #include <TCanvas.h>
@@ -32,7 +33,9 @@ const double borderz = 10.;
 const double Avogadro = 6.022140857e23; //mol^-1
 const double ArMass = 39.948; // u
 const double NoNucleons = 40;
-const double Density = 1.4; // g/cm^3
+const double Density = 1.396; // g/cm^3
+
+TSpline3* KEvsRSpline; // Global spline for momentum calculation
 
 // Function which calculates the distance between two points
 float CalcRange(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2);
@@ -49,6 +52,11 @@ void NormMatrixByRow(TH2F* UMatrix);
 // Unsmearing of selected events
 void SelectionUnsmearing(TH2F*& UMatrix, TH1F*& SVector);
 
+// Momentum calculation
+void MomentumSplinePreparation();
+
+// Get Momentum
+float GetMomentum(float TrackLength);
 
 // CC inlcusive cross section function (main) 
 void CCInclCrossSection()
@@ -109,7 +117,8 @@ void CCInclCrossSection()
 
     float TrackTheta[5000];
     float TrackPhi[5000];
-    float TrackMomentum[5000];
+//     float TrackMomentum[5000];
+    float TrackLength[5000];
 
     float XTrackStart[5000];
     float YTrackStart[5000];
@@ -168,6 +177,9 @@ void CCInclCrossSection()
     
     // Name vector
     std::vector<std::string> GenLabel;
+    
+    // Fill momentum calculation spline
+    MomentumSplinePreparation();
 
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1_Mod.root");
@@ -263,7 +275,8 @@ void CCInclCrossSection()
             ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
             ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
 
-            ChainVec.at(file_no) -> SetBranchAddress("trkmomrange_pandoraNu", TrackMomentum);
+//             ChainVec.at(file_no) -> SetBranchAddress("trkmomrange_pandoraNu", TrackMomentum);
+            ChainVec.at(file_no) -> SetBranchAddress("trklen_pandoraNu", TrackLength);
             ChainVec.at(file_no) -> SetBranchAddress("trktheta_pandoraNu", TrackTheta);
             ChainVec.at(file_no) -> SetBranchAddress("trkphi_pandoraNu",TrackPhi);
 
@@ -334,7 +347,7 @@ void CCInclCrossSection()
                 SelectionCosTheta.at(file_no) -> Fill(cos(TrackTheta[TrkID]));
                 SelectionTheta.at(file_no) -> Fill(TrackTheta[TrkID]);
                 SelectionPhi.at(file_no) -> Fill(TrackPhi[TrkID]);
-                SelectionMomentum.at(file_no) -> Fill(TrackMomentum[TrkID]);
+                SelectionMomentum.at(file_no) -> Fill(GetMomentum(TrackLength[TrkID]));
             }
 
             // if we are looking at the mc selection file
@@ -348,7 +361,7 @@ void CCInclCrossSection()
                     SelectionCosTheta.at(file_no+1) -> Fill(cos(TrackTheta[TrkID]));
                     SelectionTheta.at(file_no+1) -> Fill(TrackTheta[TrkID]);
                     SelectionPhi.at(file_no+1) -> Fill(TrackPhi[TrkID]);
-                    SelectionMomentum.at(file_no+1) -> Fill(TrackMomentum[TrkID]);
+                    SelectionMomentum.at(file_no+1) -> Fill(GetMomentum(TrackLength[TrkID]));
                 }
                 else // if event is signal and truth
                 {
@@ -364,7 +377,7 @@ void CCInclCrossSection()
                     UMatrixCosTheta -> Fill( cos(MCTheta[MCTrkID]),cos(TrackTheta[TrkID]) );
                     UMatrixTheta -> Fill( MCTheta[MCTrkID],TrackTheta[TrkID] );
                     UMatrixPhi -> Fill( MCPhi[MCTrkID],TrackPhi[TrkID] );
-                    UMatrixMomentum -> Fill( TrueLeptonMomentum[MCVtxID],TrackMomentum[TrkID] );
+                    UMatrixMomentum -> Fill( TrueLeptonMomentum[MCVtxID],GetMomentum(TrackLength[TrkID]) );
                 }
             } // if mc selection file
             else if(file_no == 3 && MCTrkID > -1 && nuPDGTruth[MCVtxID] == 14)
@@ -763,4 +776,42 @@ void SelectionUnsmearing(TH2F*& UMatrix, TH1F*& SVector)
         // Fill unsmeared content into vector again
         SVector->SetBinContent(xbin,UnsmearedContent);
     }
+}
+
+void MomentumSplinePreparation()
+{
+    float RangeGramPerCM[29] = {9.833E-1, 1.786E0, 3.321E0, 6.598E0, 1.058E1, 3.084E1, 4.250E1, 6.732E1, 1.063E2, 1.725E2, 
+                               2.385E2, 4.934E2, 6.163E2, 8.552E2, 1.202E3, 1.758E3, 2.297E3, 4.359E3, 5.354E3, 7.298E3, 
+                               1.013E4, 1.469E4, 1.910E4, 3.558E4, 4.326E4, 5.768E4, 7.734E4, 1.060E5, 1.307E5};
+
+    float KEMeV[29] = {10, 14, 20, 30, 40, 80, 100, 140, 200, 300, 400, 800, 1000, 1400, 2000, 3000, 4000, 
+                       8000, 10000, 14000, 20000, 30000, 40000, 80000, 100000, 140000, 200000, 300000, 400000};
+                       
+    // convert to cm
+    for(auto & RangePoint : RangeGramPerCM)
+    {
+        RangePoint /= Density;
+    }
+    
+    TGraph* KEvsR = new TGraph(29, RangeGramPerCM, KEMeV);
+    
+    KEvsRSpline = new TSpline3("KEvsRS",KEvsR);
+    
+    delete KEvsR;
+}
+
+float GetMomentum(float TrackLength)
+{
+    float MuonMass = 105.7; //MeV
+    
+    // Change Track length to kinetic energy
+    TrackLength = KEvsRSpline->Eval(TrackLength);
+    
+    // Convert kinetic energy to momentum
+    TrackLength = sqrt( pow(TrackLength,2) + 2*TrackLength*MuonMass );
+    
+    // Convert MeV to GeV
+    TrackLength /= 1000;
+    
+    return TrackLength;
 }
