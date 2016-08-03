@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <boost/concept_check.hpp>
 
 #include <TChain.h>
 #include <TCanvas.h>
