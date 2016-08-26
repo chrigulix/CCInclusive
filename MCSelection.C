@@ -68,6 +68,18 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     {
         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
     }
+    else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone_field")
+    {
+        std::ifstream FileNames("/pnfs/uboone/persistent/users/sowjanya/v05_08_00/bnbpluscosmics_nominal_scOn_100k/ana/filesana.list");
+
+        std::string FileName;
+
+        while(std::getline(FileNames,FileName))
+        {
+            std::cout << FileName << std::endl;
+            treenc -> Add((FileName).c_str());
+        }
+    }
     else
     {
         treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );

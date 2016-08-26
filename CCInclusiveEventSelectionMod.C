@@ -103,6 +103,19 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             treenc -> Add((FileName).c_str());
         }
     }
+    else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone_field")
+    {
+//         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+        std::ifstream FileNames("/pnfs/uboone/persistent/users/sowjanya/v05_08_00/bnbpluscosmics_nominal_scOn_100k/ana/filesana.list");
+
+        std::string FileName;
+
+        while(std::getline(FileNames,FileName))
+        {
+            std::cout << FileName << std::endl;
+            treenc -> Add((FileName).c_str());
+        }
+    }
     else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone")
     {
         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );

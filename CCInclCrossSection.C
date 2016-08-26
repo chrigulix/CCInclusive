@@ -63,8 +63,8 @@ void CCInclCrossSection()
     float NumberOfTargets = (FVx - 2*borderx) * (FVy - 2*bordery) * (FVz - 2*borderz) * Density * Avogadro/ArMass*NoNucleons;
     
     // Output file file type
-//     std::string FileType = "pdf";
-    std::string FileType = "png";
+    std::string FileType = "pdf";
+//     std::string FileType = "png";
 
     // Data input file vector
     std::vector<TChain*> ChainVec;
