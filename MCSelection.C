@@ -188,7 +188,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     //Event Loop
     for(int i = StartEvent; i < EndEvent; i++)
     {
-        if(i%1000 == 0) std::cout << "\t... " << i << std::endl;
+        if(i%1 == 0) std::cout << "\t... " << i << std::endl;
 
         // Get tree entries
         treenc -> GetEntry(i);
