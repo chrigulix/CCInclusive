@@ -367,7 +367,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             //Event Loop
             for(int i = StartEvent; i < EndEvent; i++)
             {
-                if(i == 121558 && GeneratorName == "MEC") continue;
+                if( (i == 121558 && GeneratorName == "MEC") || (i == 2634 && GeneratorName == "prodgenie_bnb_nu_cosmic_uboone_field") ) continue;
                 if(i%1000 == 0) std::cout << "\t... " << i << std::endl;
 
                 // Get tree entries
