@@ -133,7 +133,7 @@ int POTCheck(std::string GeneratorName, unsigned int ThreadNumber, unsigned int 
         treenc -> SetBranchAddress("potbnbETOR875", &potbnbETOR875);
         treenc -> SetBranchAddress("potnumiETORTGT", &potnumiETORTGT);
         
-        if(pot > 0) std::cout << i << " " << pot << std::endl;
+        if(pot > .1) std::cout << i << " " << pot << std::endl;
         
         // Calculate total POTs
         TotPOT += pot;
@@ -142,6 +142,11 @@ int POTCheck(std::string GeneratorName, unsigned int ThreadNumber, unsigned int 
         TotPOTBNBTGT += potnumiETORTGT;
         
     }//loop over all events
+    
+    std::cout << "TotPOT " << TotPOT << std::endl;
+    std::cout << "TotPOTBNB860 " << TotPOTBNB860 << std::endl;
+    std::cout << "TotPOTBNB875 " << TotPOTBNB875 << std::endl;
+    std::cout << "TotPOTBNBTGT " << TotPOTBNBTGT << std::endl;
 
     return 0;
 
