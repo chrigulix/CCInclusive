@@ -57,6 +57,8 @@ void MomentumSplinePreparation();
 // Get Momentum
 float GetMomentum(float TrackLength);
 
+void CalcSigEfficiency(std::vector<TH1F*>& HistVector);
+
 // CC inlcusive cross section function (main) 
 void CCInclCrossSection()
 {
@@ -198,6 +200,7 @@ void CCInclCrossSection()
     GenLabel.push_back("Data On-Beam BNB");
     GenLabel.push_back("Data Off-Beam BNBEXT");
     GenLabel.push_back("MC Selection");
+    GenLabel.push_back("MC Selection Cosmics");
     GenLabel.push_back("MC Selection Backgrounds");
     GenLabel.push_back("MC Selection Truth");
     GenLabel.push_back("MC Truth");
@@ -207,6 +210,7 @@ void CCInclCrossSection()
     ScalingFactors.push_back(1);
     ScalingFactors.push_back(1.2300);
     ScalingFactors.push_back(DataPOT/MCPOT);
+    ScalingFactors.push_back(1);
     ScalingFactors.push_back(DataPOT/MCPOT);
     ScalingFactors.push_back(DataPOT/MCPOT);
     ScalingFactors.push_back(DataPOT/MCPOT);
@@ -355,21 +359,33 @@ void CCInclCrossSection()
                 // if event is background
                 if(TrkID < 0 || MCVtxID < 0 || TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1 || nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) || PDGTruth[MCTrkID] != 13)
                 {
-                    // Fill background histograms
-                    SelectionTrackRange.at(file_no+1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    SelectionCosTheta.at(file_no+1) -> Fill(cos(TrackTheta[TrkID]));
-                    SelectionTheta.at(file_no+1) -> Fill(TrackTheta[TrkID]);
-                    SelectionPhi.at(file_no+1) -> Fill(TrackPhi[TrkID]);
-                    SelectionMomentum.at(file_no+1) -> Fill(GetMomentum(TrackLength[TrkID]));
+                    if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                    {
+                        // Fill cosmic background histograms
+                        SelectionTrackRange.at(file_no+1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                        SelectionCosTheta.at(file_no+1) -> Fill(cos(TrackTheta[TrkID]));
+                        SelectionTheta.at(file_no+1) -> Fill(TrackTheta[TrkID]);
+                        SelectionPhi.at(file_no+1) -> Fill(TrackPhi[TrkID]);
+                        SelectionMomentum.at(file_no+1) -> Fill(GetMomentum(TrackLength[TrkID]));
+                    }
+                    else
+                    {
+                        // Fill other background histograms
+                        SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                        SelectionCosTheta.at(file_no+2) -> Fill(cos(TrackTheta[TrkID]));
+                        SelectionTheta.at(file_no+2) -> Fill(TrackTheta[TrkID]);
+                        SelectionPhi.at(file_no+2) -> Fill(TrackPhi[TrkID]);
+                        SelectionMomentum.at(file_no+2) -> Fill(GetMomentum(TrackLength[TrkID]));
+                    }
                 }
                 else // if event is signal and truth
                 {
                     // Fill background histograms
-                    SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
-                    SelectionCosTheta.at(file_no+2) -> Fill(cos(MCTheta[MCTrkID]));
-                    SelectionTheta.at(file_no+2) -> Fill(MCTheta[MCTrkID]);
-                    SelectionPhi.at(file_no+2) -> Fill(MCPhi[MCTrkID]);
-                    SelectionMomentum.at(file_no+2) -> Fill(TrueLeptonMomentum[MCVtxID]);
+                    SelectionTrackRange.at(file_no+3) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
+                    SelectionCosTheta.at(file_no+3) -> Fill(cos(MCTheta[MCTrkID]));
+                    SelectionTheta.at(file_no+3) -> Fill(MCTheta[MCTrkID]);
+                    SelectionPhi.at(file_no+3) -> Fill(MCPhi[MCTrkID]);
+                    SelectionMomentum.at(file_no+3) -> Fill(TrueLeptonMomentum[MCVtxID]);
                     
                     // Fill unsmearing matrix
                     UMatrixTrackRange -> Fill( CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]),CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]) );
@@ -382,11 +398,11 @@ void CCInclCrossSection()
             else if(file_no == 3 && MCTrkID > -1 && nuPDGTruth[MCVtxID] == 14)
             {
                 // Fill background histograms
-                SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
-                SelectionCosTheta.at(file_no+2) -> Fill(cos(MCTheta[MCTrkID]));
-                SelectionTheta.at(file_no+2) -> Fill(MCTheta[MCTrkID]);
-                SelectionPhi.at(file_no+2) -> Fill(MCPhi[MCTrkID]);
-                SelectionMomentum.at(file_no+2) -> Fill(TrueLeptonMomentum[MCVtxID]);
+                SelectionTrackRange.at(file_no+3) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
+                SelectionCosTheta.at(file_no+3) -> Fill(cos(MCTheta[MCTrkID]));
+                SelectionTheta.at(file_no+3) -> Fill(MCTheta[MCTrkID]);
+                SelectionPhi.at(file_no+3) -> Fill(MCPhi[MCTrkID]);
+                SelectionMomentum.at(file_no+3) -> Fill(TrueLeptonMomentum[MCVtxID]);
             }
             
         } // Event loop
@@ -419,11 +435,11 @@ void CCInclCrossSection()
     } // scaling loop
     
     // Fill efficiency
-    SelectionTrackRange.back()->Divide(SelectionTrackRange.at(4),SelectionTrackRange.at(5));
-    SelectionCosTheta.back()->Divide(SelectionCosTheta.at(4),SelectionCosTheta.at(5));
-    SelectionTheta.back()->Divide(SelectionTheta.at(4),SelectionTheta.at(5));
-    SelectionPhi.back()->Divide(SelectionPhi.at(4),SelectionPhi.at(5));
-    SelectionMomentum.back()->Divide(SelectionMomentum.at(4),SelectionMomentum.at(5));
+    SelectionTrackRange.back()->Divide(SelectionTrackRange.at(5),SelectionTrackRange.at(6));
+    SelectionCosTheta.back()->Divide(SelectionCosTheta.at(5),SelectionCosTheta.at(6));
+    SelectionTheta.back()->Divide(SelectionTheta.at(5),SelectionTheta.at(6));
+    SelectionPhi.back()->Divide(SelectionPhi.at(5),SelectionPhi.at(6));
+    SelectionMomentum.back()->Divide(SelectionMomentum.at(5),SelectionMomentum.at(6));
 
     // Subtract offbeam from onbeam data, overwrite onbeam- and erase offbeam histogram
     AddHistograms(SelectionTrackRange,0,1,-1,1);
@@ -440,11 +456,11 @@ void CCInclCrossSection()
     NormMatrixByRow(UMatrixMomentum);
 
     // Subtract backgrounds from data
-    AddHistograms(SelectionTrackRange,0,2,-1);
-    AddHistograms(SelectionCosTheta,0,2,-1);
-    AddHistograms(SelectionTheta,0,2,-1);
-    AddHistograms(SelectionPhi,0,2,-1);
-    AddHistograms(SelectionMomentum,0,2,-1);
+    AddHistograms(SelectionTrackRange,0,3,-1);
+    AddHistograms(SelectionCosTheta,0,3,-1);
+    AddHistograms(SelectionTheta,0,3,-1);
+    AddHistograms(SelectionPhi,0,3,-1);
+    AddHistograms(SelectionMomentum,0,3,-1);
     
     // Subtract backgrounds from mc selection and erase bgr
     AddHistograms(SelectionTrackRange,1,2,-1,1);
@@ -452,6 +468,18 @@ void CCInclCrossSection()
     AddHistograms(SelectionCosTheta,1,2,-1,1);
     AddHistograms(SelectionTheta,1,2,-1,1);
     AddHistograms(SelectionMomentum,1,2,-1,1);
+    // Subtract cosmic background from mc selection
+    AddHistograms(SelectionTrackRange,1,2,-1);
+    AddHistograms(SelectionPhi,1,2,-1,1);
+    AddHistograms(SelectionCosTheta,1,2,-1);
+    AddHistograms(SelectionTheta,1,2,-1);
+    AddHistograms(SelectionMomentum,1,2,-1);
+    
+    CalcSigEfficiency(SelectionTrackRange);
+    CalcSigEfficiency(SelectionPhi);
+    CalcSigEfficiency(SelectionCosTheta);
+    CalcSigEfficiency(SelectionTheta);
+    CalcSigEfficiency(SelectionMomentum);
     
     // Draw histogram
     TCanvas *Canvas1a = new TCanvas("Range a", "Range", 1400, 1000);
@@ -531,6 +559,13 @@ void CCInclCrossSection()
         SelectionPhi.at(hist_no)->Divide(SelectionPhi.back());
         SelectionMomentum.at(hist_no)->Divide(SelectionMomentum.back());
     }
+    
+    // Efficiency unfolding
+    SelectionTrackRange.at(0)->Multiply(SelectionTrackRange.at(2));
+    SelectionCosTheta.at(0)->Multiply(SelectionCosTheta.at(2));
+    SelectionTheta.at(0)->Multiply(SelectionTheta.at(2));
+    SelectionPhi.at(0)->Multiply(SelectionPhi.at(2));
+    SelectionMomentum.at(0)->Multiply(SelectionMomentum.at(2));
     
     // Draw histogram
     TCanvas *Canvas1b = new TCanvas("Range b", "Range", 1400, 1000);
@@ -639,7 +674,7 @@ void CCInclCrossSection()
     SelectionTheta.at(1)->SetMaximum(1.2*SelectionTheta.at(0)->GetBinContent(SelectionTheta.at(0)->GetMaximumBin()));
     SelectionTheta.at(1)->SetMinimum(0.0);
     SelectionTheta.at(1)->SetFillColor(46);
-    SelectionTheta.at(1) -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad/Nucleon]");
+    SelectionTheta.at(1)->GetYaxis()->SetTitle("d#sigma/d#theta [cm^{2}/rad/Nucleon]");
     SelectionTheta.at(1)->Draw("E2");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
@@ -813,4 +848,16 @@ float GetMomentum(float TrackLength)
     TrackLength /= 1000;
     
     return TrackLength;
+}
+
+void CalcSigEfficiency (std::vector<TH1F*>& HistVector)
+{
+    for(unsigned bin_no = 0; bin_no < HistVector.at(2)->GetNbinsX(); bin_no++)
+    {
+        float SignalBinContent = HistVector.at(1)->GetBinContent(bin_no);
+        
+        // This calculates the per bin efficiency of signal compared to cosmic contamination
+        float Efficiency = SignalBinContent / (SignalBinContent + HistVector.at(2)->GetBinContent(bin_no));
+        HistVector.at(2)->SetBinContent(bin_no,Efficiency);
+    }
 }
