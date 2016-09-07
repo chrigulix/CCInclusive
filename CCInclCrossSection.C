@@ -210,7 +210,7 @@ void CCInclCrossSection()
     ScalingFactors.push_back(1);
     ScalingFactors.push_back(1.2300);
     ScalingFactors.push_back(DataPOT/MCPOT);
-    ScalingFactors.push_back(1);
+    ScalingFactors.push_back(DataPOT/MCPOT);
     ScalingFactors.push_back(DataPOT/MCPOT);
     ScalingFactors.push_back(DataPOT/MCPOT);
     ScalingFactors.push_back(DataPOT/MCPOT);
@@ -361,7 +361,7 @@ void CCInclCrossSection()
                 {
                     if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                     {
-                        // Fill cosmic background histograms
+                        // Fill not cosmic background histograms
                         SelectionTrackRange.at(file_no+1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                         SelectionCosTheta.at(file_no+1) -> Fill(cos(TrackTheta[TrkID]));
                         SelectionTheta.at(file_no+1) -> Fill(TrackTheta[TrkID]);
@@ -370,7 +370,7 @@ void CCInclCrossSection()
                     }
                     else
                     {
-                        // Fill other background histograms
+                        // Fill cosmic background histograms
                         SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                         SelectionCosTheta.at(file_no+2) -> Fill(cos(TrackTheta[TrkID]));
                         SelectionTheta.at(file_no+2) -> Fill(TrackTheta[TrkID]);
@@ -463,11 +463,11 @@ void CCInclCrossSection()
     AddHistograms(SelectionMomentum,0,3,-1);
     
     // Subtract backgrounds from mc selection and erase bgr
-    AddHistograms(SelectionTrackRange,1,2,-1,1);
-    AddHistograms(SelectionPhi,1,2,-1,1);
-    AddHistograms(SelectionCosTheta,1,2,-1,1);
-    AddHistograms(SelectionTheta,1,2,-1,1);
-    AddHistograms(SelectionMomentum,1,2,-1,1);
+    AddHistograms(SelectionTrackRange,1,3,-1,1);
+    AddHistograms(SelectionPhi,1,3,-1,1);
+    AddHistograms(SelectionCosTheta,1,3,-1,1);
+    AddHistograms(SelectionTheta,1,3,-1,1);
+    AddHistograms(SelectionMomentum,1,3,-1,1);
     // Subtract cosmic background from mc selection
     AddHistograms(SelectionTrackRange,1,2,-1);
     AddHistograms(SelectionPhi,1,2,-1,1);
@@ -640,7 +640,7 @@ void CCInclCrossSection()
     
     TCanvas *Canvas0 = new TCanvas("Test", "Test", 1400, 1000);
     Canvas0->cd();
-    SelectionTheta.back()->Draw();
+    SelectionMomentum.at(2)->Draw();
 
     // Draw histogram
     TCanvas *Canvas1 = new TCanvas("Range", "Range", 1400, 1000);
@@ -852,7 +852,7 @@ float GetMomentum(float TrackLength)
 
 void CalcSigEfficiency (std::vector<TH1F*>& HistVector)
 {
-    for(unsigned bin_no = 0; bin_no < HistVector.at(2)->GetNbinsX(); bin_no++)
+    for(unsigned bin_no = 1; bin_no <= HistVector.at(2)->GetNbinsX(); bin_no++)
     {
         float SignalBinContent = HistVector.at(1)->GetBinContent(bin_no);
         
