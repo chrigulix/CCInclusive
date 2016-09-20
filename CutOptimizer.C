@@ -247,7 +247,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
         for(const auto& VertexingName : VertexProdNameVec)
         {
             // Open output file
-            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+"_Mod.root").c_str(),"RECREATE");
+            TFile* OutputFile = new TFile(("rootfiles/Cut_Optimizer_"+GeneratorName+"_"+Version+FileNumberStr+"_Mod.root").c_str(),"RECREATE");
             // Make a clone tree which gets filled
 
             treenc -> SetBranchAddress("event", &event);
