@@ -220,7 +220,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
     double lengthcut = 75; //cm. Length of longest track
     double beammin = 3.55/*-0.36*/; //us. Beam window start
     double beammax = 5.15/*-0.36*/; //us. Beam window end
-    double PEthresh = 50; //PE
+    double PEthresh = 121;//50; //PE
     double MCTrackToMCVtxDist = 0.5; //cm. distance between mc track start and mc vertex
     double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
 
