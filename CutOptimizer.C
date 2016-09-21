@@ -18,14 +18,14 @@
 // using namespace std;
 
 //This defines our current settings for the fiducial volume
-double FVx = 256.35;
-double FVy = 233;
-double FVz = 1036.8;
-double borderx = 10.;
-double bordery = 20.;
-double borderz = 10.;
-double cryoradius = 191.61;
-double cryoz = 1086.49 + 2*67.63;
+float FVx = 256.35;
+float FVy = 233;
+float FVz = 1036.8;
+float borderx = 10.;
+float bordery = 20.;
+float borderz = 10.;
+float cryoradius = 191.61;
+float cryoz = 1086.49 + 2*67.63;
 
 //This function returns if a 3D point is within the fiducial volume
 bool inFV(double x, double y, double z);
