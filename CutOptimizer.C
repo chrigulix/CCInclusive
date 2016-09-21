@@ -358,12 +358,12 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
             TH1F* VtxDistanceSignal = new TH1F("VtxDistanceSignal","VtxDistanceSignal",500,0,10);
             TH1F* VtxDistanceBGR = new TH1F("VtxDistanceBGR","VtxDistanceBGR",500,0,10);
             
-            TH1F* XVtxPosSignal = new TH1F("XVtxPosSignal","XVtxPosSignal",256,0,256);
-            TH1F* XVtxPosBGR = new TH1F("XVtxPosBGR","XVtxPosBGR",256,0,256);
-            TH1F* YVtxPosSignal = new TH1F("YVtxPosSignal","YVtxPosSignal",233,-233/2,-233/2);
-            TH1F* YVtxPosBGR = new TH1F("YVtxPosBGR","YVtxPosBGR",233,-233/2,-233/2);
-            TH1F* ZVtxPosSignal = new TH1F("ZVtxPosSignal","ZVtxPosSignal",1037,0,1037);
-            TH1F* ZVtxPosBGR = new TH1F("ZVtxPosBGR","ZVtxPosBGR",1037,0,1037);
+            TH1F* XVtxPosSignal = new TH1F("XVtxPosSignal","XVtxPosSignal",128,0,128);
+            TH1F* XVtxPosBGR = new TH1F("XVtxPosBGR","XVtxPosBGR",128,0,128);
+            TH1F* YVtxPosSignal = new TH1F("YVtxPosSignal","YVtxPosSignal",117,0,117);
+            TH1F* YVtxPosBGR = new TH1F("YVtxPosBGR","YVtxPosBGR",117,0,117);
+            TH1F* ZVtxPosSignal = new TH1F("ZVtxPosSignal","ZVtxPosSignal",519,0,519);
+            TH1F* ZVtxPosBGR = new TH1F("ZVtxPosBGR","ZVtxPosBGR",519,0,519);
             
             TH1F* FlashDistSignal = new TH1F("FlashDistSignal","FlashDistSignal",500,0,500);
             TH1F* FlashDistBGR = new TH1F("FlashDistBGR","FlashDistBGR",500,0,500);
