@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 #include <map>
+#include <cmath>
 
 #include <TCanvas.h>
 #include <TChain.h>
@@ -350,11 +351,11 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
 
             double TotalPOT = 0.0;
             
-            TH1F* FlashSignal = new TH1F("FlashSignal","FlashSignal",500,0,500);
-            TH1F* FlashBGR = new TH1F("FlashBGR","FlashBGR",500,0,500);
+            TH1F* FlashSignal = new TH1F("FlashSignal","FlashSignal",1500,0,1500);
+            TH1F* FlashBGR = new TH1F("FlashBGR","FlashBGR",1500,0,1500);
             
-            TH1F* VtxDistanceSignal = new TH1F("VtxDistanceSignal","VtxDistanceSignal",500,0,500);
-            TH1F* VtxDistanceBGR = new TH1F("VtxDistanceBGR","VtxDistanceBGR",500,0,500);
+            TH1F* VtxDistanceSignal = new TH1F("VtxDistanceSignal","VtxDistanceSignal",500,0,10);
+            TH1F* VtxDistanceBGR = new TH1F("VtxDistanceBGR","VtxDistanceBGR",500,0,10);
             
             TH1F* XVtxPosSignal = new TH1F("XVtxPosSignal","XVtxPosSignal",256,0,256);
             TH1F* XVtxPosBGR = new TH1F("XVtxPosBGR","XVtxPosBGR",256,0,256);
@@ -563,9 +564,9 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     
                     if(NuMuCCTrackCandidate > -1)
                     {
-                        XVtxPosSignal->Fill(vtxx[VertexCandidate]);
-                        YVtxPosSignal->Fill(vtxy[VertexCandidate]);
-                        ZVtxPosSignal->Fill(vtxz[VertexCandidate]);
+                        XVtxPosSignal->Fill(std::min(vtxx[VertexCandidate],FVx-vtxx[VertexCandidate]));
+                        YVtxPosSignal->Fill(std::fabs(vtxy[VertexCandidate]));
+                        ZVtxPosSignal->Fill(std::min(vtxz[VertexCandidate],FVz-vtxz[VertexCandidate]));
                         
                     }
                     else
