@@ -618,7 +618,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     // If there is a track candidate
                     if(TrackCandidate > -1)
                     {
-                        if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1 && MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
+                        if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1)
                         {
                             FlashDistSignal->Fill(FlashTrackDist(flash_zcenter[theflash], trkstartz[TrackCandidate], trkendz[TrackCandidate]));
                         }
@@ -646,7 +646,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                                 if(NuMuCCTrackCandidate > -1)
                                     MCEventsTracksInFV++;
                                 
-                                if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1 && MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
+                                if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1 /*&& MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]]*/)
                                 {
                                     TrackRangeSignal->Fill(TrackCandLength);
                                 }
