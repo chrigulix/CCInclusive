@@ -563,7 +563,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     bool IsNeutrinoInteraction = false;
                     
                     // Loop over all tracks of the vertex candidate
-                    for(auto const& track_no : VertexTrackCollection.at(VertexCandidate))
+                    for(auto const& track_no : *VertexTrackCollection.at(VertexCandidate))
                     {
                         if(trkorigin[track_no][trkbestplane[track_no]] == 1) IsNeutrinoInteraction = true;
                     }

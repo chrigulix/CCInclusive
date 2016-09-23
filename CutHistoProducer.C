@@ -41,8 +41,8 @@ void CutHistoProducer()
 
     TH1F* YVtxPosSignal = (TH1F*)InputFile->Get("YVtxPosSignal");
     TH1F* YVtxPosBGR = (TH1F*)InputFile->Get("YVtxPosBGR");
-    Scan(YVtxPosSignal); 
-    Scan(YVtxPosBGR); 
+    ReverseScan(YVtxPosSignal); 
+    ReverseScan(YVtxPosBGR); 
     
     TH1F* ZVtxPosSignal = (TH1F*)InputFile->Get("ZVtxPosSignal");
     TH1F* ZVtxPosBGR = (TH1F*)InputFile->Get("ZVtxPosBGR");
