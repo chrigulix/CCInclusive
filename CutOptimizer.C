@@ -558,24 +558,32 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                             VertexCosTheta = fabs(WeightedCosTheta);
                         }
                     }// vertex collection loop
-
-                    // Initialize Track Candidate properties
-                    TrackCandidate = -1;
-                    float TrackCandLength = 0.0;
                     
-                    if(NuMuCCTrackCandidate > -1)
+                    // Check if vertex has neutrino track
+                    bool IsNeutrinoInteraction = false;
+                    
+                    // Loop over all tracks of the vertex candidate
+                    for(auto const& track_no : VertexTrackCollection.at(VertexCandidate))
+                    {
+                        if(trkorigin[track_no][trkbestplane[track_no]] == 1) IsNeutrinoInteraction = true;
+                    }
+
+                    if(IsNeutrinoInteraction && NuMuCCTrackCandidate > -1)
                     {
                         XVtxPosSignal->Fill(std::min(vtxx[VertexCandidate],FVx-vtxx[VertexCandidate]));
-                        YVtxPosSignal->Fill(std::fabs(vtxy[VertexCandidate]));
+                        YVtxPosSignal->Fill(FVy-std::fabs(vtxy[VertexCandidate]));
                         ZVtxPosSignal->Fill(std::min(vtxz[VertexCandidate],FVz-vtxz[VertexCandidate]));
-                        
                     }
                     else
                     {
-                        XVtxPosBGR->Fill(vtxx[VertexCandidate]);
-                        YVtxPosBGR->Fill(vtxy[VertexCandidate]);
-                        ZVtxPosBGR->Fill(vtxz[VertexCandidate]);
+                        XVtxPosBGR->Fill(std::min(vtxx[VertexCandidate],FVx-vtxx[VertexCandidate]));
+                        YVtxPosBGR->Fill(FVy-std::fabs(vtxy[VertexCandidate]));
+                        ZVtxPosBGR->Fill(std::min(vtxz[VertexCandidate],FVz-vtxz[VertexCandidate]));
                     }
+                    
+                    // Initialize Track Candidate properties
+                    TrackCandidate = -1;
+                    float TrackCandLength = 0.0;
 
                     // Check if vertex candidate is contained in FV
                     if(inFV(vtxx[VertexCandidate], vtxy[VertexCandidate], vtxz[VertexCandidate]))
