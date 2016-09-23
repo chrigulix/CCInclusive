@@ -19,7 +19,8 @@ void CalculateSign(TH1F* SignalHist, TH1F* BgrHist);
 
 void CutHistoProducer()
 {
-    TFile* InputFile = new TFile("/lheppc46/data/uBData/anatrees/Cut_Optimizer_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root");
+//     TFile* InputFile = new TFile("/lheppc46/data/uBData/anatrees/Cut_Optimizer_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root");
+    TFile* InputFile = new TFile("rootfiles/Cut_Optimizer_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root");
     
     TH1F* FlashSignal = (TH1F*)InputFile->Get("FlashSignal");
     TH1F* FlashBGR = (TH1F*)InputFile->Get("FlashBGR");
@@ -40,8 +41,8 @@ void CutHistoProducer()
 
     TH1F* YVtxPosSignal = (TH1F*)InputFile->Get("YVtxPosSignal");
     TH1F* YVtxPosBGR = (TH1F*)InputFile->Get("YVtxPosBGR");
-    ReverseScan(YVtxPosSignal); 
-    ReverseScan(YVtxPosBGR); 
+    Scan(YVtxPosSignal); 
+    Scan(YVtxPosBGR); 
     
     TH1F* ZVtxPosSignal = (TH1F*)InputFile->Get("ZVtxPosSignal");
     TH1F* ZVtxPosBGR = (TH1F*)InputFile->Get("ZVtxPosBGR");
