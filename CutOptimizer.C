@@ -217,10 +217,10 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
     //define cut variables
     double flashwidth = 1;//80; //cm. Distance flash-track
     double distcut = 0.5;//5; //cm. Distance track start/end to vertex
-    double lengthcut = 75; //cm. Length of longest track
+    double lengthcut = 102;//75; //cm. Length of longest track
     double beammin = 3.55/*-0.36*/; //us. Beam window start
     double beammax = 5.15/*-0.36*/; //us. Beam window end
-    double PEthresh = 121;//50; //PE
+    double PEthresh = 187;//50; //PE
     double MCTrackToMCVtxDist = 0.5; //cm. distance between mc track start and mc vertex
     double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
 
@@ -575,13 +575,13 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     if(IsNeutrinoInteraction && NuMuCCTrackCandidate > -1)
                     {
                         XVtxPosSignal->Fill(std::min(vtxx[VertexCandidate],FVx-vtxx[VertexCandidate]));
-                        YVtxPosSignal->Fill(FVy-std::fabs(vtxy[VertexCandidate]));
+                        YVtxPosSignal->Fill(FVy/2.-std::fabs(vtxy[VertexCandidate]));
                         ZVtxPosSignal->Fill(std::min(vtxz[VertexCandidate],FVz-vtxz[VertexCandidate]));
                     }
                     else
                     {
                         XVtxPosBGR->Fill(std::min(vtxx[VertexCandidate],FVx-vtxx[VertexCandidate]));
-                        YVtxPosBGR->Fill(FVy-std::fabs(vtxy[VertexCandidate]));
+                        YVtxPosBGR->Fill(FVy/2.-std::fabs(vtxy[VertexCandidate]));
                         ZVtxPosBGR->Fill(std::min(vtxz[VertexCandidate],FVz-vtxz[VertexCandidate]));
                     }
                     
