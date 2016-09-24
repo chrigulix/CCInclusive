@@ -73,7 +73,7 @@ void CutHistoProducer()
     
     TCanvas* C1 = new TCanvas("Vertex Dist", "Vertex Dist", 1400, 1000);
     C1->cd();
-    VtxDistanceBGR->Draw();
+    VtxDistanceSignal->Draw();
     
     TCanvas* C2 = new TCanvas("Vertex Pos X", "Vertex Pos X", 1400, 1000);
     C2->cd();

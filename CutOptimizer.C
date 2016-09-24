@@ -215,9 +215,9 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
     Int_t          MCTrueIndex[maxtracks];
 
     //define cut variables
-    double flashwidth = 68;//80; //cm. Distance flash-track
+    double flashwidth = 14;//80; //cm. Distance flash-track
     double distcut = 5;//5; //cm. Distance track start/end to vertex
-    double lengthcut = 102;//75; //cm. Length of longest track
+    double lengthcut = 78;//102 75; //cm. Length of longest track
     double beammin = 3.55/*-0.36*/; //us. Beam window start
     double beammax = 5.15/*-0.36*/; //us. Beam window end
     double PEthresh = 187;//50; //PE
@@ -492,7 +492,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                             distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
                             TrackRange = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
                             
-                            if(NuMuCCTrackCandidate > -1 && MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[j][trkbestplane[j]])
+                            if(NuMuCCTrackCandidate > -1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                             {
                                 DistStartCut = std::min(DistStartCut,diststart);
                                 DistEndCut = std::min(DistEndCut,distend);
@@ -634,7 +634,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     // If there is a track candidate
                     if(TrackCandidate > -1)
                     {
-                        if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1 && MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
+                        if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1 /*&& MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]]*/)
                         {
                             FlashDistSignal->Fill(FlashTrackDist(flash_zcenter[theflash], trkstartz[TrackCandidate], trkendz[TrackCandidate]));
                         }
