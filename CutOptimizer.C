@@ -310,8 +310,8 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
 
             int theflash = -1;
 
-            double diststart = 0;
-            double distend = 0;
+            float diststart = 0;
+            float distend = 0;
             double TrackRange = 0;
 
             int ntrue = 0;
