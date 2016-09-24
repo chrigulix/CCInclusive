@@ -215,8 +215,8 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
     Int_t          MCTrueIndex[maxtracks];
 
     //define cut variables
-    double flashwidth = 1;//80; //cm. Distance flash-track
-    double distcut = 0.5;//5; //cm. Distance track start/end to vertex
+    double flashwidth = 68;//80; //cm. Distance flash-track
+    double distcut = 5;//5; //cm. Distance track start/end to vertex
     double lengthcut = 102;//75; //cm. Length of longest track
     double beammin = 3.55/*-0.36*/; //us. Beam window start
     double beammax = 5.15/*-0.36*/; //us. Beam window end
@@ -472,7 +472,12 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     
                     float DistStartCut = 9999.;
                     float DistEndCut = 9999.;
-
+                    
+                    bool VtxDistSignal = false;
+                    
+                    std::vector<float> VtxDistBgrMinVec(ntracks_reco,9999.);
+//                     std::vector<float> VtxEndDistBgrMinVec(ntracks_reco,9999.);
+                    
                     // Loop over all vertices
                     for(int v = 0; v < nvtx; v++)
                     {
@@ -487,9 +492,16 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                             distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
                             TrackRange = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
                             
-                            if(DistStartCut > diststart) DistStartCut = diststart;
-                            
-                            if(DistEndCut > distend) DistEndCut = distend;
+                            if(NuMuCCTrackCandidate > -1 && MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[j][trkbestplane[j]])
+                            {
+                                DistStartCut = std::min(DistStartCut,diststart);
+                                DistEndCut = std::min(DistEndCut,distend);
+                                VtxDistSignal = true;
+                            }
+                            else 
+                            {
+                                VtxDistBgrMinVec.at(j) = std::min(VtxDistBgrMinVec.at(j), std::min(diststart,distend));
+                            }
                             
                             // If the track vertex distance is within cut, increase track count
                             if(diststart < distcut || distend < distcut)
@@ -520,9 +532,13 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                         } // track loop
                     } // vertex loop
                     
-                    if(NuMuCCTrackCandidate > -1) VtxDistanceSignal->Fill(std::min(DistStartCut,DistEndCut));
-                    else VtxDistanceBGR->Fill(std::min(DistStartCut,DistEndCut));
-
+                    if(VtxDistSignal) VtxDistanceSignal->Fill(std::min(DistStartCut,DistEndCut));
+                    
+                    for(const auto& BgrDistance : VtxDistBgrMinVec)
+                    {
+                        VtxDistanceBGR->Fill(BgrDistance);
+                    }
+                    
                     // Vertex candidate properties
                     VertexCandidate = -1;
                     float VertexCosTheta = 0.0;
@@ -618,7 +634,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     // If there is a track candidate
                     if(TrackCandidate > -1)
                     {
-                        if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1)
+                        if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1 && MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
                         {
                             FlashDistSignal->Fill(FlashTrackDist(flash_zcenter[theflash], trkstartz[TrackCandidate], trkendz[TrackCandidate]));
                         }
@@ -646,7 +662,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                                 if(NuMuCCTrackCandidate > -1)
                                     MCEventsTracksInFV++;
                                 
-                                if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1 /*&& MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]]*/)
+                                if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && NuMuCCTrackCandidate > -1 && MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
                                 {
                                     TrackRangeSignal->Fill(TrackCandLength);
                                 }
