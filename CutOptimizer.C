@@ -215,8 +215,8 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
     Int_t          MCTrueIndex[maxtracks];
 
     //define cut variables
-    double flashwidth = 14;//80; //cm. Distance flash-track
-    double distcut = 5;//5; //cm. Distance track start/end to vertex
+    double flashwidth = 43;//14 80; //cm. Distance flash-track
+    double distcut = 0.02;//5; //cm. Distance track start/end to vertex
     double lengthcut = 78;//102 75; //cm. Length of longest track
     double beammin = 3.55/*-0.36*/; //us. Beam window start
     double beammax = 5.15/*-0.36*/; //us. Beam window end
