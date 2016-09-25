@@ -33,6 +33,11 @@ void CutHistoProducer()
     TH1F* VtxDistanceBGR = (TH1F*)InputFile->Get("VtxDistanceBGR");
     Scan(VtxDistanceSignal);
     Scan(VtxDistanceBGR);
+    
+    TH1F* TrueVtxDistanceSignal = (TH1F*)InputFile->Get("TrueVtxDistanceSignal");
+    TH1F* TrueVtxDistanceBGR = (TH1F*)InputFile->Get("TrueVtxDistanceBGR");
+    Scan(TrueVtxDistanceSignal);
+    Scan(TrueVtxDistanceBGR);
           
     TH1F* XVtxPosSignal = (TH1F*)InputFile->Get("XVtxPosSignal");
     TH1F* XVtxPosBGR = (TH1F*)InputFile->Get("XVtxPosBGR");
@@ -61,6 +66,7 @@ void CutHistoProducer()
     
     CalculateSign(FlashSignal,FlashBGR);
     CalculateSign(VtxDistanceSignal,VtxDistanceBGR);
+    CalculateSign(TrueVtxDistanceSignal,TrueVtxDistanceBGR);
     CalculateSign(XVtxPosSignal,XVtxPosBGR);
     CalculateSign(YVtxPosSignal,YVtxPosBGR);
     CalculateSign(ZVtxPosSignal,ZVtxPosBGR);
@@ -74,6 +80,10 @@ void CutHistoProducer()
     TCanvas* C1 = new TCanvas("Vertex Dist", "Vertex Dist", 1400, 1000);
     C1->cd();
     VtxDistanceSignal->Draw();
+    
+    TCanvas* C1a = new TCanvas("True Vertex Dist", "True Vertex Dist", 1400, 1000);
+    C1a->cd();
+    TrueVtxDistanceSignal->Draw();
     
     TCanvas* C2 = new TCanvas("Vertex Pos X", "Vertex Pos X", 1400, 1000);
     C2->cd();

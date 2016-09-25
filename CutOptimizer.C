@@ -485,7 +485,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                         // Loop over all vertices
                         for(int v = 0; v < nvtx; v++)
                         {
-                            // Find vertex with minimum distance to true vertex
+                            // Find reco vertex with minimum distance to true vertex and store these as vertex candidates
                             float TempDist = std::sqrt( std::pow(nuvtxx_truth[true_v]-vtxx[v],2)+std::pow(nuvtxy_truth[true_v]-vtxy[v],2)+std::pow(nuvtxz_truth[true_v]-vtxz[v],2) );
                             if(TempDist < MinDistToCand.at(mcv))
                             {
