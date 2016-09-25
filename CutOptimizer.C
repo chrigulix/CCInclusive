@@ -310,10 +310,6 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
 
             int theflash = -1;
 
-            float diststart = 0;
-            float distend = 0;
-            double TrackRange = 0;
-
             int ntrue = 0;
 
             int TrackCandidate;
@@ -358,6 +354,9 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
             TH1F* VtxDistanceSignal = new TH1F("VtxDistanceSignal","VtxDistanceSignal",500,0,10);
             TH1F* VtxDistanceBGR = new TH1F("VtxDistanceBGR","VtxDistanceBGR",500,0,10);
             
+            TH1F* TrueVtxDistanceSignal = new TH1F("TrueVtxDistanceSignal","TrueVtxDistanceSignal",500,0,500);
+            TH1F* TrueVtxDistanceBGR = new TH1F("TrueVtxDistanceBGR","TrueVtxDistanceBGR",500,0,500);
+            
             TH1F* XVtxPosSignal = new TH1F("XVtxPosSignal","XVtxPosSignal",128,0,128);
             TH1F* XVtxPosBGR = new TH1F("XVtxPosBGR","XVtxPosBGR",128,0,128);
             TH1F* YVtxPosSignal = new TH1F("YVtxPosSignal","YVtxPosSignal",117,0,117);
@@ -393,6 +392,9 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                 MCTrackCandidate = -1;
                 MCVertexCandidate = -1;
                 NuMuCCTrackCandidate = -1;
+                
+                std::vector<int> MCTrackCandVec;
+                std::vector<int> MCVertexCandVec;
 
                 // Loop over all MC neutrino vertices
                 for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
@@ -410,6 +412,9 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                             if( PDG_truth[track_no] == 13 && MCTrueIndex[track_no] == vertex_no
                                 && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist )
                             {
+                                MCTrackCandVec.push_back(track_no);
+                                MCVertexCandVec.push_back(vertex_no);
+                                
                                 // Fill track candidate index
                                 NuMuCCTrackCandidate = track_no;
                             }
@@ -461,11 +466,34 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     bool FlashMatchFlag = true;
                     bool TrackContainedFlag = false;
 
+                    float diststart = 0;
+                    float distend = 0;
+                    double TrackRange = 0;
+
                     // Increase events with flash > 50 PE and within beam window
                     EventsWithFlash++;
                     if(NuMuCCTrackCandidate > -1)
                         MCEventsWithFlash++;
+                    
+                    std::vector<int> CandVertex(MCVertexCandVec.size());
+                    std::vector<float> MinDistToCand(MCVertexCandVec.size(),9999.f);
 
+                    // Loop over MC truth candidate verteces
+                    for(unsigned int mcv = 0; mcv < MCVertexCandVec.size(); ++mcv)
+                    {
+                        int true_v = MCVertexCandVec.at(mcv);
+                        // Loop over all vertices
+                        for(int v = 0; v < nvtx; v++)
+                        {
+                            // Find vertex with minimum distance to true vertex
+                            float TempDist = std::sqrt( std::pow(nuvtxx_truth[true_v]-vtxx[v],2)+std::pow(nuvtxy_truth[true_v]-vtxy[v],2)+std::pow(nuvtxz_truth[true_v]-vtxz[v],2) );
+                            if(TempDist < MinDistToCand.at(mcv))
+                            {
+                                CandVertex.at(mcv) = v;
+                                MinDistToCand.at(mcv) = TempDist;
+                            }
+                        }
+                    }
 
                     // Initialize a vertex and associated track collection
                     std::map< int,std::vector<int> > VertexTrackCollection;
@@ -483,9 +511,17 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                         for(int j = 0; j < ntracks_reco; j++)
                         {
                             // Calculate distances from track start/end to vertex and calculate track lenth
-                            diststart = sqrt((vtxx[v] - trkstartx[j])*(vtxx[v] - trkstartx[j]) + (vtxy[v] - trkstarty[j])*(vtxy[v] - trkstarty[j]) + (vtxz[v] - trkstartz[j])*(vtxz[v] - trkstartz[j]));
-                            distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
-                            TrackRange = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
+                            diststart = std::sqrt( std::pow(vtxx[v] - trkstartx[j],2) + std::pow(vtxy[v] - trkstarty[j],2) + std::pow(vtxz[v] - trkstartz[j],2) );
+                            distend = std::sqrt( std::pow(vtxx[v] - trkendx[j],2) + std::pow(vtxy[v] - trkendy[j],2) + std::pow(vtxz[v] - trkendz[j],2) );
+                            TrackRange = std::sqrt( std::pow(trkstartx[j] - trkendx[j],2) + std::pow(trkstarty[j] - trkendy[j],2) + std::pow(trkstartz[j] - trkendz[j],2) );
+                            
+                            // Loop through all candidate indices
+                            for(const auto& v_cand : CandVertex)
+                            {
+                                // check if signal or background track and if the candidate vertex is chosen
+                                if(v_cand == v && trkorigin[j][trkbestplane[j]] == 1) TrueVtxDistanceSignal->Fill(std::min(diststart,distend));
+                                else if (v_cand == v) TrueVtxDistanceBGR->Fill(std::min(diststart,distend));
+                            }
                             
                             // If neutrino related track, change flags to signal
                             if(v == 0 && NuMuCCTrackCandidate > -1 && trkorigin[j][trkbestplane[j]] == 1)
@@ -761,6 +797,9 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
             
             VtxDistanceSignal->Write();
             VtxDistanceBGR->Write();
+            
+            TrueVtxDistanceSignal->Write();
+            TrueVtxDistanceBGR->Write();
             
             XVtxPosSignal->Write();
             XVtxPosBGR->Write();
