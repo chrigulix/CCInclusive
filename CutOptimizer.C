@@ -216,7 +216,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
 
     //define cut variables
     double flashwidth = 43;//14 80; //cm. Distance flash-track
-    double distcut = 0.02;//5; //cm. Distance track start/end to vertex
+    double distcut = 5; //cm. Distance track start/end to vertex
     double lengthcut = 78;//102 75; //cm. Length of longest track
     double beammin = 3.55/*-0.36*/; //us. Beam window start
     double beammax = 5.15/*-0.36*/; //us. Beam window end
@@ -470,13 +470,8 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                     // Initialize a vertex and associated track collection
                     std::map< int,std::vector<int> > VertexTrackCollection;
                     
-                    float DistStartCut = 9999.;
-                    float DistEndCut = 9999.;
-                    
-                    bool VtxDistSignal = false;
-                    
-                    std::vector<float> VtxDistBgrMinVec(ntracks_reco,9999.);
-//                     std::vector<float> VtxEndDistBgrMinVec(ntracks_reco,9999.);
+                    // Stores the distance to every minimum track to vtx distance for every track and a boolian which shows if background
+                    std::vector<std::pair<bool,float>> VtxDistMinVec(ntracks_reco,std::make_pair(false,9999.f));
                     
                     // Loop over all vertices
                     for(int v = 0; v < nvtx; v++)
@@ -492,16 +487,14 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                             distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
                             TrackRange = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
                             
-                            if(NuMuCCTrackCandidate > -1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                            // If neutrino related track, change flags to signal
+                            if(v == 0 && NuMuCCTrackCandidate > -1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                             {
-                                DistStartCut = std::min(DistStartCut,diststart);
-                                DistEndCut = std::min(DistEndCut,distend);
-                                VtxDistSignal = true;
+                                VtxDistMinVec.at(j).first = true;
                             }
-                            else 
-                            {
-                                VtxDistBgrMinVec.at(j) = std::min(VtxDistBgrMinVec.at(j), std::min(diststart,distend));
-                            }
+                            
+                            // Fill minimum of track to vertex distance
+                            VtxDistMinVec.at(j).second = std::min(VtxDistMinVec.at(j).second, std::min(diststart,distend));
                             
                             // If the track vertex distance is within cut, increase track count
                             if(diststart < distcut || distend < distcut)
@@ -532,11 +525,18 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                         } // track loop
                     } // vertex loop
                     
-                    if(VtxDistSignal) VtxDistanceSignal->Fill(std::min(DistStartCut,DistEndCut));
-                    
-                    for(const auto& BgrDistance : VtxDistBgrMinVec)
+                    // Loop over all minimum distance pairs
+                    for(const auto& MinDistance : VtxDistMinVec)
                     {
-                        VtxDistanceBGR->Fill(BgrDistance);
+                        // If signal fill signal histogram if not fill bgr histogram
+                        if(MinDistance.first)
+                        {
+                            VtxDistanceSignal->Fill(MinDistance.second);
+                        }
+                        else
+                        {
+                            VtxDistanceBGR->Fill(MinDistance.second);
+                        }
                     }
                     
                     // Vertex candidate properties
