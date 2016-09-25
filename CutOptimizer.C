@@ -488,7 +488,7 @@ int CutOptimizer(std::string GeneratorName, unsigned int ThreadNumber, unsigned 
                             TrackRange = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
                             
                             // If neutrino related track, change flags to signal
-                            if(v == 0 && NuMuCCTrackCandidate > -1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                            if(v == 0 && NuMuCCTrackCandidate > -1 && trkorigin[j][trkbestplane[j]] == 1)
                             {
                                 VtxDistMinVec.at(j).first = true;
                             }
