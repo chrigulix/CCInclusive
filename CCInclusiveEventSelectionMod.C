@@ -133,7 +133,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     }
     else
     {
-        treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+        treenc -> Add( ("/lheppc46/data/uBData/anatrees/samples/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
     }
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
@@ -213,12 +213,12 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     Int_t          MCTrueIndex[maxtracks];
 
     //define cut variables
-    double flashwidth = 80; //cm. Distance flash-track
-    double distcut = 5; //cm. Distance track start/end to vertex
-    double lengthcut = 75; //cm. Length of longest track
+    double flashwidth = 22;//14 80; //cm. Distance flash-track
+    double distcut = 38;//5; //cm. Distance track start/end to vertex
+    double lengthcut = 78;//102 75; //cm. Length of longest track
     double beammin = 3.55/*-0.36*/; //us. Beam window start
     double beammax = 5.15/*-0.36*/; //us. Beam window end
-    double PEthresh = 50; //PE
+    double PEthresh = 187;//50; //PE
     double MCTrackToMCVtxDist = 0.5; //cm. distance between mc track start and mc vertex
     double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
 
