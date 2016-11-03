@@ -43,8 +43,8 @@ void HistoProducerNoSys()
 {
     TGaxis::SetMaxDigits(4);
     
-//     std::string Folder = "CCInclusiveNote";
-    std::string Folder = "ThesisSelection";
+    std::string Folder = "CCInclusiveNote";
+//     std::string Folder = "ThesisSelection";
     
     //     std::string TrackProdName="pandoraNuKHit";
 //     std::string TrackProdName = "pandoraCosmic";
@@ -1112,6 +1112,7 @@ void HistoProducerNoSys()
     {
         LegendBGR->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
+    LegendBGR->AddEntry((TObject*)nullptr,"(Stat. Uncert. Only)","");
 
     TCanvas *Canvas11 = new TCanvas("OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000);
     Canvas11->cd();
