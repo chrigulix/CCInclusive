@@ -43,6 +43,9 @@ void HistoProducerNoSys()
 {
     TGaxis::SetMaxDigits(4);
     
+//     std::string Folder = "CCInclusiveNote";
+    std::string Folder = "ThesisSelection";
+    
     //     std::string TrackProdName="pandoraNuKHit";
 //     std::string TrackProdName = "pandoraCosmic";
     std::string TrackProdName="pandoraNu";
@@ -214,16 +217,17 @@ void HistoProducerNoSys()
     std::vector<unsigned int> ColorMap = {13,28,42,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2"+ SelectionLabel +".root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_3"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_3"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1"+ SelectionLabel +".root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_field_v05_08_00"+ SelectionLabel +".root").c_str());
 //     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_BITE_v05_08_00"+ SelectionLabel +".root").c_str());
 
     for(const auto& Label : GenLabel)

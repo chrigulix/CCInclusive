@@ -19,7 +19,10 @@ void CalculateSign(TH1F* SignalHist, TH1F* BgrHist);
 
 void CutHistoProducer()
 {
-    TFile* InputFile = new TFile("/lheppc46/data/uBData/anatrees/Cut_Optimizer_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root");
+    std::string Folder = "CCInclusiveNote";
+//     std::string Folder = "ThesisSelection";
+    
+    TFile* InputFile = new TFile(("/lheppc46/data/uBData/anatrees/"+Folder+"/Cut_Optimizer_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root").c_str());
 //     TFile* InputFile = new TFile("rootfiles/Cut_Optimizer_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root");
     
     TH1F* FlashSignal = (TH1F*)InputFile->Get("FlashSignal");

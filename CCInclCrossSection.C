@@ -64,6 +64,9 @@ void CCInclCrossSection()
 {
     float NumberOfTargets = (FVx - 2*borderx) * (FVy - 2*bordery) * (FVz - 2*borderz) * Density * Avogadro/ArMass*NoNucleons;
     
+//     std::string Folder = "CCInclusiveNote";
+    std::string Folder = "ThesisSelection";
+    
     // Output file file type
     std::string FileType = "pdf";
 //     std::string FileType = "png";
@@ -93,7 +96,7 @@ void CCInclCrossSection()
 
     size_t NumberOfBins = 20;
 
-    double MCPOT = 2.3e20;
+    double MCPOT = 2.3e20/191362*92498;
     double DataPOT = 4.95e19;
     
     double IntegratedFlux;
@@ -183,19 +186,20 @@ void CCInclCrossSection()
     MomentumSplinePreparation();
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1_Mod.root");
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2_Mod.root");
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_3_Mod.root");
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1_Mod.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2_Mod.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_3_Mod.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1_Mod.root");
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2_Mod.root");
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1_Mod.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2_Mod.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root");
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_field_v05_08_00_Mod.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
 
     GenLabel.push_back("Data On-Beam BNB");
     GenLabel.push_back("Data Off-Beam BNBEXT");
