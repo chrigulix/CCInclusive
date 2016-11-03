@@ -1112,7 +1112,8 @@ void HistoProducerNoSys()
     {
         LegendBGR->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
-    LegendBGR->AddEntry((TObject*)nullptr,"(Stat. Uncert. Only)","");
+    LegendBGR->AddEntry((TObject*)nullptr,"","");
+    LegendBGR->AddEntry((TObject*)nullptr,"(Stat. uncertainty only)","");
 
     TCanvas *Canvas11 = new TCanvas("OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000);
     Canvas11->cd();
