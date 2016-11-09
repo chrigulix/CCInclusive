@@ -470,9 +470,11 @@ void HistoProducerMC()
                 std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at ( file_no )->GetEntries() << std::endl;
             }
             
-            if(file_no == 1) std::cout << tree_index << std::endl;
+//             if(file_no == 1) std::cout << tree_index << std::endl;
 
             ChainVec.at ( file_no )->GetEntry ( tree_index );
+            
+            if(file_no == 1) std::cout << tree_index << std::endl;
 
 //             if(tree_index < 100)
 //             {
@@ -654,6 +656,7 @@ void HistoProducerMC()
             }
             else if ( file_no == 1 && TrkID > -1 && MCVtxID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && PDGTruth[MCTrkID] == 13 && nuPDGTruth[MCVtxID] == 14 && CCNCFlag[MCVtxID] == 0 && inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) )
             {
+                std::cout << 2 << std::endl;
                 SelectionTrackRange.at ( 2 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                 SelectionTheta.at ( 2 )->Fill ( MCTheta[MCTrkID] );
                 SelectionCosTheta.at ( 2 )->Fill ( cos ( MCTheta[MCTrkID] ) );
@@ -670,9 +673,11 @@ void HistoProducerMC()
                 SelXVtxPosition.at ( 2 )->Fill ( XnuVtxTruth[MCVtxID] );
                 SelYVtxPosition.at ( 2 )->Fill ( YnuVtxTruth[MCVtxID] );
                 SelZVtxPosition.at ( 2 )->Fill ( ZnuVtxTruth[MCVtxID] );
+                std::cout << 2 << std::endl;
                 
                 if ( inFV ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID] ) && inFV ( XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) )
                 {
+                    std::cout << 3 << std::endl;
                     SelectionTrackRange.at ( 3 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                     SelectionTheta.at ( 3 )->Fill ( MCTheta[MCTrkID] );
                     SelectionCosTheta.at ( 3 )->Fill ( cos ( MCTheta[MCTrkID] ) );
@@ -689,12 +694,14 @@ void HistoProducerMC()
                     SelXVtxPosition.at ( 3 )->Fill ( XnuVtxTruth[MCVtxID] );
                     SelYVtxPosition.at ( 3 )->Fill ( YnuVtxTruth[MCVtxID] );
                     SelZVtxPosition.at ( 3 )->Fill ( ZnuVtxTruth[MCVtxID] );
+                    std::cout << 3 << std::endl;
                 }
 
 
                 // Selection QE RES DIS
                 if ( TruthMode[MCVtxID] == 0 )
                 {
+                    std::cout << 10 << std::endl;
                     nuQE++;
                     SelectionTrackRange.at ( 10 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                     SelectionTheta.at ( 10 )->Fill ( MCTheta[MCTrkID] );
@@ -712,10 +719,12 @@ void HistoProducerMC()
                     SelXVtxPosition.at ( 10 )->Fill ( XnuVtxTruth[MCVtxID] );
                     SelYVtxPosition.at ( 10 )->Fill ( YnuVtxTruth[MCVtxID] );
                     SelZVtxPosition.at ( 10 )->Fill ( ZnuVtxTruth[MCVtxID] );
+                    std::cout << 10 << std::endl;
 
                 }
                 else if ( TruthMode[MCVtxID] == 1 )
                 {
+                    std::cout << 11 << std::endl;
                     nuRES++;
                     SelectionTrackRange.at ( 11 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                     SelectionTheta.at ( 11 )->Fill ( MCTheta[MCTrkID] );
@@ -733,10 +742,12 @@ void HistoProducerMC()
                     SelXVtxPosition.at ( 11 )->Fill ( XnuVtxTruth[MCVtxID] );
                     SelYVtxPosition.at ( 11 )->Fill ( YnuVtxTruth[MCVtxID] );
                     SelZVtxPosition.at ( 11 )->Fill ( ZnuVtxTruth[MCVtxID] );
+                    std::cout << 11 << std::endl;
 
                 }
                 else if ( TruthMode[MCVtxID] == 2 )
                 {
+                    std::cout << 12 << std::endl;
                     nuDIS++;
                     SelectionTrackRange.at ( 12 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                     SelectionTheta.at ( 12 )->Fill ( MCTheta[MCTrkID] );
@@ -754,7 +765,10 @@ void HistoProducerMC()
                     SelXVtxPosition.at ( 12 )->Fill ( XnuVtxTruth[MCVtxID] );
                     SelYVtxPosition.at ( 12 )->Fill ( YnuVtxTruth[MCVtxID] );
                     SelZVtxPosition.at ( 12 )->Fill ( ZnuVtxTruth[MCVtxID] );
+                    std::cout << 12 << std::endl;
                 }
+                
+                std::cout << "back" << std::endl;
 
                 // Fill systematic errors independet of CC or NC
                 SelectionTrackRange.back()->Fill ( CalcLength ( XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID] ),1+SystematicErrors.at ( 0 ).Eval ( NuEnergyTruth[MCVtxID] ) );
@@ -773,6 +787,7 @@ void HistoProducerMC()
                 SelXVtxPosition.back()->Fill ( XVertexPosition[VtxID],1+SystematicErrors.at ( 0 ).Eval ( NuEnergyTruth[MCVtxID] ) );
                 SelYVtxPosition.back()->Fill ( YVertexPosition[VtxID],1+SystematicErrors.at ( 0 ).Eval ( NuEnergyTruth[MCVtxID] ) );
                 SelZVtxPosition.back()->Fill ( ZVertexPosition[VtxID],1+SystematicErrors.at ( 0 ).Eval ( NuEnergyTruth[MCVtxID] ) );
+                std::cout << "back" << std::endl;
             }
         }
         std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
