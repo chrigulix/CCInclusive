@@ -1268,9 +1268,12 @@ void HistoProducerMC()
     }
     
     LegendMCSel->AddEntry(SelectionTrackRange.at ( 2 ), "After Selection","f");
+    LegendMCSel->AddEntry((TObject*)nullptr,"(Stat. uncertainty only)","");
 
     LegendMC->AddEntry ( SelectionTrackRange.at ( 0 ), ( MCLabel.at ( 0 ) ).c_str(),"f" );
     LegendMC->AddEntry ( SelectionTrackRange.at ( 1 ), ( MCLabel.at ( 1 ) ).c_str(),"f" );
+    LegendMC->AddEntry((TObject*)nullptr,"","");
+    LegendMC->AddEntry((TObject*)nullptr,"(Stat. uncertainty only)","");
 //     LegendMC->AddEntry ( SelectionTrackRange.at ( 2 ), ( MCLabel.at ( 2 ) ).c_str(),"f" );
 //     for ( unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++ )
 //     {
@@ -1280,10 +1283,14 @@ void HistoProducerMC()
     LegendInt->AddEntry ( SelectionTrackRange.at ( 10 ), ( IntLabel.at ( 0 ) ).c_str(),"f" );
     LegendInt->AddEntry ( SelectionTrackRange.at ( 11 ), ( IntLabel.at ( 1 ) ).c_str(),"f" );
     LegendInt->AddEntry ( SelectionTrackRange.at ( 12 ), ( IntLabel.at ( 2 ) ).c_str(),"f" );
+    LegendInt->AddEntry((TObject*)nullptr,"","");
+    LegendInt->AddEntry((TObject*)nullptr,"(Stat. uncertainty only)","");
 
     LegendIntTrue->AddEntry ( SelectionTrackRange.at ( 4 ), ( IntTrueLabel.at ( 0 ) ).c_str(),"f" );
     LegendIntTrue->AddEntry ( SelectionTrackRange.at ( 5 ), ( IntTrueLabel.at ( 1 ) ).c_str(),"f" );
     LegendIntTrue->AddEntry ( SelectionTrackRange.at ( 6 ), ( IntTrueLabel.at ( 2 ) ).c_str(),"f" );
+    LegendIntTrue->AddEntry((TObject*)nullptr,"","");
+    LegendIntTrue->AddEntry((TObject*)nullptr,"(Stat. uncertainty only)","");
 
 
     TCanvas *Canvas11 = new TCanvas ( "OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000 );
