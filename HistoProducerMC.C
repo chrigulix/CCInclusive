@@ -822,9 +822,13 @@ void HistoProducerMC()
     LegendEffInt->AddEntry ( EffTrackRange.at ( 2 ), ( EffIntLabel.at ( 0 ) ).c_str(),"lf" );
     LegendEffInt->AddEntry ( EffTrackRange.at ( 3 ), ( EffIntLabel.at ( 1 ) ).c_str(),"lf" );
     LegendEffInt->AddEntry ( EffTrackRange.at ( 4 ), ( EffIntLabel.at ( 2 ) ).c_str(),"lf" );
+    LegendEffInt->AddEntry((TObject*)nullptr,"","");
+    LegendEffInt->AddEntry((TObject*)nullptr,"(Stat. uncertainty only)","");
 
     LegendEfficiency->AddEntry ( EffTrackRange.at ( 1 ), ( EfficiencyLabel.at ( 1 ) ).c_str(),"lf" );
     LegendEfficiency->AddEntry ( EffTrackRange.at ( 0 ), ( EfficiencyLabel.at ( 0 ) ).c_str(),"lf" );
+    LegendEfficiency->AddEntry((TObject*)nullptr,"","");
+    LegendEfficiency->AddEntry((TObject*)nullptr,"(Stat. uncertainty only)","");
 
     TCanvas *Canvas1 = new TCanvas ( "Efficiency OnBeam Minus OffBeam Track Range", "Efficiency OnBeam Minus OffBeam Track Range", 1400, 1000 );
     TMultiGraph *MGTrackRange = new TMultiGraph();
