@@ -46,6 +46,7 @@ bool inFV ( double x, double y, double z );
 void HistoProducerMC()
 {
     TGaxis::SetMaxDigits ( 4 );
+    TGaxis::SetExponentOffset( -0.048, 0.005, "y" );
 
     std::string Folder = "CCInclusiveNote";
 //     std::string Folder = "ThesisSelection";
@@ -743,7 +744,7 @@ void HistoProducerMC()
                 }
                 else if ( TruthMode[MCVtxID] == 2 )
                 {
-                    std::cout << 12 << std::endl;
+//                     std::cout << 12 << std::endl;
                     nuDIS++;
                     SelectionTrackRange.at ( 12 )->Fill ( CalcLength ( XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID] ) );
                     SelectionTheta.at ( 12 )->Fill ( MCTheta[MCTrkID] );
@@ -761,7 +762,7 @@ void HistoProducerMC()
                     SelXVtxPosition.at ( 12 )->Fill ( XnuVtxTruth[MCVtxID] );
                     SelYVtxPosition.at ( 12 )->Fill ( YnuVtxTruth[MCVtxID] );
                     SelZVtxPosition.at ( 12 )->Fill ( ZnuVtxTruth[MCVtxID] );
-                    std::cout << 12 << std::endl;
+//                     std::cout << 12 << std::endl;
                 }
                 
 //                 std::cout << "back" << std::endl;
@@ -994,7 +995,7 @@ void HistoProducerMC()
     MGCosThetaInt->GetXaxis()->SetTitle ( "cos(#theta)" );
     MGCosThetaInt->GetYaxis()->SetTitle ( "Efficiency" );
     LegendEffInt->Draw();
-//     TextSimulation.Draw();
+    TextSimulation.Draw();
     TextSelection.Draw();
     Canvas2bInt->SaveAs ( ( "EffIntMCCosTheta"+SelectionLabel+"."+FileType ).c_str() );
 
