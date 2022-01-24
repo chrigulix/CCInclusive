@@ -12,20 +12,13 @@
 // Root logon function
 void rootlogon()
 {
-    int Font = 132; // Serif, Standard 42
-    
-    double MainTitleSize = 0.08;
+    int Font = 42;
     double LabelSize = 0.04;
     double TitleSize = 0.05;
-    double LegendSize = 0.04;
     
     // Set text font and text size
     gStyle->SetTextFont( Font );
     gStyle->SetTextSize(LabelSize);
-
-    // Set main title size and font
-    gStyle->SetTitleFont(Font,"t");
-    gStyle->SetTitleSize(MainTitleSize,"t");
     
     // Set axis label title fonts
     gStyle->SetLabelFont( Font,"x");
@@ -47,7 +40,8 @@ void rootlogon()
     gStyle->SetTitleOffset(1.,"x");
     gStyle->SetTitleOffset(1.,"y");
 
-    // Supress statistics in canvas
+    // Supress title and statistics in canvas
+    gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);
 
     // Set default color
@@ -73,12 +67,6 @@ void rootlogon()
     gStyle->SetLineWidth(2.);
     gStyle->SetLineStyleString(2,"[12 12]");// postscript dashes
     
-    // Set Legend style
-    gStyle->SetLegendBorderSize(1);
-    gStyle->SetLegendFillColor(0);
-    gStyle->SetLegendFont(Font);
-    gStyle->SetLegendTextSize(LegendSize);
-
     // The following specifies the "MicroBooNE Simulation, Preliminary" text box
     TPaveText* TextSimulation = new TPaveText(0.5,0.92,0.9,0.96,"nbNDC");
     TextSimulation->AddText("MicroBooNE Simulation, Preliminary");
