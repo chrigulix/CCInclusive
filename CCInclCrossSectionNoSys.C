@@ -96,8 +96,7 @@ void CCInclCrossSection()
 
     size_t NumberOfBins = 20;
 
-//     double MCPOT = 2.3e20/191362*92498;
-    double MCPOT = 2.304e20; ///141*62;
+    double MCPOT = 2.3e20/191362*92498;
     double DataPOT = 4.95e19;
     
     double IntegratedFlux;
