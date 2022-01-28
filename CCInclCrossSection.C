@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <cmath>
 
 #include <TChain.h>
 #include <TCanvas.h>
@@ -33,6 +34,7 @@ const double Avogadro = 6.022140857e23; //mol^-1
 const double ArMass = 39.948; // u
 const double NoNucleons = 40;
 const double Density = 1.396; // g/cm^3
+const double Pi = 3.14159265358979323846; // Pi
 
 TSpline3* KEvsRSpline; // Global spline for momentum calculation
 
@@ -98,7 +100,8 @@ void CCInclCrossSection()
 
 //     double MCPOT = 2.3e20/191362*92498;
     double MCPOT = 2.304e20; ///141*62;
-    double DataPOT = 4.95e19;
+    double TruthPOT = 5.451e19;
+    double DataPOT = 4.950e19;
     
     double IntegratedFlux;
 
@@ -207,74 +210,75 @@ void CCInclCrossSection()
 //     ChainVec.back() -> Add((Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_field_v05_08_00_Mod.root").c_str());
     GenLabel.push_back("MC Selection");
     ScalingFactors.push_back(DataPOT/MCPOT);
+    
+    // MC selection categories
+    GenLabel.push_back("MC Cosmics");
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    GenLabel.push_back("MC Beam Backgrounds");
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    GenLabel.push_back("MC True Selection");
+    ScalingFactors.push_back(DataPOT/MCPOT);
 
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add((Folder+"/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
-    GenLabel.push_back("MC Cosmics");
-    ScalingFactors.push_back(DataPOT/MCPOT);
+    GenLabel.push_back("MC Truth");
+    ScalingFactors.push_back(DataPOT/TruthPOT);
     // TODO Wrong label
     
-    // ???
-    GenLabel.push_back("MC Beam Backgrounds");
-    GenLabel.push_back("MC True Selection");
-    GenLabel.push_back("MC Truth");
+    // Efficiency histograms
     GenLabel.push_back("Efficiency");
-    
-    ScalingFactors.push_back(DataPOT/MCPOT);
-    ScalingFactors.push_back(DataPOT/MCPOT);
-    ScalingFactors.push_back(DataPOT/MCPOT);
     ScalingFactors.push_back(1);
 
     // Loop over all generation labels
     for(const auto& Label : GenLabel)
     {
-        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range",NumberOfBins,0,1036.8));
+        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Muon Track Range",NumberOfBins,0,1036.8));
         SelectionTrackRange.back() -> SetStats(0);
         SelectionTrackRange.back() -> GetXaxis() -> SetTitle("Muon track range [cm]");
         SelectionTrackRange.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionTrackRange.back() -> GetYaxis() -> SetTitle("d#sigma/dl [cm^{2}/cm]");
 
-        SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta",NumberOfBins,-1,1));
+        SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"Cosine of #theta-Angle",NumberOfBins,-1,1));
         SelectionCosTheta.back() -> SetStats(0);
         SelectionCosTheta.back() -> GetXaxis() -> SetTitle("Muon cos(#theta)");
         SelectionCosTheta.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionCosTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d(cos#theta) [cm^{2}/cos(#theta)]");
         
-        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta",NumberOfBins,0,3.142));
+        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle",NumberOfBins,0,180));
         SelectionTheta.back() -> SetStats(0);
-        SelectionTheta.back() -> GetXaxis() -> SetTitle("Muon #theta angle [rad]");
+        SelectionTheta.back() -> GetXaxis() -> SetTitle("Muon #theta-Angle [#circ]");
         SelectionTheta.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad]");
 
-        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle",NumberOfBins,-3.142,3.142));
+        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#varphi-Angle",NumberOfBins,-180,180));
         SelectionPhi.back() -> SetStats(0);
-        SelectionPhi.back() -> GetXaxis() -> SetTitle("Muon #phi angle [rad]");
+        SelectionPhi.back() -> GetXaxis() -> SetTitle("Muon #varphi-Angle [#circ]");
         SelectionPhi.back() -> GetYaxis() -> SetTitle("No. of events");
-//         SelectionPhi.back() -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/rad]");
+//         SelectionPhi.back() -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/#circ]");
 
-        SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum",NumberOfBins,0,3));
+        SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Muon Momentum",NumberOfBins,0,3));
         SelectionMomentum.back() -> SetStats(0);
-        SelectionMomentum.back() -> GetXaxis() -> SetTitle("Muon momentum p [GeV/c]");
+        SelectionMomentum.back() -> GetXaxis() -> SetTitle("Muon Momentum p_{#mu} [GeV/c]");
         SelectionMomentum.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
     } // loop over generation label
     
-    // Initialize unsmearing matrices
-    UMatrixTrackRange = new TH2F("Unsmering Matrix Track Range","Unsmering Matrix Track Range",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
+    // Initialize smearing matrices
+    UMatrixTrackRange = new TH2F("Unsmering Matrix Track Range","Smearing Matrix Track Range",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
     UMatrixTrackRange -> GetXaxis() -> SetTitle("Muon track length (truth) [cm]");
     UMatrixTrackRange -> GetYaxis() -> SetTitle("Muon track length (reco) [cm]");
-    UMatrixCosTheta = new TH2F("Unsmering Matrix CosTheta","Unsmering Matrix CosTheta",NumberOfBins,0,-1,NumberOfBins,0,-1);
+    UMatrixCosTheta = new TH2F("Smearing Matrix CosTheta","Smearing Matrix cos(#theta)",NumberOfBins,0,-1,NumberOfBins,0,-1);
     UMatrixCosTheta -> GetXaxis() -> SetTitle("Muon cos(#theta) (truth)");
     UMatrixCosTheta -> GetYaxis() -> SetTitle("Muon cos(#theta) (reco)");
-    UMatrixTheta = new TH2F("Unsmering Matrix Theta","Unsmering Matrix Theta",NumberOfBins,0,3.142,NumberOfBins,0,3.142);
-    UMatrixTheta -> GetXaxis() -> SetTitle("Muon #theta angle (truth) [rad]");
-    UMatrixTheta -> GetYaxis() -> SetTitle("Muon #theta angle (reco) [rad]");
-    UMatrixPhi = new TH2F("Unsmering Matrix Phi","Unsmering Matrix Phi",NumberOfBins,0,-3.142,NumberOfBins,0,3.142);
-    UMatrixPhi -> GetXaxis() -> SetTitle("Muon #phi angle (truth) [rad]");
-    UMatrixPhi -> GetYaxis() -> SetTitle("Muon #phi angle (reco) [rad]");
-    UMatrixMomentum = new TH2F("Unsmering Matrix Momentum","Unsmering Matrix Momentum",NumberOfBins,0,3,NumberOfBins,0,3);
-    UMatrixMomentum -> GetXaxis() -> SetTitle("Muon momentum (truth) [rad]");
-    UMatrixMomentum -> GetYaxis() -> SetTitle("Muon momentum (reco) [rad]");
+    UMatrixTheta = new TH2F("Smearing Matrix Theta","Smearing Matrix Theta",NumberOfBins,0,180,NumberOfBins,0,180);
+    UMatrixTheta -> GetXaxis() -> SetTitle("Muon #theta-Angle (truth) [#circ]");
+    UMatrixTheta -> GetYaxis() -> SetTitle("Muon #theta-Angle (reco) [#circ]");
+    UMatrixPhi = new TH2F("Smearing Matrix Phi","Smearing Matrix Phi",NumberOfBins,0,-180,NumberOfBins,0,180);
+    UMatrixPhi -> GetXaxis() -> SetTitle("Muon #varphi-Angle (truth) [#circ]");
+    UMatrixPhi -> GetYaxis() -> SetTitle("Muon #varphi-Angle (reco) [#circ]");
+    UMatrixMomentum = new TH2F("Smearing Matrix Momentum","Smearing Matrix Momentum",NumberOfBins,0,3,NumberOfBins,0,3);
+    UMatrixMomentum -> GetXaxis() -> SetTitle("Muon Momentum (truth) [#circ]");
+    UMatrixMomentum -> GetYaxis() -> SetTitle("Muon Momentum (reco) [#circ]");
 
     // Loop over all files
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
@@ -359,13 +363,13 @@ void CCInclCrossSection()
             {
                 // Fill histograms as usual
                 SelectionTrackRange.at(file_no) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                SelectionCosTheta.at(file_no) -> Fill(cos(TrackTheta[TrkID]));
-                SelectionTheta.at(file_no) -> Fill(TrackTheta[TrkID]);
-                SelectionPhi.at(file_no) -> Fill(TrackPhi[TrkID]);
+                SelectionCosTheta.at(file_no) -> Fill(std::cos(TrackTheta[TrkID]));
+                SelectionTheta.at(file_no) -> Fill(TrackTheta[TrkID]/Pi*180);
+                SelectionPhi.at(file_no) -> Fill(TrackPhi[TrkID]/Pi*180);
                 SelectionMomentum.at(file_no) -> Fill(GetMomentum(TrackLength[TrkID]));
             }
 
-            // if we are looking at the mc selection file
+            // if we are looking at the MC selection file
             if(file_no == 2)
             {
                 // If event is cosmic background
@@ -374,9 +378,9 @@ void CCInclCrossSection()
                     cosmics++;
                     // Fill cosmic background histograms
                     SelectionTrackRange.at(file_no+1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    SelectionCosTheta.at(file_no+1) -> Fill(cos(TrackTheta[TrkID]));
-                    SelectionTheta.at(file_no+1) -> Fill(TrackTheta[TrkID]);
-                    SelectionPhi.at(file_no+1) -> Fill(TrackPhi[TrkID]);
+                    SelectionCosTheta.at(file_no+1) -> Fill(std::cos(TrackTheta[TrkID]));
+                    SelectionTheta.at(file_no+1) -> Fill(TrackTheta[TrkID]/Pi*180);
+                    SelectionPhi.at(file_no+1) -> Fill(TrackPhi[TrkID]/Pi*180);
                     SelectionMomentum.at(file_no+1) -> Fill(GetMomentum(TrackLength[TrkID]));
                 }
                 // else if event is other background
@@ -385,35 +389,35 @@ void CCInclCrossSection()
                         beambgr++;
                         // Fill beam related background histograms
                         SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                        SelectionCosTheta.at(file_no+2) -> Fill(cos(TrackTheta[TrkID]));
-                        SelectionTheta.at(file_no+2) -> Fill(TrackTheta[TrkID]);
-                        SelectionPhi.at(file_no+2) -> Fill(TrackPhi[TrkID]);
+                        SelectionCosTheta.at(file_no+2) -> Fill(std::cos(TrackTheta[TrkID]));
+                        SelectionTheta.at(file_no+2) -> Fill(TrackTheta[TrkID]/Pi*180);
+                        SelectionPhi.at(file_no+2) -> Fill(TrackPhi[TrkID]/Pi*180);
                         SelectionMomentum.at(file_no+2) -> Fill(GetMomentum(TrackLength[TrkID]));
                 }
                 else // if event is signal and truth
                 {
                     // Fill background histograms
                     SelectionTrackRange.at(file_no+3) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
-                    SelectionCosTheta.at(file_no+3) -> Fill(cos(MCTheta[MCTrkID]));
-                    SelectionTheta.at(file_no+3) -> Fill(MCTheta[MCTrkID]);
-                    SelectionPhi.at(file_no+3) -> Fill(MCPhi[MCTrkID]);
+                    SelectionCosTheta.at(file_no+3) -> Fill(std::cos(MCTheta[MCTrkID]));
+                    SelectionTheta.at(file_no+3) -> Fill(MCTheta[MCTrkID]/Pi*180);
+                    SelectionPhi.at(file_no+3) -> Fill(MCPhi[MCTrkID]/Pi*180);
                     SelectionMomentum.at(file_no+3) -> Fill(TrueLeptonMomentum[MCVtxID]);
                     
                     // Fill unsmearing matrix
                     UMatrixTrackRange -> Fill( CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]),CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]) );
-                    UMatrixCosTheta -> Fill( cos(MCTheta[MCTrkID]),cos(TrackTheta[TrkID]) );
-                    UMatrixTheta -> Fill( MCTheta[MCTrkID],TrackTheta[TrkID] );
-                    UMatrixPhi -> Fill( MCPhi[MCTrkID],TrackPhi[TrkID] );
+                    UMatrixCosTheta -> Fill( std::cos(MCTheta[MCTrkID]),std::cos(TrackTheta[TrkID]) );
+                    UMatrixTheta -> Fill( MCTheta[MCTrkID]/Pi*180,TrackTheta[TrkID]/Pi*180 );
+                    UMatrixPhi -> Fill( MCPhi[MCTrkID]/Pi*180,TrackPhi[TrkID]/Pi*180 );
                     UMatrixMomentum -> Fill( TrueLeptonMomentum[MCVtxID],GetMomentum(TrackLength[TrkID]) );
                 }
-            } // if mc selection file
-            else if(file_no == 3 && MCTrkID > -1 && nuPDGTruth[MCVtxID] == 14)
+            } // if truth selection file
+            else if(file_no == 3 && MCTrkID >= 0 && nuPDGTruth[MCVtxID] == 14)
             {
                 // Fill background histograms
                 SelectionTrackRange.at(file_no+3) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
-                SelectionCosTheta.at(file_no+3) -> Fill(cos(MCTheta[MCTrkID]));
-                SelectionTheta.at(file_no+3) -> Fill(MCTheta[MCTrkID]);
-                SelectionPhi.at(file_no+3) -> Fill(MCPhi[MCTrkID]);
+                SelectionCosTheta.at(file_no+3) -> Fill(std::cos(MCTheta[MCTrkID]));
+                SelectionTheta.at(file_no+3) -> Fill(MCTheta[MCTrkID]/Pi*180);
+                SelectionPhi.at(file_no+3) -> Fill(MCPhi[MCTrkID]/Pi*180);
                 SelectionMomentum.at(file_no+3) -> Fill(TrueLeptonMomentum[MCVtxID]);
             }
             
@@ -438,7 +442,7 @@ void CCInclCrossSection()
         SelectionMomentum.at(hist_no)->Sumw2();
     } // histogram loop
 
-    // loop over scaleing factors 
+    // loop over scaling factors 
     for(unsigned int scale_no = 0; scale_no < ScalingFactors.size(); scale_no++)
     {
         // Scale histograms
@@ -456,9 +460,7 @@ void CCInclCrossSection()
     SelectionPhi.back()->Divide(SelectionPhi.at(5),SelectionPhi.at(6));
     SelectionMomentum.back()->Divide(SelectionMomentum.at(5),SelectionMomentum.at(6));
     
-    
-
-    // Subtract offbeam from onbeam data, overwrite onbeam- and erase offbeam histogram
+    // Subtract offbeam from onbeam data, overwrite onbeam
     AddHistograms(SelectionTrackRange,0,1,-1);
     AddHistograms(SelectionCosTheta,0,1,-1);
     AddHistograms(SelectionTheta,0,1,-1);
@@ -472,25 +474,19 @@ void CCInclCrossSection()
     NormMatrixByRow(UMatrixPhi);
     NormMatrixByRow(UMatrixMomentum);
 
-    // Subtract backgrounds from data
+    // Subtract cosmic background from data and overwrite data histogram
+    AddHistograms(SelectionTrackRange,0,3,-1);
+    AddHistograms(SelectionCosTheta,0,3,-1);
+    AddHistograms(SelectionTheta,0,3,-1);
+    AddHistograms(SelectionPhi,0,3,-1);
+    AddHistograms(SelectionMomentum,0,3,-1);
+    // Subtract beam background from data and overwrite data histogram
     AddHistograms(SelectionTrackRange,0,4,-1);
+    AddHistograms(SelectionPhi,0,4,-1);
     AddHistograms(SelectionCosTheta,0,4,-1);
     AddHistograms(SelectionTheta,0,4,-1);
-    AddHistograms(SelectionPhi,0,4,-1);
     AddHistograms(SelectionMomentum,0,4,-1);
     
-//     AddHistograms(SelectionTrackRange,0,2,-1);
-//     AddHistograms(SelectionPhi,0,2,-1,1);
-//     AddHistograms(SelectionCosTheta,0,2,-1);
-//     AddHistograms(SelectionTheta,0,2,-1);
-//     AddHistograms(SelectionMomentum,0,2,-1);
-    
-    // Subtract backgrounds from mc selection and erase bgr
-    AddHistograms(SelectionTrackRange,2,4,-1);
-    AddHistograms(SelectionPhi,2,4,-1);
-    AddHistograms(SelectionCosTheta,2,4,-1);
-    AddHistograms(SelectionTheta,2,4,-1);
-    AddHistograms(SelectionMomentum,2,4,-1);
     // Subtract cosmic background from mc selection
     AddHistograms(SelectionTrackRange,2,3,-1);
     AddHistograms(SelectionPhi,2,3,-1);
@@ -498,11 +494,18 @@ void CCInclCrossSection()
     AddHistograms(SelectionTheta,2,3,-1);
     AddHistograms(SelectionMomentum,2,3,-1);
     
-    CalcSigEfficiency(SelectionTrackRange);
-    CalcSigEfficiency(SelectionPhi);
-    CalcSigEfficiency(SelectionCosTheta);
-    CalcSigEfficiency(SelectionTheta);
-    CalcSigEfficiency(SelectionMomentum);
+    // Subtract beam backgrounds from mc selection
+    AddHistograms(SelectionTrackRange,2,4,-1);
+    AddHistograms(SelectionPhi,2,4,-1);
+    AddHistograms(SelectionCosTheta,2,4,-1);
+    AddHistograms(SelectionTheta,2,4,-1);
+    AddHistograms(SelectionMomentum,2,4,-1);
+    
+//     CalcSigEfficiency(SelectionTrackRange);
+//     CalcSigEfficiency(SelectionPhi);
+//     CalcSigEfficiency(SelectionCosTheta);
+//     CalcSigEfficiency(SelectionTheta);
+//     CalcSigEfficiency(SelectionMomentum);
     
     // Draw histogram
     TCanvas *Canvas1a = new TCanvas("Range a", "Range", 1400, 1000);
@@ -855,6 +858,7 @@ void MomentumSplinePreparation()
     }
     
     TGraph* KEvsR = new TGraph(29, RangeGramPerCM, KEMeV);
+//     KEvsR -> Draw();
     
     KEvsRSpline = new TSpline3("KEvsRS",KEvsR);
     
@@ -869,7 +873,7 @@ float GetMomentum(float TrackLength)
     TrackLength = KEvsRSpline->Eval(TrackLength);
     
     // Convert kinetic energy to momentum
-    TrackLength = sqrt( pow(TrackLength,2) + 2*TrackLength*MuonMass );
+    TrackLength = std::sqrt( std::pow(TrackLength,2) + 2*TrackLength*MuonMass );
     
     // Convert MeV to GeV
     TrackLength /= 1000;
