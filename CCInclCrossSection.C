@@ -48,7 +48,7 @@ bool inFV(double x, double y, double z);
 void AddHistograms(std::vector<TH1F*>& HistVector, unsigned int First, unsigned int Last, float Weight, bool EraseLast = false);
 
 // Normalize Matrix by row
-void NormMatrixByRow(TH2F* UMatrix);
+void NormMatrixByColumn(TH2F* UMatrix);
 
 // Unsmearing of selected events
 void SelectionUnsmearing(TH2F*& UMatrix, TH1F*& SVector);
@@ -161,6 +161,8 @@ void CCInclCrossSection()
     float MCPhi[5000];
     float MCEnergy[5000];
     
+    double HistogramWeight;
+    
     TH1D* NuMuFlux;
 //     TH1F* NuMuFlux = new TH1F("NuMuFlux","NuMuFlux",NumberOfBins,0,3);
     
@@ -218,12 +220,27 @@ void CCInclCrossSection()
     ScalingFactors.push_back(DataPOT/MCPOT);
     GenLabel.push_back("MC True Selection");
     ScalingFactors.push_back(DataPOT/MCPOT);
-
+    
+    ChainVec.push_back(new TChain("anatree"));
+    ChainVec.back() -> Add((Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_MA_v05_08_00_Mod.root").c_str());
+    GenLabel.push_back("MA Adjusted Selection");
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    
+    ChainVec.push_back(new TChain("anatree"));
+    ChainVec.back() -> Add((Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_TEM_v05_08_00_Mod.root").c_str());
+    GenLabel.push_back("TEM Selection");
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    
+    ChainVec.push_back(new TChain("anatree"));
+    ChainVec.back() -> Add((Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_MEC_v05_08_00_Mod.root").c_str());
+    GenLabel.push_back("MEC Selection");
+    ScalingFactors.push_back(DataPOT/MCPOT);
+    
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add((Folder+"/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
     GenLabel.push_back("MC Truth");
-    ScalingFactors.push_back(DataPOT/TruthPOT);
-    // TODO Wrong label
+    ScalingFactors.push_back(DataPOT/MCPOT);
+//     ScalingFactors.push_back(DataPOT/TruthPOT);
     
     // Efficiency histograms
     GenLabel.push_back("Efficiency");
@@ -286,7 +303,7 @@ void CCInclCrossSection()
         std::cout << "----------------------------------------" << std::endl;
 
         // Reco entities for all files except truth
-        if(file_no < 3)
+        if(file_no < 6)
         {
             ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
             ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
@@ -313,7 +330,7 @@ void CCInclCrossSection()
         if(file_no > 1)
         {
             ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
-            ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
+//             ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
             ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
             ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
             ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
@@ -335,8 +352,23 @@ void CCInclCrossSection()
             ChainVec.at(file_no) -> SetBranchAddress("phi", MCPhi);
             ChainVec.at(file_no) -> SetBranchAddress("Eng", MCEnergy);
             
+            if(file_no == 2 || file_no == 6)
+            {
+                ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
+            }
+            
+            // MA re-weight factor
+            if(file_no == 3)
+            {
+                ChainVec.at(file_no) -> SetBranchAddress("eventWeight_MA", &HistogramWeight);
+            }
+            else
+            {
+                HistogramWeight = 1.0;
+            }
+            
             // Backtracker information only if there are reco objects
-            if(file_no < 3)
+            if(file_no < 6)
             {
                 ChainVec.at(file_no) -> SetBranchAddress("trkorigin_pandoraNu", TrkOrigin);
                 ChainVec.at(file_no) -> SetBranchAddress("trkpidbestplane_pandoraNu", TrkBestPlane);
@@ -349,8 +381,8 @@ void CCInclCrossSection()
         // Loop over all events
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no) -> GetEntries(); tree_index++)
         {
-            // Skip corrupted events
-            if(file_no == 3 && (tree_index == 11602 || tree_index == 11675 || tree_index == 13510 || tree_index == 33027 || tree_index == 33070 || tree_index == 36239 || tree_index == 44078)) continue;
+            // Skip corrupted events in truth file
+            if(file_no == 6 && (tree_index == 11602 || tree_index == 11675 || tree_index == 13510 || tree_index == 33027 || tree_index == 33070 || tree_index == 36239 || tree_index == 44078)) continue;
             
             // Progress indicator
             if(!(tree_index % 1000)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no) -> GetEntries() << std::endl;
@@ -361,7 +393,7 @@ void CCInclCrossSection()
             // if there are reco products
             if(file_no < 3)
             {
-                // Fill histograms as usual
+                // Fill histograms as usual for all files
                 SelectionTrackRange.at(file_no) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                 SelectionCosTheta.at(file_no) -> Fill(std::cos(TrackTheta[TrkID]));
                 SelectionTheta.at(file_no) -> Fill(TrackTheta[TrkID]/Pi*180);
@@ -371,21 +403,26 @@ void CCInclCrossSection()
 
             // if we are looking at the MC selection file
             if(file_no == 2)
-            {
+            {                
                 // If event is cosmic background
                 if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1)
                 {
-                    cosmics++;
-                    // Fill cosmic background histograms
-                    SelectionTrackRange.at(file_no+1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    SelectionCosTheta.at(file_no+1) -> Fill(std::cos(TrackTheta[TrkID]));
-                    SelectionTheta.at(file_no+1) -> Fill(TrackTheta[TrkID]/Pi*180);
-                    SelectionPhi.at(file_no+1) -> Fill(TrackPhi[TrkID]/Pi*180);
-                    SelectionMomentum.at(file_no+1) -> Fill(GetMomentum(TrackLength[TrkID]));
+//                     if(file_no == 2)
+//                     {
+                        cosmics++;
+                        // Fill cosmic background histograms
+                        SelectionTrackRange.at(file_no+1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                        SelectionCosTheta.at(file_no+1) -> Fill(std::cos(TrackTheta[TrkID]));
+                        SelectionTheta.at(file_no+1) -> Fill(TrackTheta[TrkID]/Pi*180);
+                        SelectionPhi.at(file_no+1) -> Fill(TrackPhi[TrkID]/Pi*180);
+                        SelectionMomentum.at(file_no+1) -> Fill(GetMomentum(TrackLength[TrkID]));
+//                     }
                 }
                 // else if event is other background
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && ( nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]) )/* || PDGTruth[MCTrkID] != 13*/)
                 {
+//                     if(file_no == 2)
+//                     {
                         beambgr++;
                         // Fill beam related background histograms
                         SelectionTrackRange.at(file_no+2) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -393,6 +430,7 @@ void CCInclCrossSection()
                         SelectionTheta.at(file_no+2) -> Fill(TrackTheta[TrkID]/Pi*180);
                         SelectionPhi.at(file_no+2) -> Fill(TrackPhi[TrkID]/Pi*180);
                         SelectionMomentum.at(file_no+2) -> Fill(GetMomentum(TrackLength[TrkID]));
+//                     }
                 }
                 else // if event is signal and truth
                 {
@@ -403,15 +441,27 @@ void CCInclCrossSection()
                     SelectionPhi.at(file_no+3) -> Fill(MCPhi[MCTrkID]/Pi*180);
                     SelectionMomentum.at(file_no+3) -> Fill(TrueLeptonMomentum[MCVtxID]);
                     
-                    // Fill unsmearing matrix
-                    UMatrixTrackRange -> Fill( CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]),CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]) );
-                    UMatrixCosTheta -> Fill( std::cos(MCTheta[MCTrkID]),std::cos(TrackTheta[TrkID]) );
-                    UMatrixTheta -> Fill( MCTheta[MCTrkID]/Pi*180,TrackTheta[TrkID]/Pi*180 );
-                    UMatrixPhi -> Fill( MCPhi[MCTrkID]/Pi*180,TrackPhi[TrkID]/Pi*180 );
-                    UMatrixMomentum -> Fill( TrueLeptonMomentum[MCVtxID],GetMomentum(TrackLength[TrkID]) );
+//                     if(file_no == 2)
+//                     {
+                        // Fill smearing matrix
+                        UMatrixTrackRange -> Fill( CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]),CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]) );
+                        UMatrixCosTheta -> Fill( std::cos(MCTheta[MCTrkID]),std::cos(TrackTheta[TrkID]) );
+                        UMatrixTheta -> Fill( MCTheta[MCTrkID]/Pi*180,TrackTheta[TrkID]/Pi*180 );
+                        UMatrixPhi -> Fill( MCPhi[MCTrkID]/Pi*180,TrackPhi[TrkID]/Pi*180 );
+                        UMatrixMomentum -> Fill( TrueLeptonMomentum[MCVtxID],GetMomentum(TrackLength[TrkID]) );
+//                     }
                 }
-            } // if truth selection file
-            else if(file_no == 3 && MCTrkID >= 0 && nuPDGTruth[MCVtxID] == 14)
+            }
+            else if(file_no > 2 && file_no < 6)
+            {
+                SelectionTrackRange.at(file_no) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
+                SelectionCosTheta.at(file_no) -> Fill(std::cos(TrackTheta[TrkID]),HistogramWeight);
+                SelectionTheta.at(file_no) -> Fill(TrackTheta[TrkID]/Pi*180,HistogramWeight);
+                SelectionPhi.at(file_no) -> Fill(TrackPhi[TrkID]/Pi*180,HistogramWeight);
+                SelectionMomentum.at(file_no) -> Fill(GetMomentum(TrackLength[TrkID]),HistogramWeight);
+            }
+            // if truth selection file
+            else if(file_no == 6 && MCTrkID >= 0 && nuPDGTruth[MCVtxID] == 14)
             {
                 // Fill background histograms
                 SelectionTrackRange.at(file_no+3) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
@@ -454,11 +504,11 @@ void CCInclCrossSection()
     } // scaling loop
     
     // Fill efficiency
-    SelectionTrackRange.back()->Divide(SelectionTrackRange.at(5),SelectionTrackRange.at(6));
-    SelectionCosTheta.back()->Divide(SelectionCosTheta.at(5),SelectionCosTheta.at(6));
-    SelectionTheta.back()->Divide(SelectionTheta.at(5),SelectionTheta.at(6));
-    SelectionPhi.back()->Divide(SelectionPhi.at(5),SelectionPhi.at(6));
-    SelectionMomentum.back()->Divide(SelectionMomentum.at(5),SelectionMomentum.at(6));
+    SelectionTrackRange.back()->Divide(SelectionTrackRange.at(5),SelectionTrackRange.at(9));
+    SelectionCosTheta.back()->Divide(SelectionCosTheta.at(5),SelectionCosTheta.at(9));
+    SelectionTheta.back()->Divide(SelectionTheta.at(5),SelectionTheta.at(9));
+    SelectionPhi.back()->Divide(SelectionPhi.at(5),SelectionPhi.at(9));
+    SelectionMomentum.back()->Divide(SelectionMomentum.at(5),SelectionMomentum.at(9));
     
     // Subtract offbeam from onbeam data, overwrite onbeam
     AddHistograms(SelectionTrackRange,0,1,-1);
@@ -468,11 +518,11 @@ void CCInclCrossSection()
     AddHistograms(SelectionMomentum,0,1,-1);
     
     // Normalize matrices by row
-    NormMatrixByRow(UMatrixTrackRange);
-    NormMatrixByRow(UMatrixCosTheta);
-    NormMatrixByRow(UMatrixTheta);
-    NormMatrixByRow(UMatrixPhi);
-    NormMatrixByRow(UMatrixMomentum);
+    NormMatrixByColumn(UMatrixTrackRange);
+    NormMatrixByColumn(UMatrixCosTheta);
+    NormMatrixByColumn(UMatrixTheta);
+    NormMatrixByColumn(UMatrixPhi);
+    NormMatrixByColumn(UMatrixMomentum);
 
     // Subtract cosmic background from data and overwrite data histogram
     AddHistograms(SelectionTrackRange,0,3,-1);
@@ -501,6 +551,48 @@ void CCInclCrossSection()
     AddHistograms(SelectionTheta,2,4,-1);
     AddHistograms(SelectionMomentum,2,4,-1);
     
+    // Subtract cosmic background from mc selection
+    AddHistograms(SelectionTrackRange,6,3,-1);
+    AddHistograms(SelectionPhi,6,3,-1);
+    AddHistograms(SelectionCosTheta,6,3,-1);
+    AddHistograms(SelectionTheta,6,3,-1);
+    AddHistograms(SelectionMomentum,6,3,-1);
+    
+    // Subtract beam backgrounds from mc selection
+    AddHistograms(SelectionTrackRange,6,4,-1);
+    AddHistograms(SelectionPhi,6,4,-1);
+    AddHistograms(SelectionCosTheta,6,4,-1);
+    AddHistograms(SelectionTheta,6,4,-1);
+    AddHistograms(SelectionMomentum,6,4,-1);
+    
+    // Subtract cosmic background from mc selection
+    AddHistograms(SelectionTrackRange,7,3,-1);
+    AddHistograms(SelectionPhi,7,3,-1);
+    AddHistograms(SelectionCosTheta,7,3,-1);
+    AddHistograms(SelectionTheta,7,3,-1);
+    AddHistograms(SelectionMomentum,7,3,-1);
+    
+    // Subtract beam backgrounds from mc selection
+    AddHistograms(SelectionTrackRange,7,4,-1);
+    AddHistograms(SelectionPhi,7,4,-1);
+    AddHistograms(SelectionCosTheta,7,4,-1);
+    AddHistograms(SelectionTheta,7,4,-1);
+    AddHistograms(SelectionMomentum,7,4,-1);
+    
+    // Subtract cosmic background from mc selection
+    AddHistograms(SelectionTrackRange,8,3,-1);
+    AddHistograms(SelectionPhi,8,3,-1);
+    AddHistograms(SelectionCosTheta,8,3,-1);
+    AddHistograms(SelectionTheta,8,3,-1);
+    AddHistograms(SelectionMomentum,8,3,-1);
+    
+    // Subtract beam backgrounds from mc selection
+    AddHistograms(SelectionTrackRange,8,4,-1);
+    AddHistograms(SelectionPhi,8,4,-1);
+    AddHistograms(SelectionCosTheta,8,4,-1);
+    AddHistograms(SelectionTheta,8,4,-1);
+    AddHistograms(SelectionMomentum,8,4,-1);
+    
 //     CalcSigEfficiency(SelectionTrackRange);
 //     CalcSigEfficiency(SelectionPhi);
 //     CalcSigEfficiency(SelectionCosTheta);
@@ -513,7 +605,13 @@ void CCInclCrossSection()
     SelectionTrackRange.at(2)->SetMaximum(1.2*SelectionTrackRange.at(0)->GetBinContent(SelectionTrackRange.at(0)->GetMaximumBin()));
     SelectionTrackRange.at(2)->SetMinimum(0.0);
     SelectionTrackRange.at(2)->SetFillColor(46);
-    SelectionTrackRange.at(2)->Draw("E2");
+    SelectionTrackRange.at(2)->Draw("E2 SAME");
+    SelectionTrackRange.at(6)->SetFillColor(28);
+    SelectionTrackRange.at(6)->Draw("E2 SAME");
+    SelectionTrackRange.at(7)->SetFillColor(30);
+    SelectionTrackRange.at(7)->Draw("E2 SAME");
+    SelectionTrackRange.at(8)->SetFillColor(38);
+    SelectionTrackRange.at(8)->Draw("E2 SAME");
     SelectionTrackRange.at(0)->SetLineWidth(2);
     SelectionTrackRange.at(0)->SetLineColor(1);
     SelectionTrackRange.at(0)->SetMarkerColor(1);
@@ -798,27 +896,27 @@ void AddHistograms(std::vector<TH1F*>& HistVector, unsigned int First, unsigned 
     }
 }
 
-void NormMatrixByRow(TH2F* UMatrix)
+void NormMatrixByColumn(TH2F* UMatrix)
 {
-    // loop over ybins of the unsmearing matrices
-    for(unsigned int ybin = 1; ybin <= UMatrix->GetNbinsY(); ybin++)
+    // loop over xbins of the smearing matrices
+    for(unsigned int xbin = 1; xbin <= UMatrix->GetNbinsX(); xbin++)
     {
         float NormFact = 0;
         
-        // loop over xbins (row)
-        for(unsigned int xbin = 1; xbin <= UMatrix->GetNbinsX(); xbin++)
+        // loop over ybins (column)
+        for(unsigned int ybin = 1; ybin <= UMatrix->GetNbinsY(); ybin++)
         {
-            // Add row entry to normalization factor
+            // Add column entry to normalization factor
             NormFact += UMatrix->GetBinContent(xbin,ybin);
-        } // xbin loop
+        } // ybin loop
         
-        // loop over xbins (row)
-        for(unsigned int xbin = 1; xbin <= UMatrix->GetNbinsX(); xbin++)
+        // loop over xbins (column)
+        for(unsigned int ybin = 1; ybin <= UMatrix->GetNbinsY(); ybin++)
         {
             // Normalize entire row of the matrix
             if(NormFact) UMatrix->SetBinContent(xbin,ybin,UMatrix->GetBinContent(xbin,ybin)/NormFact) ;
-        }// xbin loop
-    }// ybin loop
+        }// ybin loop
+    }// xbin loop
 }
 
 void SelectionUnsmearing(TH2F*& UMatrix, TH1F*& SVector)
