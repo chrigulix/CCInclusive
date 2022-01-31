@@ -163,6 +163,14 @@ void CCInclCrossSection()
     
     double HistogramWeight;
     
+    // Calculating total efficiency
+    unsigned int ExpectedEvents = 0;
+    unsigned int SelectedEvents = 0;
+    
+    // Check MA normalization
+    unsigned int MASamples = 0;
+    double MASamplesCorr = 0;
+    
     TH1D* NuMuFlux;
 //     TH1F* NuMuFlux = new TH1F("NuMuFlux","NuMuFlux",NumberOfBins,0,3);
     
@@ -224,7 +232,7 @@ void CCInclCrossSection()
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add((Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_MA_v05_08_00_Mod.root").c_str());
     GenLabel.push_back("MA Adjusted Selection");
-    ScalingFactors.push_back(DataPOT/MCPOT);
+    ScalingFactors.push_back(DataPOT/MCPOT*6920/6194);
     
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add((Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_TEM_v05_08_00_Mod.root").c_str());
@@ -327,10 +335,10 @@ void CCInclCrossSection()
         }
 
         // MC entities just for non-data files
-        if(file_no > 1)
+        if(file_no == 2 || file_no == 6)
         {
             ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
-//             ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
+            ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
             ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
             ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
             ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
@@ -343,6 +351,7 @@ void CCInclCrossSection()
             ChainVec.at(file_no) -> SetBranchAddress("nuPDG_truth", nuPDGTruth);
             ChainVec.at(file_no) -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
             ChainVec.at(file_no) -> SetBranchAddress("StartPointx", XMCTrackStart);
+            ChainVec.at(file_no) -> SetBranchAddress("StartPointy", YMCTrackStart);
             ChainVec.at(file_no) -> SetBranchAddress("StartPointz", ZMCTrackStart);
             ChainVec.at(file_no) -> SetBranchAddress("EndPointx", XMCTrackEnd);
             ChainVec.at(file_no) -> SetBranchAddress("EndPointy", YMCTrackEnd);
@@ -352,20 +361,10 @@ void CCInclCrossSection()
             ChainVec.at(file_no) -> SetBranchAddress("phi", MCPhi);
             ChainVec.at(file_no) -> SetBranchAddress("Eng", MCEnergy);
             
-            if(file_no == 2 || file_no == 6)
-            {
-                ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
-            }
-            
-            // MA re-weight factor
-            if(file_no == 3)
-            {
-                ChainVec.at(file_no) -> SetBranchAddress("eventWeight_MA", &HistogramWeight);
-            }
-            else
-            {
-                HistogramWeight = 1.0;
-            }
+//             if(file_no == 2 || file_no == 6)
+//             {
+//                 ChainVec.at(file_no) -> SetBranchAddress("MCVertexCand", &MCVtxID);
+//             }
             
             // Backtracker information only if there are reco objects
             if(file_no < 6)
@@ -375,17 +374,27 @@ void CCInclCrossSection()
             }
         }
         
+        // MA re-weight factor
+        if(file_no == 3)
+        {
+            ChainVec.at(file_no) -> SetBranchAddress("eventWeight_MA", &HistogramWeight);
+        }
+        else
+        {
+            HistogramWeight = 1.0;
+        }
+        
         unsigned int cosmics = 0;
         unsigned int beambgr = 0;
         
         // Loop over all events
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no) -> GetEntries(); tree_index++)
         {
-            // Skip corrupted events in truth file
-            if(file_no == 6 && (tree_index == 11602 || tree_index == 11675 || tree_index == 13510 || tree_index == 33027 || tree_index == 33070 || tree_index == 36239 || tree_index == 44078)) continue;
-            
             // Progress indicator
             if(!(tree_index % 1000)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no) -> GetEntries() << std::endl;
+
+            // Skip corrupted events in truth file
+            if(file_no == 6 && (tree_index == 11602 || tree_index == 11675 || tree_index == 13510 || tree_index == 33027 || tree_index == 33070 || tree_index == 36239 || tree_index == 44078)) continue;
 
             // Get tree entry for this event
             ChainVec.at(file_no) -> GetEntry(tree_index);
@@ -450,18 +459,39 @@ void CCInclCrossSection()
                         UMatrixPhi -> Fill( MCPhi[MCTrkID]/Pi*180,TrackPhi[TrkID]/Pi*180 );
                         UMatrixMomentum -> Fill( TrueLeptonMomentum[MCVtxID],GetMomentum(TrackLength[TrkID]) );
 //                     }
+                    SelectedEvents++;
                 }
             }
+//             else if(file_no == 3)
+//             {
+//                 SelectionTrackRange.at(file_no+3) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
+//                 SelectionCosTheta.at(file_no+3) -> Fill(std::cos(TrackTheta[TrkID]),HistogramWeight);
+//                 SelectionTheta.at(file_no+3) -> Fill(TrackTheta[TrkID]/Pi*180,HistogramWeight);
+//                 SelectionPhi.at(file_no+3) -> Fill(TrackPhi[TrkID]/Pi*180,HistogramWeight);
+//                 SelectionMomentum.at(file_no+3) -> Fill(GetMomentum(TrackLength[TrkID]),HistogramWeight);
+//                 
+//                 if(HistogramWeight!=1.0) std::cout << HistogramWeight << std:: endl;
+//                 MASamples++;
+//                 MASamplesCorr += HistogramWeight;
+//             }
             else if(file_no > 2 && file_no < 6)
             {
-                SelectionTrackRange.at(file_no) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
-                SelectionCosTheta.at(file_no) -> Fill(std::cos(TrackTheta[TrkID]),HistogramWeight);
-                SelectionTheta.at(file_no) -> Fill(TrackTheta[TrkID]/Pi*180,HistogramWeight);
-                SelectionPhi.at(file_no) -> Fill(TrackPhi[TrkID]/Pi*180,HistogramWeight);
-                SelectionMomentum.at(file_no) -> Fill(GetMomentum(TrackLength[TrkID]),HistogramWeight);
+                SelectionTrackRange.at(file_no+3) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
+                SelectionCosTheta.at(file_no+3) -> Fill(std::cos(TrackTheta[TrkID]),HistogramWeight);
+                SelectionTheta.at(file_no+3) -> Fill(TrackTheta[TrkID]/Pi*180,HistogramWeight);
+                SelectionPhi.at(file_no+3) -> Fill(TrackPhi[TrkID]/Pi*180,HistogramWeight);
+                SelectionMomentum.at(file_no+3) -> Fill(GetMomentum(TrackLength[TrkID]),HistogramWeight);
+                
+//                 if(HistogramWeight!=1.0) std::cout << HistogramWeight << std:: endl;
+                
+                if(file_no == 3)
+                {
+                    MASamples++;
+                    MASamplesCorr += HistogramWeight;
+                }
             }
             // if truth selection file
-            else if(file_no == 6 && MCTrkID >= 0 && nuPDGTruth[MCVtxID] == 14)
+            else if(file_no == 6 && MCTrkID >= 0 && nuPDGTruth[MCVtxID] == 14 && inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]))
             {
                 // Fill background histograms
                 SelectionTrackRange.at(file_no+3) -> Fill(CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]));
@@ -469,6 +499,8 @@ void CCInclCrossSection()
                 SelectionTheta.at(file_no+3) -> Fill(MCTheta[MCTrkID]/Pi*180);
                 SelectionPhi.at(file_no+3) -> Fill(MCPhi[MCTrkID]/Pi*180);
                 SelectionMomentum.at(file_no+3) -> Fill(TrueLeptonMomentum[MCVtxID]);
+                
+                ExpectedEvents++;
             }
             
         } // Event loop
@@ -476,10 +508,28 @@ void CCInclCrossSection()
         // Reset branch addresses to avoid problems
         ChainVec.at(file_no) -> ResetBranchAddresses();
         
+        // Delete chain from memory (preventing overflow)
+        ChainVec.at(file_no) -> Delete();
+        
         std::cout << "Cosmic count: " << cosmics << std::endl;
         std::cout << "Beam bgr count: " << beambgr << std::endl;
 
     } // file loop
+    
+    std::cout << "---------MA Normalization Check---------" << std::endl;
+    std::cout << "MA count normal \t" << MASamples  <<  std::endl; 
+    std::cout << "MA weighted count \t" << MASamplesCorr << std::endl;
+    std::cout << "MA weight check \t" << SelectionTrackRange.at(6)->Integral() << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    
+    double TotalEfficiency = (double)SelectedEvents/(double)ExpectedEvents;
+    double EfficiencyError = TotalEfficiency*(std::sqrt((double)SelectedEvents)/(double)SelectedEvents +  std::sqrt((double)ExpectedEvents)/(double)ExpectedEvents);
+    
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "Overall selected events \t" << SelectedEvents << " ± " << std::sqrt((double)SelectedEvents)  <<  std::endl; 
+    std::cout << "Overall expected events \t" << ExpectedEvents << " ± " << std::sqrt((double)ExpectedEvents) << std::endl;
+    std::cout << "Overall selection efficiency \t" << TotalEfficiency << " ± " << EfficiencyError << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
     
     // loop over all histograms
     for(unsigned int hist_no = 0; hist_no < GenLabel.size(); hist_no++)
@@ -624,6 +674,12 @@ void CCInclCrossSection()
     SelectionCosTheta.at(2)->SetMinimum(0.0);
     SelectionCosTheta.at(2)->SetFillColor(46);
     SelectionCosTheta.at(2)->Draw("E2");
+    SelectionCosTheta.at(6)->SetFillColor(28);
+    SelectionCosTheta.at(6)->Draw("E2 SAME");
+    SelectionCosTheta.at(7)->SetFillColor(30);
+    SelectionCosTheta.at(7)->Draw("E2 SAME");
+    SelectionCosTheta.at(8)->SetFillColor(38);
+    SelectionCosTheta.at(8)->Draw("E2 SAME");
     SelectionCosTheta.at(0)->SetLineWidth(2);
     SelectionCosTheta.at(0)->SetLineColor(1);
     SelectionCosTheta.at(0)->SetMarkerColor(1);
@@ -636,6 +692,12 @@ void CCInclCrossSection()
     SelectionTheta.at(2)->SetMinimum(0.0);
     SelectionTheta.at(2)->SetFillColor(46);
     SelectionTheta.at(2)->Draw("E2");
+    SelectionTheta.at(6)->SetFillColor(28);
+    SelectionTheta.at(6)->Draw("E2 SAME");
+    SelectionTheta.at(7)->SetFillColor(30);
+    SelectionTheta.at(7)->Draw("E2 SAME");
+    SelectionTheta.at(8)->SetFillColor(38);
+    SelectionTheta.at(8)->Draw("E2 SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->SetMarkerColor(1);
@@ -648,6 +710,12 @@ void CCInclCrossSection()
     SelectionPhi.at(2)->SetMinimum(0.0);
     SelectionPhi.at(2)->SetFillColor(46);
     SelectionPhi.at(2)->Draw("E2");
+    SelectionPhi.at(6)->SetFillColor(28);
+    SelectionPhi.at(6)->Draw("E2 SAME");
+    SelectionPhi.at(7)->SetFillColor(30);
+    SelectionPhi.at(7)->Draw("E2 SAME");
+    SelectionPhi.at(8)->SetFillColor(38);
+    SelectionPhi.at(8)->Draw("E2 SAME");
     SelectionPhi.at(0)->SetLineWidth(2);
     SelectionPhi.at(0)->SetLineColor(1);
     SelectionPhi.at(0)->SetMarkerColor(1);
@@ -660,6 +728,12 @@ void CCInclCrossSection()
     SelectionMomentum.at(2)->SetMinimum(0.0);
     SelectionMomentum.at(2)->SetFillColor(46);
     SelectionMomentum.at(2)->Draw("E2");
+    SelectionMomentum.at(6)->SetFillColor(28);
+    SelectionMomentum.at(6)->Draw("E2 SAME");
+    SelectionMomentum.at(7)->SetFillColor(30);
+    SelectionMomentum.at(7)->Draw("E2 SAME");
+    SelectionMomentum.at(8)->SetFillColor(38);
+    SelectionMomentum.at(8)->Draw("E2 SAME");
     SelectionMomentum.at(0)->SetLineWidth(2);
     SelectionMomentum.at(0)->SetLineColor(1);
     SelectionMomentum.at(0)->SetMarkerColor(1);
