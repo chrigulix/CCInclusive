@@ -125,7 +125,6 @@ void CCInclCrossSection()
 
     int CCNCFlag[10];
     int TruthMode[10];
-    int NuPDGTruth[10];
     float TrueLeptonMomentum[10];
     float NuEnergyTruth[10];
     float nuvtxx_truth[10]; //true vertex x (in cm)
@@ -389,7 +388,7 @@ void CCInclCrossSection()
         }
 
         // MC entities just for non-data files
-        if(file_no > 2)
+        if(file_no > 1)
         {
             ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
             ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
@@ -540,7 +539,7 @@ void CCInclCrossSection()
                     nuOutFV++;
                 }
                 // If Origin is neutrino & CC event & interaction product is anti-nu_mu
-                else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 0 && NuPDGTruth[MCVtxID] == -14)
+                else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 0 && nuPDGTruth[MCVtxID] == -14)
                 {
                     BgrTrackRange.at(file_no-2).at(4) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
                     BgrCosTheta.at(file_no-2).at(4) -> Fill(std::cos(TrackTheta[TrkID]),HistogramWeight);
@@ -551,7 +550,7 @@ void CCInclCrossSection()
                     antinu_mu++;
                 }
                 // else if nu_e like event
-                else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 0 && std::abs(NuPDGTruth[MCVtxID]) == 12)
+                else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 0 && std::abs(nuPDGTruth[MCVtxID]) == 12)
                 {
                     BgrTrackRange.at(file_no-2).at(5) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
                     BgrCosTheta.at(file_no-2).at(5) -> Fill(std::cos(TrackTheta[TrkID]),HistogramWeight);
@@ -576,7 +575,7 @@ void CCInclCrossSection()
                 else
                 {
                     // only if file 2 and nu_mu CC event
-                    if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && NuPDGTruth[MCVtxID] == 14)
+                    if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && nuPDGTruth[MCVtxID] == 14)
                     {
                         // Fill searing matrices
                         UMatrixTrackRange -> Fill( CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]),CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]) );
@@ -609,7 +608,7 @@ void CCInclCrossSection()
                 std::cout << "----------------------------------------" << std::endl;
                 std::cout << "!----Background Sanity Check Failed----!" << std::endl;
                 std::cout << "----------------------------------------" << std::endl;
-                std::cout << "File: " << file_no << ", Event: " << tree_index << std::endl;
+                std::cout << "File: " << file_no << ", Event: " << tree_index << "" << std::endl;
             }
 
 
@@ -715,6 +714,12 @@ void CCInclCrossSection()
         std::cout << "nu_e like: \t" << nu_e << " ± " << nu_eErr << std::endl;
         std::cout << "NC event: \t" << nuNC << " ± " << nuNCErr << std::endl;
         std::cout << "----------------------------------------" << std::endl;
+        
+        // Check if backgrounds add up correctly 
+        if(allbgr == cosmic + dirt + nuOutFV + antinu_mu + nu_e + nuNC)
+        {
+            std::cout << "WARNING: There is a difference in background sums by " << allbgr - cosmic - dirt - nuOutFV - antinu_mu - nu_e - nuNC << " events!"
+        }
 
         // Reset branch addresses to avoid problems
         ChainVec.at(file_no) -> ResetBranchAddresses();
