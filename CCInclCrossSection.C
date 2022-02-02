@@ -492,6 +492,13 @@ void CCInclCrossSection()
                         }
                     }
                 }
+                
+                // Count Histogram weight
+                if(file_no == 3)
+                {
+                    MASamples++;
+                    MASamplesCorr += HistogramWeight;
+                }
 
                 // If track origin isn't a neutrino or not nu_mu or an NC event or not in FV it is background
                 if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1 || nuPDGTruth[MCVtxID] != 14 || CCNCFlag[MCVtxID] == 1 || !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]))
