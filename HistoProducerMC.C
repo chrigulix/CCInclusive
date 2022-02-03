@@ -48,7 +48,7 @@ void HistoProducerMC()
     TGaxis::SetMaxDigits ( 4 );
     TGaxis::SetExponentOffset( -0.048, 0.005, "y" );
 
-    std::string Folder = "CCInclusiveNote";
+    std::string Folder = "/home/christoph/anatrees/CCInclusiveNote";
 //     std::string Folder = "ThesisSelection";
 
     //     std::string TrackProdName="pandoraNuKHit";
@@ -239,10 +239,10 @@ void HistoProducerMC()
     std::vector<unsigned int> ColorMap = {30,38,42};
 
     ChainVec.push_back ( new TChain ( "anatree" ) );
-    ChainVec.back() -> Add ( ("/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str() );
+    ChainVec.back() -> Add ( (Folder+"/Hist_MC_Truth_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str() );
 
     ChainVec.push_back ( new TChain ( "anatree" ) );
-    ChainVec.back() -> Add( ( "/lheppc46/data/uBData/anatrees/"+Folder+"/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root" ).c_str() );
+    ChainVec.back() -> Add( (Folder+"/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root").c_str() );
 
     for ( const auto& Label : GenLabel )
     {

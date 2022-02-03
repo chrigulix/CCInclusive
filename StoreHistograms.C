@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <array>
 #include <fstream>
+#include <sstream>
 #include <functional>
 #include <memory>
 #include <string>
@@ -38,6 +39,9 @@ const double Pi = 3.14159265358979323846; // Pi
 
 TSpline3* KEvsRSpline; // Global spline for momentum calculation
 
+// Read Beam systematics for nu_mu, anti-nu_mu, nu_e, and anti-nu_e into a TGraph
+std::vector<TGraph*> ReadFluxSystematics(const std::string &PathToFile);
+
 // Function which calculates the distance between two points
 float CalcRange(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2);
 
@@ -72,10 +76,6 @@ void StoreHistograms()
 
     // Data input file vector
     std::vector<TChain*> ChainVec;
-    
-    // Add these containers to root's data dictionary (DOESN'T WORK!)
-    gInterpreter->GenerateDictionary("std::vector<TH1F*>", "vector");
-    gInterpreter->GenerateDictionary("std::vector<std::vector<TH1F*> >", "vector");
 
     // Selection Histogram Vectors
     std::vector<TH1F*> SelectionTrackRange;
@@ -98,6 +98,27 @@ void StoreHistograms()
     std::vector<std::vector<TH1F*>> BgrXVtxPosition;
     std::vector<std::vector<TH1F*>> BgrYVtxPosition;
     std::vector<std::vector<TH1F*>> BgrZVtxPosition;
+
+    // Efficiencies
+    std::vector<TEfficiency*> EffTrackRange;
+    std::vector<TEfficiency*> EffCosTheta;
+    std::vector<TEfficiency*> EffTheta;
+    std::vector<TEfficiency*> EffPhi;
+    std::vector<TEfficiency*> EffMomentum;
+    std::vector<TEfficiency*> EffXVtxPosition;
+    std::vector<TEfficiency*> EffYVtxPosition;
+    std::vector<TEfficiency*> EffZVtxPosition;
+
+    // Purities
+    std::vector<TEfficiency*> PurTrackRange;
+    std::vector<TEfficiency*> PurCosTheta;
+    std::vector<TEfficiency*> PurTheta;
+    std::vector<TEfficiency*> PurPhi;
+    std::vector<TEfficiency*> PurMomentum;
+    std::vector<TEfficiency*> PurTrackLength;
+    std::vector<TEfficiency*> PurXVtxPosition;
+    std::vector<TEfficiency*> PurYVtxPosition;
+    std::vector<TEfficiency*> PurZVtxPosition;
 
     // Unsemaring Matrix
     TH2F* UMatrixTrackRange;
@@ -183,7 +204,7 @@ void StoreHistograms()
     float MCEnergy[5000];
 
     double HistogramWeight;
-    
+
     // Calculating total efficiency
     unsigned int ExpectedEvents = 0;
     unsigned int SelectedEvents = 0;
@@ -203,8 +224,12 @@ void StoreHistograms()
     IntegratedFlux = NuMuFlux->Integral()*4.95e19/1e20;
 
 //     std::cout << TempNuMuFlux->Integral(5,NuMuFlux->GetNbinsX())*4.95e19/1e20 << std::endl;
-    std::cout << IntegratedFlux << std::endl;
-
+    std::cout << "Integrated flux corresponding to 4.95e19 POT: " << IntegratedFlux << " cm^-2 s^-1"<< std::endl;
+    
+    std::string FluxSysFile = "bnb_sys_error_uboone.txt";
+    // Read beam systematics
+    std::vector<TGraph*> Test = ReadFluxSystematics(FluxSysFile);
+    
 //     TempNuMuFlux->Rebin(3);
 
 //     for(unsigned int bin_no = 1; bin_no <= NuMuFlux->GetNbinsX(); bin_no++)
@@ -274,61 +299,58 @@ void StoreHistograms()
     ScalingFactors.push_back(DataPOT/MCPOT);
 //     ScalingFactors.push_back(DataPOT/TruthPOT);
 
-    // Efficiency histograms
-
-
 //     GenLabel.push_back("Efficiency");
 //     ScalingFactors.push_back(1);
 
     // Loop over all generation labels
     for(const auto& Label : GenLabel)
     {
-        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Muon Track Range",NumberOfBins,0,1036.8));
+        SelectionTrackRange.push_back(new TH1F(("Track Range "+Label).c_str(),"Muon Track Range",NumberOfBins,0,1036.8));
         SelectionTrackRange.back() -> SetStats(0);
         SelectionTrackRange.back() -> GetXaxis() -> SetTitle("Muon track range [cm]");
         SelectionTrackRange.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionTrackRange.back() -> GetYaxis() -> SetTitle("d#sigma/dl [cm^{2}/cm]");
 
-        SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"Cosine of #theta-Angle",NumberOfBins,-1,1));
+        SelectionCosTheta.push_back(new TH1F(("cos#theta "+Label).c_str(),"Cosine of #theta-Angle",NumberOfBins,-1,1));
         SelectionCosTheta.back() -> SetStats(0);
         SelectionCosTheta.back() -> GetXaxis() -> SetTitle("Muon cos(#theta)");
         SelectionCosTheta.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionCosTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d(cos#theta) [cm^{2}/cos(#theta)]");
 
-        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle",NumberOfBins,0,180));
+        SelectionTheta.push_back(new TH1F(("#theta-Angle "+Label).c_str(),"#theta-Angle",NumberOfBins,0,180));
         SelectionTheta.back() -> SetStats(0);
         SelectionTheta.back() -> GetXaxis() -> SetTitle("Muon #theta-Angle [#circ]");
         SelectionTheta.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionTheta.back() -> GetYaxis() -> SetTitle("d#sigma/d#theta [cm^{2}/rad]");
 
-        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#varphi-Angle",NumberOfBins,-180,180));
+        SelectionPhi.push_back(new TH1F(("#phi-Angle "+Label).c_str(),"#varphi-Angle",NumberOfBins,-180,180));
         SelectionPhi.back() -> SetStats(0);
         SelectionPhi.back() -> GetXaxis() -> SetTitle("Muon #varphi-Angle [#circ]");
         SelectionPhi.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionPhi.back() -> GetYaxis() -> SetTitle("d#sigma/d#phi [cm^{2}/#circ]");
 
-        SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Muon Momentum",NumberOfBins,0,3));
+        SelectionMomentum.push_back(new TH1F(("Momentum "+Label).c_str(),"Muon Momentum",NumberOfBins,0,3));
         SelectionMomentum.back() -> SetStats(0);
         SelectionMomentum.back() -> GetXaxis() -> SetTitle("Muon Momentum p_{#mu} [GeV/c]");
         SelectionMomentum.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
 
-        SelectionTrackLength.push_back(new TH1F(("Track Length"+Label).c_str(),"Candidate Track Length",NumberOfBins,0,1036.8));
+        SelectionTrackLength.push_back(new TH1F(("Track Length "+Label).c_str(),"Candidate Track Length",NumberOfBins,0,1036.8));
         SelectionTrackLength.back() -> SetStats(0);
         SelectionTrackLength.back() -> GetXaxis() -> SetTitle("Muon Track Length l_ [cm]");
         SelectionTrackLength.back() -> GetYaxis() -> SetTitle("No. of events");
 
-        SelXVtxPosition.push_back(new TH1F(("Vertex X position"+Label).c_str(),"Vertex Position in X",NumberOfBins,0,256.35));
+        SelXVtxPosition.push_back(new TH1F(("Vertex X position "+Label).c_str(),"Vertex Position in X",NumberOfBins,0,256.35));
         SelXVtxPosition.back() -> SetStats(0);
         SelXVtxPosition.back() -> GetXaxis() -> SetTitle("x-coordinate [cm]");
         SelXVtxPosition.back() -> GetYaxis() -> SetTitle("No. of events");
 
-        SelYVtxPosition.push_back(new TH1F(("Vertex Y position"+Label).c_str(),"Vertex Position in Y",NumberOfBins,-233*0.5,233*0.5));
+        SelYVtxPosition.push_back(new TH1F(("Vertex Y position "+Label).c_str(),"Vertex Position in Y",NumberOfBins,-233*0.5,233*0.5));
         SelYVtxPosition.back() -> SetStats(0);
         SelYVtxPosition.back() -> GetXaxis() -> SetTitle("y-coordinate [cm]");
         SelYVtxPosition.back() -> GetYaxis() -> SetTitle("No. of events");
 
-        SelZVtxPosition.push_back(new TH1F(("Vertex Z position"+Label).c_str(),"Vertex Position in Z",NumberOfBins,0,1036.8));
+        SelZVtxPosition.push_back(new TH1F(("Vertex Z position "+Label).c_str(),"Vertex Position in Z",NumberOfBins,0,1036.8));
         SelZVtxPosition.back() -> SetStats(0);
         SelZVtxPosition.back() -> GetXaxis() -> SetTitle("z-coordinate [cm]");
         SelZVtxPosition.back() -> GetYaxis() -> SetTitle("No. of events");
@@ -382,6 +404,7 @@ void StoreHistograms()
     BgrLabel.push_back("anti nu_mu");
     BgrLabel.push_back("n_e-like");
     BgrLabel.push_back("nu_NC");
+    BgrLabel.push_back("PureSelected");
 
     // Initialize vector
     BgrTrackRange.resize(4);
@@ -398,15 +421,15 @@ void StoreHistograms()
     {
         for(auto Label : BgrLabel)
         {
-            BgrTrackRange.at(file_no).push_back(new TH1F((Label+"Background_Range_"+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,1036.8));
-            BgrCosTheta.at(file_no).push_back(new TH1F((Label+"Background_cos#theta_"+std::to_string(file_no)).c_str(),"cos#theta",NumberOfBins,-1,1));
-            BgrTheta.at(file_no).push_back(new TH1F((Label+"Background_#theta_"+std::to_string(file_no)).c_str(),"#theta",NumberOfBins,0,180));
-            BgrPhi.at(file_no).push_back(new TH1F((Label+"Background_#phi_"+std::to_string(file_no)).c_str(),"#phi",NumberOfBins,-180,180));
-            BgrMomentum.at(file_no).push_back(new TH1F((Label+"Background_Momentum_"+std::to_string(file_no)).c_str(),"Momentum",NumberOfBins,0,3));
-            BgrTrackLength.at(file_no).push_back(new TH1F((Label+"Background_Length_"+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,1036.8));
-            BgrXVtxPosition.at(file_no).push_back(new TH1F((Label+"Background_XVtx_"+std::to_string(file_no)).c_str(),"XVtx",NumberOfBins,0,256.35));
-            BgrYVtxPosition.at(file_no).push_back(new TH1F((Label+"Background_YVtx_"+std::to_string(file_no)).c_str(),"YVtx",NumberOfBins,-233*0.5,233*0.5));
-            BgrZVtxPosition.at(file_no).push_back(new TH1F((Label+"Background_ZVtx_"+std::to_string(file_no)).c_str(),"ZVtx",NumberOfBins,0,1036.8));
+            BgrTrackRange.at(file_no).push_back(new TH1F((Label+"Background Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,1036.8));
+            BgrCosTheta.at(file_no).push_back(new TH1F((Label+"Background cos#theta "+std::to_string(file_no)).c_str(),"cos#theta",NumberOfBins,-1,1));
+            BgrTheta.at(file_no).push_back(new TH1F((Label+"Background #theta "+std::to_string(file_no)).c_str(),"#theta",NumberOfBins,0,180));
+            BgrPhi.at(file_no).push_back(new TH1F((Label+"Background #phi "+std::to_string(file_no)).c_str(),"#phi",NumberOfBins,-180,180));
+            BgrMomentum.at(file_no).push_back(new TH1F((Label+"Background Momentum "+std::to_string(file_no)).c_str(),"Momentum",NumberOfBins,0,3));
+            BgrTrackLength.at(file_no).push_back(new TH1F((Label+"Background Length "+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,1036.8));
+            BgrXVtxPosition.at(file_no).push_back(new TH1F((Label+"Background XVtx "+std::to_string(file_no)).c_str(),"XVtx",NumberOfBins,0,256.35));
+            BgrYVtxPosition.at(file_no).push_back(new TH1F((Label+"Background YVtx "+std::to_string(file_no)).c_str(),"YVtx",NumberOfBins,-233*0.5,233*0.5));
+            BgrZVtxPosition.at(file_no).push_back(new TH1F((Label+"Background ZVtx "+std::to_string(file_no)).c_str(),"ZVtx",NumberOfBins,0,1036.8));
 
             BgrTrackRange.at(file_no).back() -> Sumw2();
             BgrCosTheta.at(file_no).back() -> Sumw2();
@@ -563,7 +586,7 @@ void StoreHistograms()
                         }
                     }
                 }
-                
+
                 // Count Histogram weight
                 if(file_no == 3)
                 {
@@ -680,8 +703,19 @@ void StoreHistograms()
                 // everything that is not background
                 else
                 {
+                    // This background vector entry contains the pure signal, without background
+                    BgrTrackRange.at(file_no-2).at(7) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
+                    BgrCosTheta.at(file_no-2).at(7) -> Fill(std::cos(TrackTheta[TrkID]),HistogramWeight);
+                    BgrTheta.at(file_no-2).at(7) -> Fill(TrackTheta[TrkID]/Pi*180,HistogramWeight);
+                    BgrPhi.at(file_no-2).at(7) -> Fill(TrackPhi[TrkID]/Pi*180,HistogramWeight);
+                    BgrMomentum.at(file_no-2).at(7) -> Fill(GetMomentum(TrackLength[TrkID]),HistogramWeight);
+                    BgrTrackLength.at(file_no-2).at(7)-> Fill(TrackLength[TrkID],HistogramWeight);;
+                    BgrXVtxPosition.at(file_no-2).at(7) -> Fill(XVertexPosition[VtxID],HistogramWeight);
+                    BgrYVtxPosition.at(file_no-2).at(7) -> Fill(YVertexPosition[VtxID],HistogramWeight);
+                    BgrZVtxPosition.at(file_no-2).at(7) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
+
                     // only if file 2 and nu_mu CC event
-                    if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && nuPDGTruth[MCVtxID] == 14)
+                    if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && nuPDGTruth[MCVtxID] == 14 && inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]))
                     {
                         // Fill searing matrices
                         UMatrixTrackRange -> Fill( CalcRange(XMCTrackStart[MCTrkID],YMCTrackStart[MCTrkID],ZMCTrackStart[MCTrkID],XMCTrackEnd[MCTrkID],YMCTrackEnd[MCTrkID],ZMCTrackEnd[MCTrkID]), CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]) );
@@ -723,6 +757,20 @@ void StoreHistograms()
                 std::cout << "File: " << file_no << ", Event: " << tree_index << ", Selected: " << SelectedEvents << ", Selection Check: " << CheckIfSane << std::endl;
             }
         } // Event loop
+
+        // Fill purities
+        if(file_no > 1 && file_no < 6)
+        {
+            PurTrackRange.push_back( new TEfficiency(*BgrTrackRange.at(file_no-2).back(), *SelectionTrackRange.at(file_no)) );
+            PurCosTheta.push_back( new TEfficiency(*BgrCosTheta.at(file_no-2).back(), *SelectionCosTheta.at(file_no)) );
+            PurTheta.push_back( new TEfficiency(*BgrTheta.at(file_no-2).back(), *SelectionTheta.at(file_no)) );
+            PurPhi.push_back( new TEfficiency(*BgrPhi.at(file_no-2).back(), *SelectionPhi.at(file_no)) );
+            PurMomentum.push_back( new TEfficiency(*BgrMomentum.at(file_no-2).back(), *SelectionMomentum.at(file_no)) );
+            PurTrackLength.push_back( new TEfficiency(*BgrTrackLength.at(file_no-2).back(), *SelectionTrackRange.at(file_no)) );
+            PurXVtxPosition.push_back( new TEfficiency(*BgrXVtxPosition.at(file_no-2).back(), *SelXVtxPosition.at(file_no)) );
+            PurYVtxPosition.push_back( new TEfficiency(*BgrYVtxPosition.at(file_no-2).back(), *SelYVtxPosition.at(file_no)) );
+            PurZVtxPosition.push_back( new TEfficiency(*BgrZVtxPosition.at(file_no-2).back(), *SelZVtxPosition.at(file_no)) );
+        }
 
         // Calculate Background errors
         double allbgrErr = std::sqrt(allbgr);
@@ -773,6 +821,23 @@ void StoreHistograms()
     std::cout << "Overall selection efficiency \t" << TotalEfficiency << " ± " << EfficiencyError << std::endl;
     std::cout << "----------------------------------------" << std::endl;
 
+    // Fill efficiency (could be a loop if there are more of them)
+    {
+        unsigned int file_no = 2;
+
+        // Efficiencies
+        EffTrackRange.push_back( new TEfficiency(*BgrTrackRange.at(file_no-2).back(), *SelectionTrackRange.back()) );
+        EffCosTheta.push_back( new TEfficiency(*BgrCosTheta.at(file_no-2).back(), *SelectionCosTheta.back()) );
+        EffTheta.push_back( new TEfficiency(*BgrTheta.at(file_no-2).back(), *SelectionTheta.back()) );
+        EffPhi.push_back( new TEfficiency(*BgrPhi.at(file_no-2).back(), *SelectionPhi.back()) );
+        EffMomentum.push_back( new TEfficiency(*BgrMomentum.at(file_no-2).back(), *SelectionMomentum.back()) );
+        EffXVtxPosition.push_back( new TEfficiency(*BgrXVtxPosition.at(file_no-2).back(), *SelXVtxPosition.back()) );
+        EffYVtxPosition.push_back( new TEfficiency(*BgrYVtxPosition.at(file_no-2).back(), *SelYVtxPosition.back()) );
+        EffZVtxPosition.push_back( new TEfficiency(*BgrZVtxPosition.at(file_no-2).back(), *SelZVtxPosition.back()) );
+
+        // Maybe more?
+    }
+
     // loop over all histograms
 
     // Fill efficiency
@@ -799,26 +864,63 @@ void StoreHistograms()
     OutputFile->cd();
 
     // TODO Find an other way to put the histograms in file!
-    
-    OutputFile->WriteObject(&SelectionTrackRange, "SelectionTrackRange");
-    OutputFile->WriteObject(&SelectionCosTheta, "SelectionCosTheta");
-    OutputFile->WriteObject(&SelectionTheta, "SelectionTheta");
-    OutputFile->WriteObject(&SelectionPhi, "SelectionPhi");
-    OutputFile->WriteObject(&SelectionMomentum, "SelectionMomentum");
-    OutputFile->WriteObject(&SelectionTrackLength, "SelectionTrackLength");
-    OutputFile->WriteObject(&SelXVtxPosition, "SelXVtxPosition");
-    OutputFile->WriteObject(&SelYVtxPosition, "SelYVtxPosition");
-    OutputFile->WriteObject(&SelZVtxPosition, "SelZVtxPosition");
 
-    OutputFile->WriteObject(&BgrTrackRange, "BgrTrackRange");
-    OutputFile->WriteObject(&BgrCosTheta, "BgrCosTheta");
-    OutputFile->WriteObject(&BgrTheta, "BgrTheta");
-    OutputFile->WriteObject(&BgrPhi, "BgrPhi");
-    OutputFile->WriteObject(&BgrMomentum, "BgrMomentum");
-    OutputFile->WriteObject(&BgrTrackLength, "BgrTrackLength");
-    OutputFile->WriteObject(&BgrXVtxPosition, "BgrXVtxPosition");
-    OutputFile->WriteObject(&BgrYVtxPosition, "BgrYVtxPosition");
-    OutputFile->WriteObject(&BgrZVtxPosition, "BgrZVtxPosition");
+    for(unsigned int histo_no = 0; histo_no < GenLabel.size(); histo_no++)
+    {
+        OutputFile->WriteObject(SelectionTrackRange.at(histo_no), SelectionTrackRange.at(histo_no)->GetName());
+        OutputFile->WriteObject(SelectionCosTheta.at(histo_no), SelectionCosTheta.at(histo_no)->GetName());
+        OutputFile->WriteObject(SelectionTheta.at(histo_no), SelectionTheta.at(histo_no)->GetName());
+        OutputFile->WriteObject(SelectionPhi.at(histo_no), SelectionPhi.at(histo_no)->GetName());
+        OutputFile->WriteObject(SelectionMomentum.at(histo_no), SelectionMomentum.at(histo_no)->GetName());
+        OutputFile->WriteObject(SelectionTrackLength.at(histo_no), SelectionTrackLength.at(histo_no)->GetName());
+        OutputFile->WriteObject(SelXVtxPosition.at(histo_no), SelXVtxPosition.at(histo_no)->GetName());
+        OutputFile->WriteObject(SelYVtxPosition.at(histo_no), SelYVtxPosition.at(histo_no)->GetName());
+        OutputFile->WriteObject(SelZVtxPosition.at(histo_no), SelZVtxPosition.at(histo_no)->GetName());
+    }
+
+    for(unsigned int file_no = 1; file_no < BgrTrackRange.size(); file_no++)
+    {
+        for(unsigned int histo_no = 1; histo_no < BgrLabel.size(); histo_no++)
+        {
+            OutputFile->WriteObject(BgrTrackRange.at(file_no).at(histo_no), BgrTrackRange.at(file_no).at(histo_no)->GetName());
+            OutputFile->WriteObject(BgrCosTheta.at(file_no).at(histo_no), BgrCosTheta.at(file_no).at(histo_no)->GetName());
+            OutputFile->WriteObject(BgrTheta.at(file_no).at(histo_no), BgrTheta.at(file_no).at(histo_no)->GetName());
+            OutputFile->WriteObject(BgrPhi.at(file_no).at(histo_no), BgrPhi.at(file_no).at(histo_no)->GetName());
+            OutputFile->WriteObject(BgrMomentum.at(file_no).at(histo_no), BgrMomentum.at(file_no).at(histo_no)->GetName());
+            OutputFile->WriteObject(BgrTrackLength.at(file_no).at(histo_no), BgrTrackLength.at(file_no).at(histo_no)->GetName());
+            OutputFile->WriteObject(BgrXVtxPosition.at(file_no).at(histo_no), BgrXVtxPosition.at(file_no).at(histo_no)->GetName());
+            OutputFile->WriteObject(BgrYVtxPosition.at(file_no).at(histo_no), BgrYVtxPosition.at(file_no).at(histo_no)->GetName());
+            OutputFile->WriteObject(BgrZVtxPosition.at(file_no).at(histo_no), BgrZVtxPosition.at(file_no).at(histo_no)->GetName());
+        }
+
+    }
+
+    // Write efficiency (-ies)
+    for(unsigned int eff_no = 0; eff_no < EffTrackRange.size(); eff_no++)
+    {
+        OutputFile->WriteObject(EffTrackRange.at(eff_no), ("EffTrackRange "+ std::to_string(eff_no)).c_str());
+        OutputFile->WriteObject(EffCosTheta.at(eff_no), ("EffCosTheta "+ std::to_string(eff_no)).c_str());
+        OutputFile->WriteObject(EffTheta.at(eff_no), ("EffTheta "+ std::to_string(eff_no)).c_str());
+        OutputFile->WriteObject(EffPhi.at(eff_no), ("EffPhi "+ std::to_string(eff_no)).c_str());
+        OutputFile->WriteObject(EffMomentum.at(eff_no), ("EffMomentum "+ std::to_string(eff_no)).c_str());
+        OutputFile->WriteObject(EffXVtxPosition.at(eff_no), ("EffXVtxPosition "+ std::to_string(eff_no)).c_str());
+        OutputFile->WriteObject(EffYVtxPosition.at(eff_no), ("EffYVtxPosition "+ std::to_string(eff_no)).c_str());
+        OutputFile->WriteObject(EffZVtxPosition.at(eff_no), ("EffZVtxPosition "+ std::to_string(eff_no)).c_str());
+    }
+
+    // Write purities
+    for(unsigned int pur_no = 0; pur_no < PurTrackRange.size(); pur_no++)
+    {
+        OutputFile->WriteObject(PurTrackRange.at(pur_no),("PurTrackRange "+ std::to_string(pur_no)).c_str());
+        OutputFile->WriteObject(PurCosTheta.at(pur_no),("PurCosTheta "+ std::to_string(pur_no)).c_str());
+        OutputFile->WriteObject(PurTheta.at(pur_no),("PurTheta "+ std::to_string(pur_no)).c_str());
+        OutputFile->WriteObject(PurPhi.at(pur_no),("PurPhi "+ std::to_string(pur_no)).c_str());
+        OutputFile->WriteObject(PurMomentum.at(pur_no),("PurMomentum "+ std::to_string(pur_no)).c_str());
+        OutputFile->WriteObject(PurTrackLength.at(pur_no),("PurTrackLength "+ std::to_string(pur_no)).c_str());
+        OutputFile->WriteObject(PurXVtxPosition.at(pur_no),("PurXVtxPosition "+ std::to_string(pur_no)).c_str());
+        OutputFile->WriteObject(PurYVtxPosition.at(pur_no),("PurYVtxPosition "+ std::to_string(pur_no)).c_str());
+        OutputFile->WriteObject(PurZVtxPosition.at(pur_no),("PurZVtxPosition "+ std::to_string(pur_no)).c_str());
+    }
 
     OutputFile->WriteObject(UMatrixTrackRange, "UMatrixTrackRange");
     OutputFile->WriteObject(UMatrixCosTheta, "UMatrixCosTheta");
@@ -832,9 +934,57 @@ void StoreHistograms()
     OutputFile->Close();
 }
 
+std::vector<TGraph*> ReadFluxSystematics(const std::string &PathToFile)
+{
+    std::ifstream InputFile(PathToFile);
+    
+    // Readout variables
+    double Energy;
+    double nu_mu;
+    double nu_mubar;
+    double nu_e;
+    double nu_ebar;
+    std::string Line;
+    
+    // Initialize data vectors
+    std::vector<double> EnergyData;
+    std::vector<double> nu_muData;
+    std::vector<double> nu_mubarData;
+    std::vector<double> nu_eData;
+    std::vector<double> nu_ebarData;
+    
+    // Skip header
+    std::getline(InputFile,Line);
+    
+    // Read variables
+    while(InputFile >> Energy >> nu_mu >> nu_mubar >> nu_e >> nu_ebar)
+    {
+        EnergyData.push_back(Energy);
+        nu_muData.push_back(nu_mu);
+        nu_mubarData.push_back(nu_mubar);
+        nu_eData.push_back(nu_e);
+        nu_ebarData.push_back(nu_ebar);
+    }
+    
+    // Convert, because root sucks
+    double* EnergyEntry = EnergyData.data();
+    double* nu_muEntry =nu_muData.data();
+    double* nu_mubarEntry = nu_mubarData.data();
+    double* nu_eEntry = nu_eData.data();
+    double* nu_ebarEntry =nu_ebarData.data();
+    
+    std::vector<TGraph*> Graphs;
+    Graphs.push_back(new TGraph(EnergyData.size(),EnergyEntry,nu_muEntry));
+    Graphs.push_back(new TGraph(EnergyData.size(),EnergyEntry,nu_mubarEntry));
+    Graphs.push_back(new TGraph(EnergyData.size(),EnergyEntry,nu_eEntry));
+    Graphs.push_back(new TGraph(EnergyData.size(),EnergyEntry,nu_ebarEntry));
+    
+    return Graphs;
+}
+
 float CalcRange(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2)
 {
-    return sqrt(pow(x_1-x_2, 2) + pow(y_1-y_2, 2) + pow(z_1-z_2, 2));
+    return std::sqrt(pow(x_1-x_2, 2) + pow(y_1-y_2, 2) + pow(z_1-z_2, 2));
 }
 
 bool inFV(double x, double y, double z)
