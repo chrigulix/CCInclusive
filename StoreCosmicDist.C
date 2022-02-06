@@ -198,6 +198,9 @@ void StoreCosmicDist()
         SelYVtxPosition.back()->Sumw2();
         SelZVtxPosition.back()->Sumw2();
     }
+    
+    std::vector<unsigned long int> NumberOfTracks;
+    std::vector<unsigned long int> NumberOfVertices;
 
     // Loop over all files
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
@@ -222,6 +225,9 @@ void StoreCosmicDist()
         ChainVec.at(file_no) -> SetBranchAddress(("vtxx_"+ProductName).c_str(), vtxx);
         ChainVec.at(file_no) -> SetBranchAddress(("vtxy_"+ProductName).c_str(), vtxy);
         ChainVec.at(file_no) -> SetBranchAddress(("vtxz_"+ProductName).c_str(), vtxz);
+        
+        NumberOfTracks.push_back(0);
+        NumberOfVertices.push_back(0);
 
         // Loop over events
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no) -> GetEntries(); tree_index++)
@@ -250,8 +256,10 @@ void StoreCosmicDist()
                 SelYVtxPosition.at(file_no) -> Fill(vtxy[vtx_no]);
                 SelZVtxPosition.at(file_no) -> Fill(vtxz[vtx_no]);
             }
-
-
+            
+            // Fill vertex and track counters
+            NumberOfTracks.back() += ntracks_reco;
+            NumberOfVertices.back() += nvtx;
         } // end event loop
 
         // Scale histograms to number of events
@@ -265,6 +273,15 @@ void StoreCosmicDist()
         SelYVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
         SelZVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
     } // end files loop
+    
+    std::cout << "-------Number of Tracks per Event-------" << std::endl;
+    std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/ChainVec.at(0)->GetEntries()  <<  std::endl;
+    std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/ChainVec.at(1)->GetEntries() << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "------Number of Vertices per Event------" << std::endl;
+    std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/(double)ChainVec.at(0)->GetEntries()  <<  std::endl;
+    std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/(double)ChainVec.at(1)->GetEntries() << std::endl;    
+    std::cout << "----------------------------------------" << std::endl;
     
     // Open output file
     TFile* OutputFile = new TFile((OutputFolder+"/Cosmic_Distributions_Histograms_Mod.root").c_str(),"RECREATE");

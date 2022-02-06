@@ -128,12 +128,13 @@ void StoreHistograms()
     std::vector<TEfficiency*> PurYVtxPosition;
     std::vector<TEfficiency*> PurZVtxPosition;
 
-    // Unsemaring Matrix
+    // Smearing Matrix
     TH2F* UMatrixTrackRange;
     TH2F* UMatrixCosTheta;
     TH2F* UMatrixTheta;
     TH2F* UMatrixPhi;
     TH2F* UMatrixMomentum;
+    TH2F* UMatrixTrackLength;
     TH2F* UMatrixXVtxPosition;
     TH2F* UMatrixYVtxPosition;
     TH2F* UMatrixZVtxPosition;
@@ -375,7 +376,7 @@ void StoreHistograms()
     } // loop over generation label
 
     // Initialize smearing matrices
-    UMatrixTrackRange = new TH2F("Unsmering Matrix Track Range","Smearing Matrix Track Range",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
+    UMatrixTrackRange = new TH2F("Smearing Matrix Track Range","Smearing Matrix Track Range",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
     UMatrixTrackRange -> GetXaxis() -> SetTitle("Muon track length (true) [cm]");
     UMatrixTrackRange -> GetYaxis() -> SetTitle("Muon track length (reco) [cm]");
     UMatrixCosTheta = new TH2F("Smearing Matrix CosTheta","Smearing Matrix cos(#theta)",NumberOfBins,-1,1,NumberOfBins,-1,1);
@@ -390,13 +391,16 @@ void StoreHistograms()
     UMatrixMomentum = new TH2F("Smearing Matrix Momentum","Smearing Matrix Momentum",NumberOfBins,0,3,NumberOfBins,0,3);
     UMatrixMomentum -> GetXaxis() -> SetTitle("Muon Momentum (true) [GeV/c]");
     UMatrixMomentum -> GetYaxis() -> SetTitle("Muon Momentum (reco) [GeV/c]");
-    UMatrixXVtxPosition = new TH2F("Unsmering Matrix XVtx","Smearing Matrix XVtx",NumberOfBins,0,256.35,NumberOfBins,0,256.35);
+    UMatrixTrackLength = new TH2F("Smearing Matrix Momentum","Smearing Matrix Momentum",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
+    UMatrixTrackLength -> GetXaxis() -> SetTitle("Muon Momentum (true) [GeV/c]");
+    UMatrixTrackLength -> GetYaxis() -> SetTitle("Muon Momentum (reco) [GeV/c]");
+    UMatrixXVtxPosition = new TH2F("Smearing Matrix XVtx","Smearing Matrix XVtx",NumberOfBins,0,256.35,NumberOfBins,0,256.35);
     UMatrixXVtxPosition -> GetXaxis() -> SetTitle("Vertex x-coordinate (true) [cm]");
     UMatrixXVtxPosition -> GetYaxis() -> SetTitle("Vertex x-coordinate (reco) [cm]");
-    UMatrixYVtxPosition = new TH2F("Unsmering Matrix YVtx","Smearing Matrix YVtx",NumberOfBins,-233*0.5,233*0.5,NumberOfBins,-233*0.5,233*0.5);
+    UMatrixYVtxPosition = new TH2F("Smearing Matrix YVtx","Smearing Matrix YVtx",NumberOfBins,-233*0.5,233*0.5,NumberOfBins,-233*0.5,233*0.5);
     UMatrixYVtxPosition -> GetXaxis() -> SetTitle("Vertex y-coordinate (true) [cm]");
     UMatrixYVtxPosition -> GetYaxis() -> SetTitle("Vertex y-coordinate (reco) [cm]");
-    UMatrixZVtxPosition = new TH2F("Unsmering Matrix ZVtx","Smearing Matrix ZVtx",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
+    UMatrixZVtxPosition = new TH2F("Smearing Matrix ZVtx","Smearing Matrix ZVtx",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
     UMatrixZVtxPosition -> GetXaxis() -> SetTitle("Vertex z-coordinate (true) [cm]");
     UMatrixZVtxPosition -> GetYaxis() -> SetTitle("Vertex z-coordinate (reco) [cm]");
 
