@@ -262,16 +262,18 @@ void StoreCosmicDist()
             NumberOfVertices.back() += nvtx;
         } // end event loop
 
+        // TODO !!!!!!THINK ABOUT EVENT WEIGHT!!!!!!
+        
         // Scale histograms to number of events
-        SelectionTrackRange.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionCosTheta.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionTheta.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionPhi.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionMomentum.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionTrackLength.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelXVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelYVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelZVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelectionTrackRange.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelectionCosTheta.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelectionTheta.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelectionPhi.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelectionMomentum.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelectionTrackLength.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelXVtxPosition.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelYVtxPosition.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelZVtxPosition.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
     } // end files loop
     
     std::cout << "-------Number of Tracks per Event-------" << std::endl;

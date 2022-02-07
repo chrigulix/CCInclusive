@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <deque>
 #include <iostream>
 #include <cmath>
 
@@ -49,6 +50,8 @@ bool inTPC(double x, double y, double z);
 
 // Add two histogramms with indices First and Last and weight
 void AddHistograms(std::vector<TH1F*>& HistVector, unsigned int First, unsigned int Last, float Weight, bool EraseLast = false);
+
+TH1F* AddToNewHist(std::vector<TH1F*>& HistVector, unsigned int First, unsigned int Last, float Weight);
 
 // Subtract background histogram from selection histogram
 void SubtractBgr(std::vector<TH1F*>& HistVector, std::vector<std::vector<TH1F*>>& BgrVector, unsigned int First, unsigned int Last, float Weight);
@@ -112,15 +115,15 @@ void DrawCCInclusive()
     std::vector<std::vector<TH1F*>> BgrZVtxPosition;
 
     // Produce beam systematics Histogram
-    std::vector<std::vector<TH1F*>> TrackRangeBeamSys;
-    std::vector<std::vector<TH1F*>> CosThetaBeamSys;
-    std::vector<std::vector<TH1F*>> ThetaBeamSys;
-    std::vector<std::vector<TH1F*>> PhiBeamSys;
-    std::vector<std::vector<TH1F*>> MomentumBeamSys;
-    std::vector<std::vector<TH1F*>> TrackLengthBeamSys;
-    std::vector<std::vector<TH1F*>> XVtxPositionBeamSys;
-    std::vector<std::vector<TH1F*>> YVtxPositionBeamSys;
-    std::vector<std::vector<TH1F*>> ZVtxPositionBeamSys;
+    std::vector<std::deque<TH1F*>> TrackRangeBeamSys;
+    std::vector<std::deque<TH1F*>> CosThetaBeamSys;
+    std::vector<std::deque<TH1F*>> ThetaBeamSys;
+    std::vector<std::deque<TH1F*>> PhiBeamSys;
+    std::vector<std::deque<TH1F*>> MomentumBeamSys;
+    std::vector<std::deque<TH1F*>> TrackLengthBeamSys;
+    std::vector<std::deque<TH1F*>> XVtxPositionBeamSys;
+    std::vector<std::deque<TH1F*>> YVtxPositionBeamSys;
+    std::vector<std::deque<TH1F*>> ZVtxPositionBeamSys;
 
     // Efficiencies
     std::vector<TEfficiency*> EffTrackRange;
@@ -187,8 +190,6 @@ void DrawCCInclusive()
         CosmicZVtxPosition.push_back( (TH1F*) CosmicFile->Get(("Vertex Z position "+Label).c_str()) );
     }
 
-//     CosmicFile -> Close();
-
     // Read cosmic comparison histograms
     TFile* SelectionFile = new TFile((InputFolder+"/Selection_Histograms_Mod.root").c_str(),"READ");
 
@@ -223,6 +224,8 @@ void DrawCCInclusive()
     GenLabel.push_back("MC Truth");
     ScalingFactors.push_back(DataPOT/MCPOT);
 
+    // BEGIN READ ----------------------------------------------------------------------------------------------------------------------------------------------
+
     // Fill selection histograms
     for(auto Label : GenLabel)
     {
@@ -247,7 +250,7 @@ void DrawCCInclusive()
     BgrLabel.push_back("n_e-like");
     BgrLabel.push_back("nu_NC");
     BgrLabel.push_back("PureSelected");
-    
+
     BgrTrackRange.resize(4);
     BgrCosTheta.resize(4);
     BgrTheta.resize(4);
@@ -261,7 +264,7 @@ void DrawCCInclusive()
     // Fill background histograms
     for(unsigned int file_no = 0; file_no < 4; file_no++)
     {
-        for(auto Label : GenLabel)
+        for(auto Label : BgrLabel)
         {
             BgrTrackRange.at(file_no).push_back( (TH1F*) SelectionFile->Get((Label+"Background Range "+std::to_string(file_no)).c_str()) );
             BgrCosTheta.at(file_no).push_back( (TH1F*) SelectionFile->Get((Label+"Background cos#theta "+std::to_string(file_no)).c_str()) );
@@ -274,8 +277,8 @@ void DrawCCInclusive()
             BgrZVtxPosition.at(file_no).push_back( (TH1F*) SelectionFile->Get((Label+"Background ZVtx "+std::to_string(file_no)).c_str()) );
         }
     }
-    
-     // Systematic labels
+
+    // Systematic labels
     std::vector<std::string> SystLabel;
     SystLabel.push_back("dirt");
     SystLabel.push_back("outFV");
@@ -294,7 +297,7 @@ void DrawCCInclusive()
     XVtxPositionBeamSys.resize(4);
     YVtxPositionBeamSys.resize(4);
     ZVtxPositionBeamSys.resize(4);
-    
+
     // Fill beam systematic histograms
     for(unsigned int file_no = 0; file_no < 4; file_no++)
     {
@@ -311,7 +314,7 @@ void DrawCCInclusive()
             ZVtxPositionBeamSys.at(file_no).push_back( (TH1F*) SelectionFile->Get((Label+"Systematics ZVtx "+std::to_string(file_no)).c_str()) );
         }
     }
-    
+
     // Fill smearing matrices
     UMatrixTrackRange = (TH2F*) SelectionFile->Get("UMatrixTrackRange");
     UMatrixCosTheta = (TH2F*) SelectionFile->Get("UMatrixCosTheta");
@@ -321,10 +324,81 @@ void DrawCCInclusive()
     UMatrixXVtxPosition = (TH2F*) SelectionFile->Get("UMatrixXVtxPosition");
     UMatrixYVtxPosition = (TH2F*) SelectionFile->Get("UMatrixYVtxPosition");
     UMatrixZVtxPosition = (TH2F*) SelectionFile->Get("UMatrixZVtxPosition");
+
+    // END READ ----------------------------------------------------------------------------------------------------------------------------------------------
+
+    // Subtract and create new vector entry
+    CosmicTrackRange.push_back(AddToNewHist(CosmicTrackRange,0,1,-1));
+    CosmicCosTheta.push_back(AddToNewHist(CosmicCosTheta,0,1,-1));
+    CosmicTheta.push_back(AddToNewHist(CosmicTheta,0,1,-1));
+    CosmicPhi.push_back(AddToNewHist(CosmicPhi,0,1,-1));
+    CosmicMomentum.push_back(AddToNewHist(CosmicMomentum,0,1,-1));
+    CosmicTrackLength.push_back(AddToNewHist(CosmicTrackLength,0,1,-1));
+    CosmicXVtxPosition.push_back(AddToNewHist(CosmicXVtxPosition,0,1,-1));
+    CosmicYVtxPosition.push_back(AddToNewHist(CosmicYVtxPosition,0,1,-1));
+    CosmicZVtxPosition.push_back(AddToNewHist(CosmicZVtxPosition,0,1,-1));
     
-//     SelectionFile -> Close();
+//     TrackRangeBeamSys.at(3).at(1) -> Draw();
+
+    // Add the cosmic background systematics histograms
+    for(unsigned int file_no = 0; file_no < 4; file_no++)
+    {
+        // First clone background
+        TrackRangeBeamSys.at(file_no).push_front( (TH1F*)CosmicTrackRange.back()->Clone() );
+        CosThetaBeamSys.at(file_no).push_front( (TH1F*)CosmicCosTheta.back()->Clone() );
+        ThetaBeamSys.at(file_no).push_front( (TH1F*)CosmicTheta.back()->Clone() );
+        PhiBeamSys.at(file_no).push_front( (TH1F*)CosmicPhi.back()->Clone() );
+        MomentumBeamSys.at(file_no).push_front( (TH1F*)CosmicMomentum.back()->Clone() );
+        TrackLengthBeamSys.at(file_no).push_front( (TH1F*)CosmicTrackLength.back()->Clone() );
+        XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicXVtxPosition.back()->Clone() );
+        YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicYVtxPosition.back()->Clone() );
+        ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicZVtxPosition.back()->Clone() );
+        
+        // Multiply square of background deviation
+        TrackRangeBeamSys.at(file_no).front() -> Multiply(CosmicTrackRange.back());
+        CosThetaBeamSys.at(file_no).front() -> Multiply(CosmicCosTheta.back());
+        ThetaBeamSys.at(file_no).front() -> Multiply(CosmicTheta.back());
+        PhiBeamSys.at(file_no).front() -> Multiply(CosmicPhi.back());
+        MomentumBeamSys.at(file_no).front() -> Multiply(CosmicMomentum.back());
+        TrackLengthBeamSys.at(file_no).front() -> Multiply(CosmicTrackLength.back());
+        XVtxPositionBeamSys.at(file_no).front() -> Multiply(CosmicXVtxPosition.back());
+        YVtxPositionBeamSys.at(file_no).front() -> Multiply(CosmicYVtxPosition.back());
+        ZVtxPositionBeamSys.at(file_no).front() -> Multiply(CosmicZVtxPosition.back());    
+        
+        // Multiply squared background
+        TrackRangeBeamSys.at(file_no).front() -> Multiply(BgrTrackRange.at(file_no).at(1));
+        TrackRangeBeamSys.at(file_no).front() -> Multiply(BgrTrackRange.at(file_no).at(1));
+        CosThetaBeamSys.at(file_no).front() -> Multiply(BgrCosTheta.at(file_no).at(1));
+        CosThetaBeamSys.at(file_no).front() -> Multiply(BgrCosTheta.at(file_no).at(1));
+        ThetaBeamSys.at(file_no).front() -> Multiply(BgrTheta.at(file_no).at(1));
+        ThetaBeamSys.at(file_no).front() -> Multiply(BgrTheta.at(file_no).at(1));
+        PhiBeamSys.at(file_no).front() -> Multiply(BgrPhi.at(file_no).at(1));
+        PhiBeamSys.at(file_no).front() -> Multiply(BgrPhi.at(file_no).at(1));
+        MomentumBeamSys.at(file_no).front() -> Multiply(BgrMomentum.at(file_no).at(1));
+        MomentumBeamSys.at(file_no).front() -> Multiply(BgrMomentum.at(file_no).at(1));
+        TrackLengthBeamSys.at(file_no).front() -> Multiply(BgrTrackLength.at(file_no).at(1));
+        TrackLengthBeamSys.at(file_no).front() -> Multiply(BgrTrackLength.at(file_no).at(1));
+        XVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrXVtxPosition.at(file_no).at(1));
+        XVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrXVtxPosition.at(file_no).at(1));
+        YVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrYVtxPosition.at(file_no).at(1));
+        YVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrYVtxPosition.at(file_no).at(1));
+        ZVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrZVtxPosition.at(file_no).at(1));
+        ZVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrZVtxPosition.at(file_no).at(1));
+    }
     
-//     CosmicPhi.at(1) -> Draw();
+//     TrackRangeBeamSys
+//     CosThetaBeamSys
+//     ThetaBeamSys
+//     PhiBeamSys
+//     MomentumBeamSys
+//     TrackLengthBeamSys
+//     XVtxPositionBeamSys
+//     YVtxPositionBeamSys
+//     ZVtxPositionBeamSys
+
+    PhiBeamSys.at(3).front() -> Draw();
+    CosmicPhi.back() -> Draw();
+
 }
 
 
@@ -364,6 +438,23 @@ void AddHistograms(std::vector<TH1F*>& HistVector, unsigned int First, unsigned 
     {
         std::cout << "Histograms not added!" << std::endl;
     }
+}
+
+TH1F* AddToNewHist(std::vector<TH1F*>& HistVector, unsigned int First, unsigned int Last, float Weight)
+{
+    TH1F *OutputHist = (TH1F*) HistVector.at(First)->Clone();
+
+    // Check if there is something to be added
+    if (HistVector.size() > Last)
+    {
+        // Add histograms
+        OutputHist -> Add(HistVector.at(Last), Weight);
+    }
+    else // if nothing can be added
+    {
+        std::cout << "Histograms not added!" << std::endl;
+    }
+    return OutputHist;
 }
 
 void SubtractBgr(std::vector<TH1F*>& HistVector, std::vector<std::vector<TH1F*>>& BgrVector, unsigned int First, unsigned int Last, float Weight)
