@@ -134,6 +134,8 @@ void StoreCosmicDist()
     NumberOfEvents.push_back(ChainVec.back() -> GetEntries());
     GenLabel.push_back("In Time Corsika All");
     BeamWindow.push_back(std::make_pair(3.2,4.8));
+    
+    GenLabel.push_back("Cosmic Systematics All");
 
     for(const auto& Label : GenLabel)
     {
@@ -262,18 +264,16 @@ void StoreCosmicDist()
             NumberOfVertices.back() += nvtx;
         } // end event loop
 
-        // TODO !!!!!!THINK ABOUT EVENT WEIGHT!!!!!!
-        
         // Scale histograms to number of events
-        SelectionTrackRange.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
-        SelectionCosTheta.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
-        SelectionTheta.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
-        SelectionPhi.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
-        SelectionMomentum.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
-        SelectionTrackLength.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
-        SelXVtxPosition.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
-        SelYVtxPosition.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
-        SelZVtxPosition.at(file_no) -> Scale(1/(double)NumberOfTracks.at(file_no));
+        SelectionTrackRange.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelectionCosTheta.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelectionTheta.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelectionPhi.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelectionMomentum.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelectionTrackLength.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelXVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelYVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+        SelZVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
     } // end files loop
     
     std::cout << "-------Number of Tracks per Event-------" << std::endl;
@@ -284,6 +284,37 @@ void StoreCosmicDist()
     std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/(double)ChainVec.at(0)->GetEntries()  <<  std::endl;
     std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/(double)ChainVec.at(1)->GetEntries() << std::endl;    
     std::cout << "----------------------------------------" << std::endl;
+    
+    // Fill the relative variance into the bins of the last histogram
+    for(unsigned int bin_no = 1; bin_no <= NumberOfBins; bin_no++)
+    {
+        SelectionTrackRange.back()->SetBinContent(bin_no,std::pow(SelectionTrackRange.at(0)->GetBinContent(bin_no)/SelectionTrackRange.at(1)->GetBinContent(bin_no) - 1,2));
+        SelectionCosTheta.back()->SetBinContent(bin_no,std::pow(SelectionCosTheta.at(0)->GetBinContent(bin_no)/SelectionCosTheta.at(1)->GetBinContent(bin_no) - 1,2));
+        SelectionTheta.back()->SetBinContent(bin_no,std::pow(SelectionTheta.at(0)->GetBinContent(bin_no)/SelectionTheta.at(1)->GetBinContent(bin_no) - 1,2));
+        SelectionPhi.back()->SetBinContent(bin_no,std::pow(SelectionPhi.at(0)->GetBinContent(bin_no)/SelectionPhi.at(1)->GetBinContent(bin_no) - 1,2));
+        
+        // Avoid 0 bins
+        if(SelectionMomentum.at(1)->GetBinContent(bin_no) > 0.0)
+        {
+            SelectionMomentum.back()->SetBinContent(bin_no,std::pow(SelectionMomentum.at(0)->GetBinContent(bin_no)/SelectionMomentum.at(1)->GetBinContent(bin_no) - 1,2));
+        }
+        else
+        {
+            SelectionMomentum.back()->SetBinContent(bin_no,1.0);
+        }
+        if(SelectionTrackLength.at(1)->GetBinContent(bin_no) > 0.0)
+        {
+            SelectionTrackLength.back()->SetBinContent(bin_no,std::pow(SelectionTrackLength.at(0)->GetBinContent(bin_no)/SelectionTrackLength.at(1)->GetBinContent(bin_no) - 1,2));
+        }
+        else
+        {
+            SelectionTrackLength.back()->SetBinContent(bin_no,1.0);
+        }
+        
+        SelXVtxPosition.back()->SetBinContent(bin_no,std::pow(SelXVtxPosition.at(0)->GetBinContent(bin_no)/SelXVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
+        SelYVtxPosition.back()->SetBinContent(bin_no,std::pow(SelYVtxPosition.at(0)->GetBinContent(bin_no)/SelYVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
+        SelZVtxPosition.back()->SetBinContent(bin_no,std::pow(SelZVtxPosition.at(0)->GetBinContent(bin_no)/SelZVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
+    }
     
     // Open output file
     TFile* OutputFile = new TFile((OutputFolder+"/Cosmic_Distributions_Histograms_Mod.root").c_str(),"RECREATE");

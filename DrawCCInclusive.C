@@ -37,6 +37,8 @@ const double NoNucleons = 40;
 const double Density = 1.396; // g/cm^3
 const double Pi = 3.14159265358979323846; // Pi
 
+size_t NumberOfBins = 20;
+
 TSpline3* KEvsRSpline; // Global spline for momentum calculation
 
 // Function which calculates the distance between two points
@@ -176,6 +178,7 @@ void DrawCCInclusive()
     std::vector<std::string> CosmicHistLabels;
     CosmicHistLabels.push_back("Data Off-Beam BNBEXT All");
     CosmicHistLabels.push_back("In Time Corsika All");
+    CosmicHistLabels.push_back("Cosmic Systematics All");
 
     for(auto Label : CosmicHistLabels)
     {
@@ -224,7 +227,7 @@ void DrawCCInclusive()
     GenLabel.push_back("MC Truth");
     ScalingFactors.push_back(DataPOT/MCPOT);
 
-    // BEGIN READ ----------------------------------------------------------------------------------------------------------------------------------------------
+    // BEGIN READ --------------------------------------------------------------------------------------------------------------------------------------------
 
     // Fill selection histograms
     for(auto Label : GenLabel)
@@ -327,23 +330,23 @@ void DrawCCInclusive()
 
     // END READ ----------------------------------------------------------------------------------------------------------------------------------------------
 
-    // Subtract and create new vector entry
-    CosmicTrackRange.push_back(AddToNewHist(CosmicTrackRange,0,1,-1));
-    CosmicCosTheta.push_back(AddToNewHist(CosmicCosTheta,0,1,-1));
-    CosmicTheta.push_back(AddToNewHist(CosmicTheta,0,1,-1));
-    CosmicPhi.push_back(AddToNewHist(CosmicPhi,0,1,-1));
-    CosmicMomentum.push_back(AddToNewHist(CosmicMomentum,0,1,-1));
-    CosmicTrackLength.push_back(AddToNewHist(CosmicTrackLength,0,1,-1));
-    CosmicXVtxPosition.push_back(AddToNewHist(CosmicXVtxPosition,0,1,-1));
-    CosmicYVtxPosition.push_back(AddToNewHist(CosmicYVtxPosition,0,1,-1));
-    CosmicZVtxPosition.push_back(AddToNewHist(CosmicZVtxPosition,0,1,-1));
-    
-//     TrackRangeBeamSys.at(3).at(1) -> Draw();
+    // BEGIN HISTOGRAM CALCULATIONS --------------------------------------------------------------------------------------------------------------------------
 
-    // Add the cosmic background systematics histograms
+    // Generate New set of histograms containing the distributions with systematics + statistics
+    std::vector<TH1F*> SystTrackRange;
+    std::vector<TH1F*> SystCosTheta;
+    std::vector<TH1F*> SystTheta;
+    std::vector<TH1F*> SystPhi;
+    std::vector<TH1F*> SystMomentum;
+    std::vector<TH1F*> SystTrackLength;
+    std::vector<TH1F*> SystXVtxPosition;
+    std::vector<TH1F*> SystYVtxPosition;
+    std::vector<TH1F*> SystZVtxPosition;
+
+    // Loop over all MC files
     for(unsigned int file_no = 0; file_no < 4; file_no++)
     {
-        // First clone background
+        // First clone cosmic relative variance
         TrackRangeBeamSys.at(file_no).push_front( (TH1F*)CosmicTrackRange.back()->Clone() );
         CosThetaBeamSys.at(file_no).push_front( (TH1F*)CosmicCosTheta.back()->Clone() );
         ThetaBeamSys.at(file_no).push_front( (TH1F*)CosmicTheta.back()->Clone() );
@@ -353,19 +356,8 @@ void DrawCCInclusive()
         XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicXVtxPosition.back()->Clone() );
         YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicYVtxPosition.back()->Clone() );
         ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicZVtxPosition.back()->Clone() );
-        
-        // Multiply square of background deviation
-        TrackRangeBeamSys.at(file_no).front() -> Multiply(CosmicTrackRange.back());
-        CosThetaBeamSys.at(file_no).front() -> Multiply(CosmicCosTheta.back());
-        ThetaBeamSys.at(file_no).front() -> Multiply(CosmicTheta.back());
-        PhiBeamSys.at(file_no).front() -> Multiply(CosmicPhi.back());
-        MomentumBeamSys.at(file_no).front() -> Multiply(CosmicMomentum.back());
-        TrackLengthBeamSys.at(file_no).front() -> Multiply(CosmicTrackLength.back());
-        XVtxPositionBeamSys.at(file_no).front() -> Multiply(CosmicXVtxPosition.back());
-        YVtxPositionBeamSys.at(file_no).front() -> Multiply(CosmicYVtxPosition.back());
-        ZVtxPositionBeamSys.at(file_no).front() -> Multiply(CosmicZVtxPosition.back());    
-        
-        // Multiply squared background
+
+        // Multiply squared background to get variance
         TrackRangeBeamSys.at(file_no).front() -> Multiply(BgrTrackRange.at(file_no).at(1));
         TrackRangeBeamSys.at(file_no).front() -> Multiply(BgrTrackRange.at(file_no).at(1));
         CosThetaBeamSys.at(file_no).front() -> Multiply(BgrCosTheta.at(file_no).at(1));
@@ -384,8 +376,87 @@ void DrawCCInclusive()
         YVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrYVtxPosition.at(file_no).at(1));
         ZVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrZVtxPosition.at(file_no).at(1));
         ZVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrZVtxPosition.at(file_no).at(1));
+
+        // Add all variances up
+        TrackRangeBeamSys.at(file_no).push_front( (TH1F*)TrackRangeBeamSys.at(file_no).front()->Clone() );
+        CosThetaBeamSys.at(file_no).push_front( (TH1F*)CosThetaBeamSys.at(file_no).front()->Clone() );
+        ThetaBeamSys.at(file_no).push_front( (TH1F*)ThetaBeamSys.at(file_no).front()->Clone() );
+        PhiBeamSys.at(file_no).push_front( (TH1F*)PhiBeamSys.at(file_no).front()->Clone() );
+        MomentumBeamSys.at(file_no).push_front( (TH1F*)MomentumBeamSys.at(file_no).front()->Clone() );
+        TrackLengthBeamSys.at(file_no).push_front( (TH1F*)TrackLengthBeamSys.at(file_no).front()->Clone() );
+        XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)XVtxPositionBeamSys.at(file_no).front()->Clone() );
+        YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)YVtxPositionBeamSys.at(file_no).front()->Clone() );
+        ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)ZVtxPositionBeamSys.at(file_no).front()->Clone() );
+
+        // Create a total systematic entry at the front of the vector
+        TrackRangeBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,1036.8));
+        CosThetaBeamSys.at(file_no).push_front(new TH1F(("Total Systematics cos#theta "+std::to_string(file_no)).c_str(),"cos#theta",NumberOfBins,-1,1));
+        ThetaBeamSys.at(file_no).push_front(new TH1F(("Total Systematics #theta "+std::to_string(file_no)).c_str(),"#theta",NumberOfBins,0,180));
+        PhiBeamSys.at(file_no).push_front(new TH1F(("Total Systematics #phi "+std::to_string(file_no)).c_str(),"#phi",NumberOfBins,-180,180));
+        MomentumBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Momentum "+std::to_string(file_no)).c_str(),"Momentum",NumberOfBins,0,3));
+        TrackLengthBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Length "+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,1036.8));
+        XVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics XVtx "+std::to_string(file_no)).c_str(),"XVtx",NumberOfBins,0,256.35));
+        YVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics YVtx "+std::to_string(file_no)).c_str(),"YVtx",NumberOfBins,-233*0.5,233*0.5));
+        ZVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics ZVtx "+std::to_string(file_no)).c_str(),"ZVtx",NumberOfBins,0,1036.8));
+
+        // Add all the variances
+        for(unsigned int sys_no = 1; sys_no < TrackRangeBeamSys.size(); sys_no++)
+        {
+            TrackRangeBeamSys.at(file_no).front()->Add(TrackRangeBeamSys.at(file_no).at(sys_no));
+            CosThetaBeamSys.at(file_no).front()->Add(CosThetaBeamSys.at(file_no).at(sys_no));
+            ThetaBeamSys.at(file_no).front()->Add(ThetaBeamSys.at(file_no).at(sys_no));
+            PhiBeamSys.at(file_no).front()->Add(PhiBeamSys.at(file_no).at(sys_no));
+            MomentumBeamSys.at(file_no).front()->Add(MomentumBeamSys.at(file_no).at(sys_no));
+            TrackLengthBeamSys.at(file_no).front()->Add(TrackLengthBeamSys.at(file_no).at(sys_no));
+            XVtxPositionBeamSys.at(file_no).front()->Add(XVtxPositionBeamSys.at(file_no).at(sys_no));
+            YVtxPositionBeamSys.at(file_no).front()->Add(YVtxPositionBeamSys.at(file_no).at(sys_no));
+            ZVtxPositionBeamSys.at(file_no).front()->Add(ZVtxPositionBeamSys.at(file_no).at(sys_no));
+        }
+
+        // Calculate standard deviation
+        for(unsigned int bin_no = 1; bin_no <= NumberOfBins; bin_no++)
+        {
+            TrackRangeBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(TrackRangeBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+            CosThetaBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(CosThetaBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+            ThetaBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(ThetaBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+            PhiBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(PhiBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+            MomentumBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(MomentumBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+            TrackLengthBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(TrackLengthBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+            XVtxPositionBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(XVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+            YVtxPositionBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(YVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+            ZVtxPositionBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(ZVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no)));
+        }
+
+        // Fill data point with statistic uncertainties first
+        SystTrackRange.push_back( (TH1F*)SelectionTrackRange.at(file_no+2)->Clone() );
+        SystCosTheta.push_back( (TH1F*)SelectionCosTheta.at(file_no+2)->Clone() );
+        SystTheta.push_back( (TH1F*)SelectionTheta.at(file_no+2)->Clone() );
+        SystPhi.push_back( (TH1F*)SelectionPhi.at(file_no+2)->Clone() );
+        SystMomentum.push_back( (TH1F*)SelectionMomentum.at(file_no+2)->Clone() );
+        SystTrackLength.push_back( (TH1F*)SelectionTrackLength.at(file_no+2)->Clone() );
+        SystXVtxPosition.push_back( (TH1F*)SelXVtxPosition.at(file_no+2)->Clone() );
+        SystYVtxPosition.push_back( (TH1F*)SelYVtxPosition.at(file_no+2)->Clone() );
+        SystZVtxPosition.push_back( (TH1F*)SelZVtxPosition.at(file_no+2)->Clone() );
+
+        // Generate New set of histograms containing the distributions with systematics + statistics
+        for(unsigned int bin_no = 1; bin_no <= NumberOfBins; bin_no++)
+        {
+            SystTrackRange.back()->SetBinError(bin_no,SelectionTrackRange.at(file_no+2)->GetBinError(bin_no)+TrackRangeBeamSys.at(file_no).front()->GetBinContent(bin_no));
+            SystCosTheta.back()->SetBinError(bin_no,SelectionCosTheta.at(file_no+2)->GetBinError(bin_no)+CosThetaBeamSys.at(file_no).front()->GetBinContent(bin_no));
+            SystTheta.back()->SetBinError(bin_no,SelectionTheta.at(file_no+2)->GetBinError(bin_no)+ThetaBeamSys.at(file_no).front()->GetBinContent(bin_no));
+            SystPhi.back()->SetBinError(bin_no,SelectionPhi.at(file_no+2)->GetBinError(bin_no)+PhiBeamSys.at(file_no).front()->GetBinContent(bin_no));
+            SystMomentum.back()->SetBinError(bin_no,SelectionMomentum.at(file_no+2)->GetBinError(bin_no)+MomentumBeamSys.at(file_no).front()->GetBinContent(bin_no));
+            SystTrackLength.back()->SetBinError(bin_no,SelectionTrackLength.at(file_no+2)->GetBinError(bin_no)+TrackLengthBeamSys.at(file_no).front()->GetBinContent(bin_no));
+            SystXVtxPosition.back()->SetBinError(bin_no,SelXVtxPosition.at(file_no+2)->GetBinError(bin_no)+XVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no));
+            SystYVtxPosition.back()->SetBinError(bin_no,SelYVtxPosition.at(file_no+2)->GetBinError(bin_no)+YVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no));
+            SystZVtxPosition.back()->SetBinError(bin_no,SelZVtxPosition.at(file_no+2)->GetBinError(bin_no)+ZVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no));
+        }
     }
-    
+    // END HISTOGRAM CALCULATIONS ------------------------------------------------------------------------------------------------------------------------
+
+
+//     std::cout << CosmicMomentum.back() << std::endl;
+
 //     TrackRangeBeamSys
 //     CosThetaBeamSys
 //     ThetaBeamSys
@@ -396,9 +467,16 @@ void DrawCCInclusive()
 //     YVtxPositionBeamSys
 //     ZVtxPositionBeamSys
 
-    PhiBeamSys.at(3).front() -> Draw();
-    CosmicPhi.back() -> Draw();
+//     MomentumBeamSys.at(0).front() -> Draw();
 
+    TCanvas *C0 = new TCanvas("C0", "C0", 700, 500);
+//     SelectionPhi.at(2) -> SetMinimu
+    SystPhi.at(0) -> SetFillColor(9);
+    SystPhi.at(0) -> Draw("E2 ");
+    SelectionPhi.at(2) -> SetFillColor(46);
+    SelectionPhi.at(2) -> Draw("E2 SAME");
+//     TCanvas *C1 = new TCanvas("C1", "C1", 700, 500);
+//     MomentumBeamSys.at(1).at(0) -> Draw();
 }
 
 
