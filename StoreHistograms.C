@@ -391,9 +391,9 @@ void StoreHistograms()
     UMatrixMomentum = new TH2F("Smearing Matrix Momentum","Smearing Matrix Momentum",NumberOfBins,0,3,NumberOfBins,0,3);
     UMatrixMomentum -> GetXaxis() -> SetTitle("Muon Momentum (true) [GeV/c]");
     UMatrixMomentum -> GetYaxis() -> SetTitle("Muon Momentum (reco) [GeV/c]");
-    UMatrixTrackLength = new TH2F("Smearing Matrix Momentum","Smearing Matrix Momentum",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
-    UMatrixTrackLength -> GetXaxis() -> SetTitle("Muon Momentum (true) [GeV/c]");
-    UMatrixTrackLength -> GetYaxis() -> SetTitle("Muon Momentum (reco) [GeV/c]");
+    UMatrixTrackLength = new TH2F("Smearing Matrix Track Length","Smearing Matrix Track Length",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
+    UMatrixTrackLength -> GetXaxis() -> SetTitle("Track Length (true) [cm]");
+    UMatrixTrackLength -> GetYaxis() -> SetTitle("Track Length (reco) [cm]");
     UMatrixXVtxPosition = new TH2F("Smearing Matrix XVtx","Smearing Matrix XVtx",NumberOfBins,0,256.35,NumberOfBins,0,256.35);
     UMatrixXVtxPosition -> GetXaxis() -> SetTitle("Vertex x-coordinate (true) [cm]");
     UMatrixXVtxPosition -> GetYaxis() -> SetTitle("Vertex x-coordinate (reco) [cm]");
@@ -567,14 +567,21 @@ void StoreHistograms()
         }
 
         // Background counters and their errors
-        unsigned int allbgr = 0;
-        unsigned int cosmic = 0;
-        unsigned int dirt = 0;
-        unsigned int nuOutFV = 0;
-        unsigned int antinu_mu = 0;
-        unsigned int nu_e = 0;
-        unsigned int nuNC = 0;
-        unsigned int nu_mu = 0;
+        double allbgr = 0.;
+        double cosmic = 0.;
+        double dirt = 0.;
+        double nuOutFV = 0.;
+        double antinu_mu = 0.;
+        double nu_e = 0.;
+        double nuNC = 0.;
+        double nu_mu = 0.;
+        
+        double dirtsyst = 0.;
+        double nuOutFVsyst = 0.;
+        double antinu_musyst = 0.;
+        double nu_esyst = 0.;
+        double nuNCsyst = 0.;
+        double nu_musyst = 0.;
 
         // Calculating total efficiency
 //         unsigned int ExpectedEvents = 0;
@@ -654,7 +661,7 @@ void StoreHistograms()
                     BgrYVtxPosition.at(file_no-2).at(0) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                     BgrZVtxPosition.at(file_no-2).at(0) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                    allbgr++;
+                    allbgr += std::pow(HistogramWeight,2);
                 }
 
                 // If track origin is not neutrino
@@ -670,7 +677,7 @@ void StoreHistograms()
                     BgrYVtxPosition.at(file_no-2).at(1) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                     BgrZVtxPosition.at(file_no-2).at(1) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                    cosmic++;
+                    cosmic += std::pow(HistogramWeight,2);
                 }
                 // else if neutrino but not in TPC
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && !inTPC(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]))
@@ -685,7 +692,7 @@ void StoreHistograms()
                     BgrYVtxPosition.at(file_no-2).at(2) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                     BgrZVtxPosition.at(file_no-2).at(2) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                    dirt++;
+                    dirt += std::pow(HistogramWeight,2);
 
                     if(nuPDGTruth[MCVtxID] == 14)
                     {
@@ -713,6 +720,8 @@ void StoreHistograms()
                     XVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     YVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     ZVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
+                    
+                    dirtsyst += std::pow(SystematicWeight,2);
                 }
                 // else if not in FV (excluding out of TPC because of else if)
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]))
@@ -727,7 +736,7 @@ void StoreHistograms()
                     BgrYVtxPosition.at(file_no-2).at(3) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                     BgrZVtxPosition.at(file_no-2).at(3) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                    nuOutFV++;
+                    nuOutFV += std::pow(HistogramWeight,2);
 
                     if(nuPDGTruth[MCVtxID] == 14)
                     {
@@ -755,6 +764,8 @@ void StoreHistograms()
                     XVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     YVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     ZVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
+                    
+                    nuOutFVsyst += std::pow(SystematicWeight,2);
                 }
                 // If Origin is neutrino & CC event & interaction product is anti-nu_mu
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 0 && nuPDGTruth[MCVtxID] == -14)
@@ -769,7 +780,7 @@ void StoreHistograms()
                     BgrYVtxPosition.at(file_no-2).at(4) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                     BgrZVtxPosition.at(file_no-2).at(4) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                    antinu_mu++;
+                    antinu_mu += std::pow(HistogramWeight,2);
 
                     SystematicWeight = HistogramWeight * FluxSystematics.at(1) -> Eval(NuEnergyTruth[MCVtxID]);
 
@@ -782,6 +793,8 @@ void StoreHistograms()
                     XVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     YVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     ZVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
+                    
+                    antinu_musyst += std::pow(SystematicWeight,2);
                 }
                 // else if nu_e like event
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 0 && std::abs(nuPDGTruth[MCVtxID]) == 12)
@@ -796,7 +809,7 @@ void StoreHistograms()
                     BgrYVtxPosition.at(file_no-2).at(5) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                     BgrZVtxPosition.at(file_no-2).at(5) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                    nu_e++;
+                    nu_e += std::pow(HistogramWeight,2);
 
                     if(nuPDGTruth[MCVtxID] == 12)
                     {
@@ -816,6 +829,8 @@ void StoreHistograms()
                     XVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     YVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     ZVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
+                    
+                    nu_esyst += std::pow(SystematicWeight,2);
                 }
                 // else if neutral current event
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 1)
@@ -830,7 +845,7 @@ void StoreHistograms()
                     BgrYVtxPosition.at(file_no-2).at(6) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                     BgrZVtxPosition.at(file_no-2).at(6) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                    nuNC++;
+                    nuNC += std::pow(HistogramWeight,2);
 
                     if(nuPDGTruth[MCVtxID] == 14)
                     {
@@ -858,6 +873,8 @@ void StoreHistograms()
                     XVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     YVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     ZVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
+                    
+                    nuNCsyst += std::pow(SystematicWeight,2);
                 }
                 // everything that is not background
                 else
@@ -873,7 +890,7 @@ void StoreHistograms()
                     BgrYVtxPosition.at(file_no-2).at(7) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                     BgrZVtxPosition.at(file_no-2).at(7) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                    nu_mu++;
+                    nu_mu += std::pow(HistogramWeight,2);
 
                     SystematicWeight = HistogramWeight * FluxSystematics.at(0) -> Eval(NuEnergyTruth[MCVtxID]);
 
@@ -886,6 +903,8 @@ void StoreHistograms()
                     XVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     YVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
                     ZVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
+                    
+                    nu_musyst += std::pow(SystematicWeight,2);
 
                     // only if file 2 and nu_mu CC event
                     if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && nuPDGTruth[MCVtxID] == 14 && inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]))
@@ -972,17 +991,26 @@ void StoreHistograms()
         double antinu_muErr = std::sqrt(antinu_mu);
         double nu_eErr = std::sqrt(nu_e);
         double nuNCErr = std::sqrt(nuNC);
+        
+        // Calculate systematic errors
+        double allbgrSystErr = std::sqrt(dirtsyst+nuOutFVsyst+antinu_musyst+nu_esyst+nuNCsyst);
+        double dirtSystErr = std::sqrt(dirtsyst);
+        double nuOutFVSystErr = std::sqrt(nuOutFVsyst);
+        double antinu_muSystErr = std::sqrt(antinu_musyst);
+        double nu_eSystErr = std::sqrt(nu_esyst);
+        double nuNCSystErr = std::sqrt(nuNCsyst);
+        double nu_muSystErr = std::sqrt(nu_musyst);
 
         // Print background summary
         std::cout << "-----------Background Summary-----------" << std::endl;
-        std::cout << "Total Bgr: \t" << allbgr << " ± " << allbgrErr << std::endl;
+        std::cout << "Total Bgr: \t" << allbgr << " ± " << allbgrErr << " ± " << allbgrSystErr << std::endl;
         std::cout << "----------------------------------------" << std::endl;
         std::cout << "Cosmic bgr: \t" << cosmic << " ± " << cosmicErr << std::endl;
-        std::cout << "Dirt event: \t" << dirt << " ± " << dirtErr << std::endl;
-        std::cout << "Out of FV: \t" << nuOutFV << " ± " << nuOutFVErr << std::endl;
-        std::cout << "anti nu_mu: \t" << antinu_mu << " ± " << antinu_muErr << std::endl;
-        std::cout << "nu_e like: \t" << nu_e << " ± " << nu_eErr << std::endl;
-        std::cout << "NC event: \t" << nuNC << " ± " << nuNCErr << std::endl;
+        std::cout << "Dirt event: \t" << dirt << " ± " << dirtErr << " ± " << dirtSystErr << std::endl;
+        std::cout << "Out of FV: \t" << nuOutFV << " ± " << nuOutFVErr << " ± " << nuOutFVSystErr << std::endl;
+        std::cout << "anti nu_mu: \t" << antinu_mu << " ± " << antinu_muErr << " ± " << antinu_muSystErr << std::endl;
+        std::cout << "nu_e like: \t" << nu_e << " ± " << nu_eErr << " ± " << nu_eSystErr << std::endl;
+        std::cout << "NC event: \t" << nuNC << " ± " << nuNCErr << " ± " << nuNCSystErr << std::endl;
         std::cout << "----------------------------------------" << std::endl;
 
         // Check if backgrounds add up correctly

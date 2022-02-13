@@ -362,15 +362,15 @@ void DrawCCInclusive()
 
             for(unsigned int syst_no = 0; syst_no < SystLabel.size(); syst_no++)
             {
-                TrackRangeBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
-                CosThetaBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
-                ThetaBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
-                PhiBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
-                MomentumBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
-                TrackLengthBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
-                XVtxPositionBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
-                YVtxPositionBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
-                ZVtxPositionBeamSys.at(scale_no-2).at(syst_no) -> Scale(ScalingFactors.at(scale_no));
+                TrackRangeBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
+                CosThetaBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
+                ThetaBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
+                PhiBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
+                MomentumBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
+                TrackLengthBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
+                XVtxPositionBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
+                YVtxPositionBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
+                ZVtxPositionBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
             }
         }
 
@@ -563,7 +563,7 @@ void DrawCCInclusive()
 //     6 SystLabel.push_back("nu_NC");
 //     7 SystLabel.push_back("PureSelected");
     
-    PhiBeamSys.at(0).at(7) -> Draw();
+    PhiBeamSys.at(0).at(1) -> Draw();
 
     TCanvas *C0 = new TCanvas("C0", "C0", 700, 500);
     SystPhi.at(0) -> SetFillColorAlpha(9,0.35);
