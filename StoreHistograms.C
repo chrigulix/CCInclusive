@@ -311,7 +311,7 @@ void StoreHistograms()
     // Loop over all generation labels
     for(const auto& Label : GenLabel)
     {
-        SelectionTrackRange.push_back(new TH1F(("Track Range "+Label).c_str(),"Muon Track Range",NumberOfBins,0,1036.8));
+        SelectionTrackRange.push_back(new TH1F(("Track Range "+Label).c_str(),"Muon Track Range",NumberOfBins,0,700));
         SelectionTrackRange.back() -> SetStats(0);
         SelectionTrackRange.back() -> GetXaxis() -> SetTitle("Muon track range [cm]");
         SelectionTrackRange.back() -> GetYaxis() -> SetTitle("No. of events");
@@ -341,7 +341,7 @@ void StoreHistograms()
         SelectionMomentum.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
 
-        SelectionTrackLength.push_back(new TH1F(("Track Length "+Label).c_str(),"Candidate Track Length",NumberOfBins,0,1036.8));
+        SelectionTrackLength.push_back(new TH1F(("Track Length "+Label).c_str(),"Candidate Track Length",NumberOfBins,0,800));
         SelectionTrackLength.back() -> SetStats(0);
         SelectionTrackLength.back() -> GetXaxis() -> SetTitle("Muon Track Length l_ [cm]");
         SelectionTrackLength.back() -> GetYaxis() -> SetTitle("No. of events");
@@ -376,7 +376,7 @@ void StoreHistograms()
     } // loop over generation label
 
     // Initialize smearing matrices
-    UMatrixTrackRange = new TH2F("Smearing Matrix Track Range","Smearing Matrix Track Range",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
+    UMatrixTrackRange = new TH2F("Smearing Matrix Track Range","Smearing Matrix Track Range",NumberOfBins,0,700,NumberOfBins,0,700);
     UMatrixTrackRange -> GetXaxis() -> SetTitle("Muon track length (true) [cm]");
     UMatrixTrackRange -> GetYaxis() -> SetTitle("Muon track length (reco) [cm]");
     UMatrixCosTheta = new TH2F("Smearing Matrix CosTheta","Smearing Matrix cos(#theta)",NumberOfBins,-1,1,NumberOfBins,-1,1);
@@ -391,7 +391,7 @@ void StoreHistograms()
     UMatrixMomentum = new TH2F("Smearing Matrix Momentum","Smearing Matrix Momentum",NumberOfBins,0,3,NumberOfBins,0,3);
     UMatrixMomentum -> GetXaxis() -> SetTitle("Muon Momentum (true) [GeV/c]");
     UMatrixMomentum -> GetYaxis() -> SetTitle("Muon Momentum (reco) [GeV/c]");
-    UMatrixTrackLength = new TH2F("Smearing Matrix Track Length","Smearing Matrix Track Length",NumberOfBins,0,1036.8,NumberOfBins,0,1036.8);
+    UMatrixTrackLength = new TH2F("Smearing Matrix Track Length","Smearing Matrix Track Length",NumberOfBins,0,800,NumberOfBins,0,800);
     UMatrixTrackLength -> GetXaxis() -> SetTitle("Track Length (true) [cm]");
     UMatrixTrackLength -> GetYaxis() -> SetTitle("Track Length (reco) [cm]");
     UMatrixXVtxPosition = new TH2F("Smearing Matrix XVtx","Smearing Matrix XVtx",NumberOfBins,0,256.35,NumberOfBins,0,256.35);
@@ -445,17 +445,17 @@ void StoreHistograms()
     XVtxPositionBeamSys.resize(4);
     YVtxPositionBeamSys.resize(4);
     ZVtxPositionBeamSys.resize(4);
-
+    
     for(unsigned int file_no = 0; file_no < BgrTrackRange.size(); file_no++)
     {
         for(auto Label : BgrLabel)
         {
-            BgrTrackRange.at(file_no).push_back(new TH1F((Label+"Background Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,1036.8));
+            BgrTrackRange.at(file_no).push_back(new TH1F((Label+"Background Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,700));
             BgrCosTheta.at(file_no).push_back(new TH1F((Label+"Background cos#theta "+std::to_string(file_no)).c_str(),"cos#theta",NumberOfBins,-1,1));
             BgrTheta.at(file_no).push_back(new TH1F((Label+"Background #theta "+std::to_string(file_no)).c_str(),"#theta",NumberOfBins,0,180));
             BgrPhi.at(file_no).push_back(new TH1F((Label+"Background #phi "+std::to_string(file_no)).c_str(),"#phi",NumberOfBins,-180,180));
             BgrMomentum.at(file_no).push_back(new TH1F((Label+"Background Momentum "+std::to_string(file_no)).c_str(),"Momentum",NumberOfBins,0,3));
-            BgrTrackLength.at(file_no).push_back(new TH1F((Label+"Background Length "+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,1036.8));
+            BgrTrackLength.at(file_no).push_back(new TH1F((Label+"Background Length "+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,800));
             BgrXVtxPosition.at(file_no).push_back(new TH1F((Label+"Background XVtx "+std::to_string(file_no)).c_str(),"XVtx",NumberOfBins,0,256.35));
             BgrYVtxPosition.at(file_no).push_back(new TH1F((Label+"Background YVtx "+std::to_string(file_no)).c_str(),"YVtx",NumberOfBins,-233*0.5,233*0.5));
             BgrZVtxPosition.at(file_no).push_back(new TH1F((Label+"Background ZVtx "+std::to_string(file_no)).c_str(),"ZVtx",NumberOfBins,0,1036.8));
@@ -473,12 +473,12 @@ void StoreHistograms()
 
         for(auto Label : SystLabel)
         {
-            TrackRangeBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,1036.8));
+            TrackRangeBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,700));
             CosThetaBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics cos#theta "+std::to_string(file_no)).c_str(),"cos#theta",NumberOfBins,-1,1));
             ThetaBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics #theta "+std::to_string(file_no)).c_str(),"#theta",NumberOfBins,0,180));
             PhiBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics #phi "+std::to_string(file_no)).c_str(),"#phi",NumberOfBins,-180,180));
             MomentumBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics Momentum "+std::to_string(file_no)).c_str(),"Momentum",NumberOfBins,0,3));
-            TrackLengthBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics Length "+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,1036.8));
+            TrackLengthBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics Length "+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,800));
             XVtxPositionBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics XVtx "+std::to_string(file_no)).c_str(),"XVtx",NumberOfBins,0,256.35));
             YVtxPositionBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics YVtx "+std::to_string(file_no)).c_str(),"YVtx",NumberOfBins,-233*0.5,233*0.5));
             ZVtxPositionBeamSys.at(file_no).push_back(new TH1F((Label+"Systematics ZVtx "+std::to_string(file_no)).c_str(),"ZVtx",NumberOfBins,0,1036.8));
@@ -496,6 +496,9 @@ void StoreHistograms()
         // Reco entities for all files except truth
         if(file_no < 6)
         {
+//             ChainVec.at(file_no) -> SetBranchAddress("no_flashes", &no_flashes);
+//             ChainVec.at(file_no) -> SetBranchAddress("flash_pe", flash_pe);
+            
             ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
             ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
 
@@ -575,7 +578,7 @@ void StoreHistograms()
         double nu_e = 0.;
         double nuNC = 0.;
         double nu_mu = 0.;
-        
+
         double dirtsyst = 0.;
         double nuOutFVsyst = 0.;
         double antinu_musyst = 0.;
@@ -586,6 +589,9 @@ void StoreHistograms()
         // Calculating total efficiency
 //         unsigned int ExpectedEvents = 0;
 //         unsigned int SelectedEvents = 0;
+        
+        // Check cut scheme
+        double TrackRangeTest = 10000;
 
         // Loop over all events
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no) -> GetEntries(); tree_index++)
@@ -613,6 +619,12 @@ void StoreHistograms()
                 SelXVtxPosition.at(file_no) -> Fill(XVertexPosition[VtxID],HistogramWeight);
                 SelYVtxPosition.at(file_no) -> Fill(YVertexPosition[VtxID],HistogramWeight);
                 SelZVtxPosition.at(file_no) -> Fill(ZVertexPosition[VtxID],HistogramWeight);
+                
+                if( CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]) < TrackRangeTest )
+                {
+                    TrackRangeTest = CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]);
+                }
+                
             }
 
             // if file is a MC Selection
@@ -711,17 +723,17 @@ void StoreHistograms()
                         SystematicWeight = HistogramWeight * FluxSystematics.at(3) -> Eval(NuEnergyTruth[MCVtxID]);
                     }
 
-                    TrackRangeBeamSys.at(file_no-2).at(0) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),std::pow(SystematicWeight,2));
-                    CosThetaBeamSys.at(file_no-2).at(0) -> Fill(std::cos(TrackTheta[TrkID]),std::pow(SystematicWeight,2));
-                    ThetaBeamSys.at(file_no-2).at(0) -> Fill(TrackTheta[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    PhiBeamSys.at(file_no-2).at(0) -> Fill(TrackPhi[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    MomentumBeamSys.at(file_no-2).at(0) -> Fill(GetMomentum(TrackLength[TrkID]),std::pow(SystematicWeight,2));
-                    TrackLengthBeamSys.at(file_no-2).at(0) -> Fill(TrackLength[TrkID],std::pow(SystematicWeight,2));
-                    XVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    YVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    ZVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    
-                    dirtsyst += std::pow(SystematicWeight,2);
+                    TrackRangeBeamSys.at(file_no-2).at(0) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),SystematicWeight);
+                    CosThetaBeamSys.at(file_no-2).at(0) -> Fill(std::cos(TrackTheta[TrkID]),SystematicWeight);
+                    ThetaBeamSys.at(file_no-2).at(0) -> Fill(TrackTheta[TrkID]/Pi*180,SystematicWeight);
+                    PhiBeamSys.at(file_no-2).at(0) -> Fill(TrackPhi[TrkID]/Pi*180,SystematicWeight);
+                    MomentumBeamSys.at(file_no-2).at(0) -> Fill(GetMomentum(TrackLength[TrkID]),SystematicWeight);
+                    TrackLengthBeamSys.at(file_no-2).at(0) -> Fill(TrackLength[TrkID],SystematicWeight);
+                    XVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(XVertexPosition[VtxID],SystematicWeight);
+                    YVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(YVertexPosition[VtxID],SystematicWeight);
+                    ZVtxPositionBeamSys.at(file_no-2).at(0) -> Fill(ZVertexPosition[VtxID],SystematicWeight);
+
+                    dirtsyst += SystematicWeight;
                 }
                 // else if not in FV (excluding out of TPC because of else if)
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && !inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]))
@@ -755,17 +767,17 @@ void StoreHistograms()
                         SystematicWeight = HistogramWeight * FluxSystematics.at(3) -> Eval(NuEnergyTruth[MCVtxID]);
                     }
 
-                    TrackRangeBeamSys.at(file_no-2).at(1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),std::pow(SystematicWeight,2));
-                    CosThetaBeamSys.at(file_no-2).at(1) -> Fill(std::cos(TrackTheta[TrkID]),std::pow(SystematicWeight,2));
-                    ThetaBeamSys.at(file_no-2).at(1) -> Fill(TrackTheta[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    PhiBeamSys.at(file_no-2).at(1) -> Fill(TrackPhi[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    MomentumBeamSys.at(file_no-2).at(1) -> Fill(GetMomentum(TrackLength[TrkID]),std::pow(SystematicWeight,2));
-                    TrackLengthBeamSys.at(file_no-2).at(1) -> Fill(TrackLength[TrkID],std::pow(SystematicWeight,2));
-                    XVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    YVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    ZVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    
-                    nuOutFVsyst += std::pow(SystematicWeight,2);
+                    TrackRangeBeamSys.at(file_no-2).at(1) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),SystematicWeight);
+                    CosThetaBeamSys.at(file_no-2).at(1) -> Fill(std::cos(TrackTheta[TrkID]),SystematicWeight);
+                    ThetaBeamSys.at(file_no-2).at(1) -> Fill(TrackTheta[TrkID]/Pi*180,SystematicWeight);
+                    PhiBeamSys.at(file_no-2).at(1) -> Fill(TrackPhi[TrkID]/Pi*180,SystematicWeight);
+                    MomentumBeamSys.at(file_no-2).at(1) -> Fill(GetMomentum(TrackLength[TrkID]),SystematicWeight);
+                    TrackLengthBeamSys.at(file_no-2).at(1) -> Fill(TrackLength[TrkID],SystematicWeight);
+                    XVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(XVertexPosition[VtxID],SystematicWeight);
+                    YVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(YVertexPosition[VtxID],SystematicWeight);
+                    ZVtxPositionBeamSys.at(file_no-2).at(1) -> Fill(ZVertexPosition[VtxID],SystematicWeight);
+
+                    nuOutFVsyst += SystematicWeight;
                 }
                 // If Origin is neutrino & CC event & interaction product is anti-nu_mu
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 0 && nuPDGTruth[MCVtxID] == -14)
@@ -784,17 +796,17 @@ void StoreHistograms()
 
                     SystematicWeight = HistogramWeight * FluxSystematics.at(1) -> Eval(NuEnergyTruth[MCVtxID]);
 
-                    TrackRangeBeamSys.at(file_no-2).at(2) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),std::pow(SystematicWeight,2));
-                    CosThetaBeamSys.at(file_no-2).at(2) -> Fill(std::cos(TrackTheta[TrkID]),std::pow(SystematicWeight,2));
-                    ThetaBeamSys.at(file_no-2).at(2) -> Fill(TrackTheta[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    PhiBeamSys.at(file_no-2).at(2) -> Fill(TrackPhi[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    MomentumBeamSys.at(file_no-2).at(2) -> Fill(GetMomentum(TrackLength[TrkID]),std::pow(SystematicWeight,2));
-                    TrackLengthBeamSys.at(file_no-2).at(2) -> Fill(TrackLength[TrkID],std::pow(SystematicWeight,2));
-                    XVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    YVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    ZVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    
-                    antinu_musyst += std::pow(SystematicWeight,2);
+                    TrackRangeBeamSys.at(file_no-2).at(2) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),SystematicWeight);
+                    CosThetaBeamSys.at(file_no-2).at(2) -> Fill(std::cos(TrackTheta[TrkID]),SystematicWeight);
+                    ThetaBeamSys.at(file_no-2).at(2) -> Fill(TrackTheta[TrkID]/Pi*180,SystematicWeight);
+                    PhiBeamSys.at(file_no-2).at(2) -> Fill(TrackPhi[TrkID]/Pi*180,SystematicWeight);
+                    MomentumBeamSys.at(file_no-2).at(2) -> Fill(GetMomentum(TrackLength[TrkID]),SystematicWeight);
+                    TrackLengthBeamSys.at(file_no-2).at(2) -> Fill(TrackLength[TrkID],SystematicWeight);
+                    XVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(XVertexPosition[VtxID],SystematicWeight);
+                    YVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(YVertexPosition[VtxID],SystematicWeight);
+                    ZVtxPositionBeamSys.at(file_no-2).at(2) -> Fill(ZVertexPosition[VtxID],SystematicWeight);
+
+                    antinu_musyst += SystematicWeight;
                 }
                 // else if nu_e like event
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 0 && std::abs(nuPDGTruth[MCVtxID]) == 12)
@@ -820,17 +832,17 @@ void StoreHistograms()
                         SystematicWeight = HistogramWeight * FluxSystematics.at(3) -> Eval(NuEnergyTruth[MCVtxID]);
                     }
 
-                    TrackRangeBeamSys.at(file_no-2).at(3) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),std::pow(SystematicWeight,2));
-                    CosThetaBeamSys.at(file_no-2).at(3) -> Fill(std::cos(TrackTheta[TrkID]),std::pow(SystematicWeight,2));
-                    ThetaBeamSys.at(file_no-2).at(3) -> Fill(TrackTheta[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    PhiBeamSys.at(file_no-2).at(3) -> Fill(TrackPhi[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    MomentumBeamSys.at(file_no-2).at(3) -> Fill(GetMomentum(TrackLength[TrkID]),std::pow(SystematicWeight,2));
-                    TrackLengthBeamSys.at(file_no-2).at(3) -> Fill(TrackLength[TrkID],std::pow(SystematicWeight,2));
-                    XVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    YVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    ZVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    
-                    nu_esyst += std::pow(SystematicWeight,2);
+                    TrackRangeBeamSys.at(file_no-2).at(3) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),SystematicWeight);
+                    CosThetaBeamSys.at(file_no-2).at(3) -> Fill(std::cos(TrackTheta[TrkID]),SystematicWeight);
+                    ThetaBeamSys.at(file_no-2).at(3) -> Fill(TrackTheta[TrkID]/Pi*180,SystematicWeight);
+                    PhiBeamSys.at(file_no-2).at(3) -> Fill(TrackPhi[TrkID]/Pi*180,SystematicWeight);
+                    MomentumBeamSys.at(file_no-2).at(3) -> Fill(GetMomentum(TrackLength[TrkID]),SystematicWeight);
+                    TrackLengthBeamSys.at(file_no-2).at(3) -> Fill(TrackLength[TrkID],SystematicWeight);
+                    XVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(XVertexPosition[VtxID],SystematicWeight);
+                    YVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(YVertexPosition[VtxID],SystematicWeight);
+                    ZVtxPositionBeamSys.at(file_no-2).at(3) -> Fill(ZVertexPosition[VtxID],SystematicWeight);
+
+                    nu_esyst += SystematicWeight;
                 }
                 // else if neutral current event
                 else if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && CCNCFlag[MCVtxID] == 1)
@@ -864,17 +876,17 @@ void StoreHistograms()
                         SystematicWeight = HistogramWeight * FluxSystematics.at(3) -> Eval(NuEnergyTruth[MCVtxID]);
                     }
 
-                    TrackRangeBeamSys.at(file_no-2).at(4) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),std::pow(SystematicWeight,2));
-                    CosThetaBeamSys.at(file_no-2).at(4) -> Fill(std::cos(TrackTheta[TrkID]),std::pow(SystematicWeight,2));
-                    ThetaBeamSys.at(file_no-2).at(4) -> Fill(TrackTheta[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    PhiBeamSys.at(file_no-2).at(4) -> Fill(TrackPhi[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    MomentumBeamSys.at(file_no-2).at(4) -> Fill(GetMomentum(TrackLength[TrkID]),std::pow(SystematicWeight,2));
-                    TrackLengthBeamSys.at(file_no-2).at(4) -> Fill(TrackLength[TrkID],std::pow(SystematicWeight,2));
-                    XVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    YVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    ZVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    
-                    nuNCsyst += std::pow(SystematicWeight,2);
+                    TrackRangeBeamSys.at(file_no-2).at(4) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),SystematicWeight);
+                    CosThetaBeamSys.at(file_no-2).at(4) -> Fill(std::cos(TrackTheta[TrkID]),SystematicWeight);
+                    ThetaBeamSys.at(file_no-2).at(4) -> Fill(TrackTheta[TrkID]/Pi*180,SystematicWeight);
+                    PhiBeamSys.at(file_no-2).at(4) -> Fill(TrackPhi[TrkID]/Pi*180,SystematicWeight);
+                    MomentumBeamSys.at(file_no-2).at(4) -> Fill(GetMomentum(TrackLength[TrkID]),SystematicWeight);
+                    TrackLengthBeamSys.at(file_no-2).at(4) -> Fill(TrackLength[TrkID],SystematicWeight);
+                    XVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(XVertexPosition[VtxID],SystematicWeight);
+                    YVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(YVertexPosition[VtxID],SystematicWeight);
+                    ZVtxPositionBeamSys.at(file_no-2).at(4) -> Fill(ZVertexPosition[VtxID],SystematicWeight);
+
+                    nuNCsyst += SystematicWeight;
                 }
                 // everything that is not background
                 else
@@ -894,17 +906,17 @@ void StoreHistograms()
 
                     SystematicWeight = HistogramWeight * FluxSystematics.at(0) -> Eval(NuEnergyTruth[MCVtxID]);
 
-                    TrackRangeBeamSys.at(file_no-2).at(5) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),std::pow(SystematicWeight,2));
-                    CosThetaBeamSys.at(file_no-2).at(5) -> Fill(std::cos(TrackTheta[TrkID]),std::pow(SystematicWeight,2));
-                    ThetaBeamSys.at(file_no-2).at(5) -> Fill(TrackTheta[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    PhiBeamSys.at(file_no-2).at(5) -> Fill(TrackPhi[TrkID]/Pi*180,std::pow(SystematicWeight,2));
-                    MomentumBeamSys.at(file_no-2).at(5) -> Fill(GetMomentum(TrackLength[TrkID]),std::pow(SystematicWeight,2));
-                    TrackLengthBeamSys.at(file_no-2).at(5) -> Fill(TrackLength[TrkID],std::pow(SystematicWeight,2));
-                    XVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(XVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    YVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(YVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    ZVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(ZVertexPosition[VtxID],std::pow(SystematicWeight,2));
-                    
-                    nu_musyst += std::pow(SystematicWeight,2);
+                    TrackRangeBeamSys.at(file_no-2).at(5) -> Fill(CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),SystematicWeight);
+                    CosThetaBeamSys.at(file_no-2).at(5) -> Fill(std::cos(TrackTheta[TrkID]),SystematicWeight);
+                    ThetaBeamSys.at(file_no-2).at(5) -> Fill(TrackTheta[TrkID]/Pi*180,SystematicWeight);
+                    PhiBeamSys.at(file_no-2).at(5) -> Fill(TrackPhi[TrkID]/Pi*180,SystematicWeight);
+                    MomentumBeamSys.at(file_no-2).at(5) -> Fill(GetMomentum(TrackLength[TrkID]),SystematicWeight);
+                    TrackLengthBeamSys.at(file_no-2).at(5) -> Fill(TrackLength[TrkID],SystematicWeight);
+                    XVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(XVertexPosition[VtxID],SystematicWeight);
+                    YVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(YVertexPosition[VtxID],SystematicWeight);
+                    ZVtxPositionBeamSys.at(file_no-2).at(5) -> Fill(ZVertexPosition[VtxID],SystematicWeight);
+
+                    nu_musyst += SystematicWeight;
 
                     // only if file 2 and nu_mu CC event
                     if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1 && nuPDGTruth[MCVtxID] == 14 && inFV(XnuVtxTruth[MCVtxID],YnuVtxTruth[MCVtxID],ZnuVtxTruth[MCVtxID]))
@@ -949,18 +961,20 @@ void StoreHistograms()
                 std::cout << "File: " << file_no << ", Event: " << tree_index << ", Selected: " << SelectedEvents << ", Selection Check: " << CheckIfSane << std::endl;
             }
         } // Event loop
+        
+        std::cout << "Lowest Track Range: " << TrackRangeTest << " cm" << std::endl;
 
         // Fill purities and scale systematics
         if(file_no > 1 && file_no < 6)
         {
             // Fill scaling vector
 //         std::vector<double> SystematicScaling = {1/(double)dirt, 1/(double)nuOutFV, 1/(double)antinu_mu, 1/(double)nu_e, 1/(double)nuNC, 1/(double)nu_mu};
-            
+
             // Scale all beam systematic errors by 1/NumberOfEvents for every file and distribution
 //             for(unsigned int label_no = 0; label_no < SystematicScaling.size(); label_no++)
 //             {
 //                 // TODO Scaling needs to be by bin, and not by full scale, also MA scaling needs to be incorporated!
-//                 
+//
 //                 TrackRangeBeamSys.at(file_no-2).at(label_no) -> Scale(SystematicScaling.at(label_no));
 //                 CosThetaBeamSys.at(file_no-2).at(label_no) -> Scale(SystematicScaling.at(label_no));
 //                 ThetaBeamSys.at(file_no-2).at(label_no) -> Scale(SystematicScaling.at(label_no));
@@ -991,15 +1005,15 @@ void StoreHistograms()
         double antinu_muErr = std::sqrt(antinu_mu);
         double nu_eErr = std::sqrt(nu_e);
         double nuNCErr = std::sqrt(nuNC);
-        
+
         // Calculate systematic errors
-        double allbgrSystErr = std::sqrt(dirtsyst+nuOutFVsyst+antinu_musyst+nu_esyst+nuNCsyst);
-        double dirtSystErr = std::sqrt(dirtsyst);
-        double nuOutFVSystErr = std::sqrt(nuOutFVsyst);
-        double antinu_muSystErr = std::sqrt(antinu_musyst);
-        double nu_eSystErr = std::sqrt(nu_esyst);
-        double nuNCSystErr = std::sqrt(nuNCsyst);
-        double nu_muSystErr = std::sqrt(nu_musyst);
+        double allbgrSystErr = std::sqrt(std::pow(dirtsyst,2)+std::pow(nuOutFVsyst,2)+std::pow(antinu_musyst,2)+std::pow(nu_esyst,2)+std::pow(nuNCsyst,2));
+        double dirtSystErr = dirtsyst;
+        double nuOutFVSystErr = nuOutFVsyst;
+        double antinu_muSystErr = antinu_musyst;
+        double nu_eSystErr = nu_esyst;
+        double nuNCSystErr = nuNCsyst;
+        double nu_muSystErr = nu_musyst;
 
         // Print background summary
         std::cout << "-----------Background Summary-----------" << std::endl;
@@ -1041,6 +1055,24 @@ void StoreHistograms()
     std::cout << "Overall selection efficiency \t" << TotalEfficiency << " ± " << EfficiencyError << std::endl;
     std::cout << "----------------------------------------" << std::endl;
 
+    // Calculate variance instead of standard deviation
+    for(unsigned int file_no = 0; file_no < 4; file_no++)
+    {
+        for(unsigned syst_no = 0; syst_no < TrackRangeBeamSys.size(); syst_no++)
+        {
+            TrackRangeBeamSys.at(file_no).at(syst_no) -> Multiply(TrackRangeBeamSys.at(file_no).at(syst_no));
+            CosThetaBeamSys.at(file_no).at(syst_no) -> Multiply(CosThetaBeamSys.at(file_no).at(syst_no));
+            ThetaBeamSys.at(file_no).at(syst_no) -> Multiply(ThetaBeamSys.at(file_no).at(syst_no));
+            PhiBeamSys.at(file_no).at(syst_no) -> Multiply(PhiBeamSys.at(file_no).at(syst_no));
+            MomentumBeamSys.at(file_no).at(syst_no) -> Multiply(MomentumBeamSys.at(file_no).at(syst_no));
+            TrackLengthBeamSys.at(file_no).at(syst_no) -> Multiply(TrackLengthBeamSys.at(file_no).at(syst_no));
+            XVtxPositionBeamSys.at(file_no).at(syst_no) -> Multiply(XVtxPositionBeamSys.at(file_no).at(syst_no));
+            YVtxPositionBeamSys.at(file_no).at(syst_no) -> Multiply(YVtxPositionBeamSys.at(file_no).at(syst_no));
+            ZVtxPositionBeamSys.at(file_no).at(syst_no) -> Multiply(ZVtxPositionBeamSys.at(file_no).at(syst_no));
+        }
+
+    }
+
     // Fill efficiency (could be a loop if there are more of them)
     {
         unsigned int file_no = 2;
@@ -1055,7 +1087,7 @@ void StoreHistograms()
         EffYVtxPosition.push_back( new TEfficiency(*BgrYVtxPosition.at(file_no-2).back(), *SelYVtxPosition.back()) );
         EffZVtxPosition.push_back( new TEfficiency(*BgrZVtxPosition.at(file_no-2).back(), *SelZVtxPosition.back()) );
     }
-    
+
     // Normalize matrices by row
     NormMatrixByColumn(UMatrixTrackRange);
     NormMatrixByColumn(UMatrixCosTheta);

@@ -139,7 +139,7 @@ void StoreCosmicDist()
 
     for(const auto& Label : GenLabel)
     {
-        SelectionTrackRange.push_back(new TH1F(("Track Range "+Label).c_str(),"Muon Track Range",NumberOfBins,0,1036.8));
+        SelectionTrackRange.push_back(new TH1F(("Track Range "+Label).c_str(),"Muon Track Range",NumberOfBins,0,700));
         SelectionTrackRange.back() -> SetStats(0);
         SelectionTrackRange.back() -> GetXaxis() -> SetTitle("Muon track range [cm]");
         SelectionTrackRange.back() -> GetYaxis() -> SetTitle("No. of events");
@@ -169,7 +169,7 @@ void StoreCosmicDist()
         SelectionMomentum.back() -> GetYaxis() -> SetTitle("No. of events");
 //         SelectionMomentum.back() -> GetYaxis() -> SetTitle("d#sigma/dp [cm^{2}/(GeV/c)]");
 
-        SelectionTrackLength.push_back(new TH1F(("Track Length "+Label).c_str(),"Candidate Track Length",NumberOfBins,0,1036.8));
+        SelectionTrackLength.push_back(new TH1F(("Track Length "+Label).c_str(),"Candidate Track Length",NumberOfBins,0,800));
         SelectionTrackLength.back() -> SetStats(0);
         SelectionTrackLength.back() -> GetXaxis() -> SetTitle("Muon Track Length l_ [cm]");
         SelectionTrackLength.back() -> GetYaxis() -> SetTitle("No. of events");
