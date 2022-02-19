@@ -164,8 +164,10 @@ void DrawCCInclusive()
 //     double MCPOT = 2.304e20/141*62;
 //     double TruthPOT = 5.451e19;
     double DataPOT = 4.950e19;
-    double MCPOT = 2.304e20;
-    double MCModPOT  = 2.062e20;
+    double MCPOT = 2.300468e20; // 2.300468e20
+    double MCMaPOT  = 2.000320e20; // 2.000320e20
+    double MCMECPOT = 2.075599e20; // 2.075599e20
+    double MCTEMPOT = 2.317981e20; // 2.317981e20
 
 
     // Read cosmic comparison histograms
@@ -216,13 +218,13 @@ void DrawCCInclusive()
     ScalingFactors.push_back(DataPOT/MCPOT);
 
     GenLabel.push_back("MA Adjusted Selection");
-    ScalingFactors.push_back(DataPOT/MCModPOT);
+    ScalingFactors.push_back(DataPOT/MCMaPOT);
 
     GenLabel.push_back("TEM Selection");
-    ScalingFactors.push_back(DataPOT/MCModPOT);
+    ScalingFactors.push_back(DataPOT/MCTEMPOT);
 
     GenLabel.push_back("MEC Selection");
-    ScalingFactors.push_back(DataPOT/MCModPOT);
+    ScalingFactors.push_back(DataPOT/MCMECPOT);
 
     GenLabel.push_back("MC Truth");
     ScalingFactors.push_back(DataPOT/MCPOT);
