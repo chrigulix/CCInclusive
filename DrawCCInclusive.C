@@ -217,13 +217,13 @@ void DrawCCInclusive()
     GenLabel.push_back(std::make_pair("MC Selection",46));
     ScalingFactors.push_back(DataPOT/MCPOT);
 
-    GenLabel.push_back(std::make_pair("MA Adjusted Selection",38));
+    GenLabel.push_back(std::make_pair("MA Adjusted Selection",28));
     ScalingFactors.push_back(DataPOT/MCMaPOT);
 
     GenLabel.push_back(std::make_pair("TEM Selection",30));
     ScalingFactors.push_back(DataPOT/MCTEMPOT);
 
-    GenLabel.push_back(std::make_pair("MEC Selection",42));
+    GenLabel.push_back(std::make_pair("MEC Selection",38));
     ScalingFactors.push_back(DataPOT/MCMECPOT);
 
     GenLabel.push_back(std::make_pair("MC Truth",1));
@@ -243,44 +243,54 @@ void DrawCCInclusive()
         SelXVtxPosition.push_back( (TH1F*) SelectionFile->Get(("Vertex X position "+Label.first).c_str()) );
         SelYVtxPosition.push_back( (TH1F*) SelectionFile->Get(("Vertex Y position "+Label.first).c_str()) );
         SelZVtxPosition.push_back( (TH1F*) SelectionFile->Get(("Vertex Z position "+Label.first).c_str()) );
-        
+
         // Set colour
         SelectionTrackRange.back()->SetFillColor(Label.second);
         SelectionTrackRange.back()->SetLineColor(Label.second);
         SelectionTrackRange.back()->SetMarkerColor(Label.second);
-        
+
         SelectionCosTheta.back()->SetFillColor(Label.second);
         SelectionCosTheta.back()->SetLineColor(Label.second);
         SelectionCosTheta.back()->SetMarkerColor(Label.second);
-        
+
         SelectionTheta.back()->SetFillColor(Label.second);
         SelectionTheta.back()->SetLineColor(Label.second);
         SelectionTheta.back()->SetMarkerColor(Label.second);
-        
+
         SelectionPhi.back()->SetFillColor(Label.second);
         SelectionPhi.back()->SetLineColor(Label.second);
         SelectionPhi.back()->SetMarkerColor(Label.second);
-        
+
         SelectionMomentum.back()->SetFillColor(Label.second);
         SelectionMomentum.back()->SetLineColor(Label.second);
         SelectionMomentum.back()->SetMarkerColor(Label.second);
-        
+
         SelectionTrackLength.back()->SetFillColor(Label.second);
         SelectionTrackLength.back()->SetLineColor(Label.second);
         SelectionTrackLength.back()->SetMarkerColor(Label.second);
-        
+
         SelXVtxPosition.back()->SetFillColor(Label.second);
         SelXVtxPosition.back()->SetLineColor(Label.second);
         SelXVtxPosition.back()->SetMarkerColor(Label.second);
-        
+
         SelYVtxPosition.back()->SetFillColor(Label.second);
         SelYVtxPosition.back()->SetLineColor(Label.second);
         SelYVtxPosition.back()->SetMarkerColor(Label.second);
-        
+
         SelZVtxPosition.back()->SetFillColor(Label.second);
         SelZVtxPosition.back()->SetLineColor(Label.second);
         SelZVtxPosition.back()->SetMarkerColor(Label.second);
     }
+
+    SelectionTrackRange.at(0)->SetMarkerStyle(9);
+    SelectionCosTheta.at(0)->SetMarkerStyle(9);
+    SelectionTheta.at(0)->SetMarkerStyle(9);
+    SelectionPhi.at(0)->SetMarkerStyle(9);
+    SelectionMomentum.at(0)->SetMarkerStyle(9);
+    SelectionTrackLength.at(0)->SetMarkerStyle(9);
+    SelXVtxPosition.at(0)->SetMarkerStyle(9);
+    SelYVtxPosition.at(0)->SetMarkerStyle(9);
+    SelZVtxPosition.at(0)->SetMarkerStyle(9);
 
     // MC Background
     std::vector<std::pair<std::string,unsigned int>> BgrLabel;
@@ -321,41 +331,41 @@ void DrawCCInclusive()
             BgrZVtxPosition.at(file_no).push_back( (TH1F*) SelectionFile->Get((Label.first+"Background ZVtx "+std::to_string(file_no)).c_str()) );
 
             // Set colours
-            BgrTrackRange.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrTrackRange.at(file_no).back()->SetFillColor(Label.second);
             BgrTrackRange.at(file_no).back()->SetLineColor(Label.second);
             BgrTrackRange.at(file_no).back()->SetMarkerColor(Label.second);
 
-            BgrCosTheta.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrCosTheta.at(file_no).back()->SetFillColor(Label.second);
             BgrCosTheta.at(file_no).back()->SetLineColor(Label.second);
             BgrCosTheta.at(file_no).back()->SetMarkerColor(Label.second);
 
-            BgrTheta.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrTheta.at(file_no).back()->SetFillColor(Label.second);
             BgrTheta.at(file_no).back()->SetLineColor(Label.second);
             BgrTheta.at(file_no).back()->SetMarkerColor(Label.second);
 
-            BgrPhi.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrPhi.at(file_no).back()->SetFillColor(Label.second);
             BgrPhi.at(file_no).back()->SetLineColor(Label.second);
             BgrPhi.at(file_no).back()->SetMarkerColor(Label.second);
 
-            BgrMomentum.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrMomentum.at(file_no).back()->SetFillColor(Label.second);
             BgrMomentum.at(file_no).back()->SetLineColor(Label.second);
             BgrMomentum.at(file_no).back()->SetMarkerColor(Label.second);
 
-            BgrTrackLength.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrTrackLength.at(file_no).back()->SetFillColor(Label.second);
             BgrTrackLength.at(file_no).back()->SetLineColor(Label.second);
             BgrTrackLength.at(file_no).back()->SetMarkerColor(Label.second);
 
-            BgrXVtxPosition.at(file_no).back()->SetFillColor(Label.second);
-            BgrXVtxPosition.at(file_no).back()->SetLineColor(Label.second);
-            BgrXVtxPosition.at(file_no).back()->SetMarkerColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrXVtxPosition.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrXVtxPosition.at(file_no).back()->SetLineColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrXVtxPosition.at(file_no).back()->SetMarkerColor(Label.second);
 
-            BgrYVtxPosition.at(file_no).back()->SetFillColor(Label.second);
-            BgrYVtxPosition.at(file_no).back()->SetLineColor(Label.second);
-            BgrYVtxPosition.at(file_no).back()->SetMarkerColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrYVtxPosition.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrYVtxPosition.at(file_no).back()->SetLineColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrYVtxPosition.at(file_no).back()->SetMarkerColor(Label.second);
 
-            BgrZVtxPosition.at(file_no).back()->SetFillColor(Label.second);
-            BgrZVtxPosition.at(file_no).back()->SetLineColor(Label.second);
-            BgrZVtxPosition.at(file_no).back()->SetMarkerColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrZVtxPosition.at(file_no).back()->SetFillColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrZVtxPosition.at(file_no).back()->SetLineColor(Label.second);
+            if(Label.second != BgrLabel.back().second)BgrZVtxPosition.at(file_no).back()->SetMarkerColor(Label.second);
         }
     }
 
@@ -438,6 +448,26 @@ void DrawCCInclusive()
                 BgrZVtxPosition.at(scale_no-2).at(bgr_no) -> Scale(ScalingFactors.at(scale_no));
             }
 
+            BgrTrackRange.at(scale_no-2).back() -> Add(BgrTrackRange.at(scale_no-2).front());
+            BgrCosTheta.at(scale_no-2).back() -> Add(BgrCosTheta.at(scale_no-2).front());
+            BgrTheta.at(scale_no-2).back() -> Add(BgrTheta.at(scale_no-2).front());
+            BgrPhi.at(scale_no-2).back() -> Add(BgrPhi.at(scale_no-2).front());
+            BgrMomentum.at(scale_no-2).back() -> Add(BgrMomentum.at(scale_no-2).front());
+            BgrTrackLength.at(scale_no-2).back() -> Add(BgrTrackLength.at(scale_no-2).front());
+            BgrXVtxPosition.at(scale_no-2).back() -> Add(BgrXVtxPosition.at(scale_no-2).front());
+            BgrYVtxPosition.at(scale_no-2).back() -> Add(BgrYVtxPosition.at(scale_no-2).front());
+            BgrZVtxPosition.at(scale_no-2).back() -> Add(BgrZVtxPosition.at(scale_no-2).front());
+
+            BgrTrackRange.at(scale_no-2).back() -> Add(SelectionTrackRange.at(1));
+            BgrCosTheta.at(scale_no-2).back() -> Add(SelectionCosTheta.at(1));
+            BgrTheta.at(scale_no-2).back() -> Add(SelectionTheta.at(1));
+            BgrPhi.at(scale_no-2).back() -> Add(SelectionPhi.at(1));
+            BgrMomentum.at(scale_no-2).back() -> Add(SelectionMomentum.at(1));
+            BgrTrackLength.at(scale_no-2).back() -> Add(SelectionTrackLength.at(1));
+            BgrXVtxPosition.at(scale_no-2).back() -> Add(SelXVtxPosition.at(1));
+            BgrYVtxPosition.at(scale_no-2).back() -> Add(SelYVtxPosition.at(1));
+            BgrZVtxPosition.at(scale_no-2).back() -> Add(SelZVtxPosition.at(1));
+
             for(unsigned int syst_no = 0; syst_no < SystLabel.size(); syst_no++)
             {
                 TrackRangeBeamSys.at(scale_no-2).at(syst_no) -> Scale(std::pow(ScalingFactors.at(scale_no),2));
@@ -453,17 +483,6 @@ void DrawCCInclusive()
         }
 
     }
-
-    // Generate New set of histograms containing the distributions with systematics + statistics
-    std::vector<TH1F*> SystTrackRange;
-    std::vector<TH1F*> SystCosTheta;
-    std::vector<TH1F*> SystTheta;
-    std::vector<TH1F*> SystPhi;
-    std::vector<TH1F*> SystMomentum;
-    std::vector<TH1F*> SystTrackLength;
-    std::vector<TH1F*> SystXVtxPosition;
-    std::vector<TH1F*> SystYVtxPosition;
-    std::vector<TH1F*> SystZVtxPosition;
 
     // Loop over all MC files
     for(unsigned int file_no = 0; file_no < 4; file_no++)
@@ -521,15 +540,15 @@ void DrawCCInclusive()
         ZVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrZVtxPosition.at(file_no).at(1));
 
         // Add all variances up
-        TrackRangeBeamSys.at(file_no).push_front( (TH1F*)TrackRangeBeamSys.at(file_no).front()->Clone() );
-        CosThetaBeamSys.at(file_no).push_front( (TH1F*)CosThetaBeamSys.at(file_no).front()->Clone() );
-        ThetaBeamSys.at(file_no).push_front( (TH1F*)ThetaBeamSys.at(file_no).front()->Clone() );
-        PhiBeamSys.at(file_no).push_front( (TH1F*)PhiBeamSys.at(file_no).front()->Clone() );
-        MomentumBeamSys.at(file_no).push_front( (TH1F*)MomentumBeamSys.at(file_no).front()->Clone() );
-        TrackLengthBeamSys.at(file_no).push_front( (TH1F*)TrackLengthBeamSys.at(file_no).front()->Clone() );
-        XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)XVtxPositionBeamSys.at(file_no).front()->Clone() );
-        YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)YVtxPositionBeamSys.at(file_no).front()->Clone() );
-        ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)ZVtxPositionBeamSys.at(file_no).front()->Clone() );
+//         TrackRangeBeamSys.at(file_no).push_front( (TH1F*)TrackRangeBeamSys.at(file_no).front()->Clone() );
+//         CosThetaBeamSys.at(file_no).push_front( (TH1F*)CosThetaBeamSys.at(file_no).front()->Clone() );
+//         ThetaBeamSys.at(file_no).push_front( (TH1F*)ThetaBeamSys.at(file_no).front()->Clone() );
+//         PhiBeamSys.at(file_no).push_front( (TH1F*)PhiBeamSys.at(file_no).front()->Clone() );
+//         MomentumBeamSys.at(file_no).push_front( (TH1F*)MomentumBeamSys.at(file_no).front()->Clone() );
+//         TrackLengthBeamSys.at(file_no).push_front( (TH1F*)TrackLengthBeamSys.at(file_no).front()->Clone() );
+//         XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)XVtxPositionBeamSys.at(file_no).front()->Clone() );
+//         YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)YVtxPositionBeamSys.at(file_no).front()->Clone() );
+//         ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)ZVtxPositionBeamSys.at(file_no).front()->Clone() );
 
         // Create a total systematic entry at the front of the vector
         TrackRangeBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,700));
@@ -556,59 +575,7 @@ void DrawCCInclusive()
             ZVtxPositionBeamSys.at(file_no).front()->Add(ZVtxPositionBeamSys.at(file_no).at(sys_no));
         }
 
-        // Calculate standard deviation
-        for(unsigned int bin_no = 1; bin_no <= NumberOfBins; bin_no++)
-        {
-            TrackRangeBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(TrackRangeBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-            CosThetaBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(CosThetaBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-            ThetaBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(ThetaBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-            PhiBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(PhiBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-            MomentumBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(MomentumBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-            TrackLengthBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(TrackLengthBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-            XVtxPositionBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(XVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-            YVtxPositionBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(YVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-            ZVtxPositionBeamSys.at(file_no).front()->SetBinContent(bin_no,std::sqrt(ZVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no)));
-        }
-
-        // Fill data point with statistic uncertainties first
-        SystTrackRange.push_back( (TH1F*)SelectionTrackRange.at(file_no+2)->Clone() );
-        SystCosTheta.push_back( (TH1F*)SelectionCosTheta.at(file_no+2)->Clone() );
-        SystTheta.push_back( (TH1F*)SelectionTheta.at(file_no+2)->Clone() );
-        SystPhi.push_back( (TH1F*)SelectionPhi.at(file_no+2)->Clone() );
-        SystMomentum.push_back( (TH1F*)SelectionMomentum.at(file_no+2)->Clone() );
-        SystTrackLength.push_back( (TH1F*)SelectionTrackLength.at(file_no+2)->Clone() );
-        SystXVtxPosition.push_back( (TH1F*)SelXVtxPosition.at(file_no+2)->Clone() );
-        SystYVtxPosition.push_back( (TH1F*)SelYVtxPosition.at(file_no+2)->Clone() );
-        SystZVtxPosition.push_back( (TH1F*)SelZVtxPosition.at(file_no+2)->Clone() );
-
-        SystTrackRange.back() -> Add(SelectionTrackRange.at(1));
-        SystCosTheta.back() -> Add(SelectionCosTheta.at(1));
-        SystTheta.back() -> Add(SelectionTheta.at(1));
-        SystPhi.back() -> Add(SelectionPhi.at(1));
-        SystMomentum.back() -> Add(SelectionMomentum.at(1));
-        SystTrackLength.back() -> Add(SelectionTrackLength.at(1));
-        SystXVtxPosition.back() -> Add(SelXVtxPosition.at(1));
-        SystYVtxPosition.back() -> Add(SelYVtxPosition.at(1));
-        SystZVtxPosition.back() -> Add(SelZVtxPosition.at(1));
-
-        // Generate New set of histograms containing the distributions with systematics + statistics
-        for(unsigned int bin_no = 1; bin_no <= NumberOfBins; bin_no++)
-        {
-            SystTrackRange.back()->SetBinError(bin_no,SystTrackRange.back()->GetBinError(bin_no)+TrackRangeBeamSys.at(file_no).front()->GetBinContent(bin_no));
-            SystCosTheta.back()->SetBinError(bin_no,SystCosTheta.back()->GetBinError(bin_no)+CosThetaBeamSys.at(file_no).front()->GetBinContent(bin_no));
-            SystTheta.back()->SetBinError(bin_no,SystTheta.back()->GetBinError(bin_no)+ThetaBeamSys.at(file_no).front()->GetBinContent(bin_no));
-            SystPhi.back()->SetBinError(bin_no,SystPhi.back()->GetBinError(bin_no)+PhiBeamSys.at(file_no).front()->GetBinContent(bin_no));
-            SystMomentum.back()->SetBinError(bin_no,SystMomentum.back()->GetBinError(bin_no)+MomentumBeamSys.at(file_no).front()->GetBinContent(bin_no));
-            SystTrackLength.back()->SetBinError(bin_no,SystTrackLength.back()->GetBinError(bin_no)+TrackLengthBeamSys.at(file_no).front()->GetBinContent(bin_no));
-            SystXVtxPosition.back()->SetBinError(bin_no,SystXVtxPosition.back()->GetBinError(bin_no)+XVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no));
-            SystYVtxPosition.back()->SetBinError(bin_no,SystYVtxPosition.back()->GetBinError(bin_no)+YVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no));
-            SystZVtxPosition.back()->SetBinError(bin_no,SystZVtxPosition.back()->GetBinError(bin_no)+ZVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no));
-        }
-    }
-
-    // Add Off-Beam sample to MC prediction standard (for all MC predictions, put this into loop with file_no+2 index)
-    for(unsigned int file_no = 0; file_no < 4; file_no++)
-    {
+        // Add Off-Beam sample to MC prediction standard (for all MC predictions, put this into loop with file_no+2 index)
         SelectionTrackRange.at(file_no+2)-> Add(SelectionTrackRange.at(1));
         SelectionCosTheta.at(file_no+2)-> Add(SelectionCosTheta.at(1));
         SelectionTheta.at(file_no+2)-> Add(SelectionTheta.at(1));
@@ -618,8 +585,50 @@ void DrawCCInclusive()
         SelXVtxPosition.at(file_no+2)-> Add(SelXVtxPosition.at(1));
         SelYVtxPosition.at(file_no+2)-> Add(SelYVtxPosition.at(1));
         SelZVtxPosition.at(file_no+2)-> Add(SelZVtxPosition.at(1));
-    }
+
+        // Add systematics to error bars: sqrt(systematics^2 + statistics^2)
+        for(unsigned int bin_no = 1; bin_no <= NumberOfBins; bin_no++)
+        {
+            SelectionTrackRange.at(file_no+2) -> SetBinError( bin_no, std::sqrt( std::pow(SelectionTrackRange.at(file_no+2)->GetBinError(bin_no),2) + TrackRangeBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+
+            SelectionCosTheta.at(file_no+2) -> SetBinError( bin_no, std::sqrt( std::pow(SelectionCosTheta.at(file_no+2)->GetBinError(bin_no),2) + CosThetaBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+
+            SelectionTheta.at(file_no+2) -> SetBinError( bin_no, std::sqrt( std::pow(SelectionTheta.at(file_no+2)->GetBinError(bin_no),2) + ThetaBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+
+            SelectionPhi.at(file_no+2) -> SetBinError( bin_no, std::sqrt( std::pow(SelectionPhi.at(file_no+2)->GetBinError(bin_no),2) + PhiBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+
+            SelectionMomentum.at(file_no+2) -> SetBinError( bin_no, std::sqrt( std::pow(SelectionMomentum.at(file_no+2)->GetBinError(bin_no),2) + MomentumBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+
+            SelectionTrackLength.at(file_no+2) -> SetBinError( bin_no, std::sqrt( std::pow(SelectionTrackLength.at(file_no+2)->GetBinError(bin_no),2) + TrackLengthBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+
+            SelXVtxPosition.at(file_no+2) -> SetBinError( bin_no, std::sqrt( std::pow(SelXVtxPosition.at(file_no+2)->GetBinError(bin_no),2) + XVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+
+            SelYVtxPosition.at(file_no+2) -> SetBinError( bin_no, std::sqrt( std::pow(SelYVtxPosition.at(file_no+2)->GetBinError(bin_no),2) + YVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+
+            SelZVtxPosition.at(file_no+2) -> SetBinError (bin_no, std::sqrt( std::pow(SelZVtxPosition.at(file_no+2)->GetBinError(bin_no),2) + ZVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
+        }
+    } // end MC-File loop
+
     // END HISTOGRAM CALCULATIONS ------------------------------------------------------------------------------------------------------------------------
+
+    // BEGIN CHI-SQUARED ANALYSIS ------------------------------------------------------------------------------------------------------------------------
+
+    std::cout << "----------------------------------------------------------------------------------" << std::endl;
+    std::cout << " Distribution | \t MA = 0.99 \t MA = 1.35 \t TEM \t \t MEC" << std::endl;
+    std::cout << "----------------------------------------------------------------------------------" << std::endl;
+    std::cout << "Track Range |\t \t" << SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(2),"CHI2/NDF") << "\t" << SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(3),"CHI2/NDF") << "\t\t" << SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(4),"CHI2/NDF") << "\t" << SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "Cos Theta |\t \t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(2),"CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(3),"CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(4),"CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "Theta |\t \t \t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(2),"CHI2/NDF") << "\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(3),"CHI2/NDF") << "\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(4),"CHI2/NDF") << "\t\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "Phi |\t \t \t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(2),"CHI2/NDF") << "\t\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(3),"CHI2/NDF") << "\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(4),"CHI2/NDF") << "\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "Momentum |\t \t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(2),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(3),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(4),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(5),"CHI2/NDF") << std::endl;
+     std::cout << "Track Length |\t \t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(2),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(3),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(4),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(5),"CHI2/NDF") << std::endl;
+     std::cout << "X Vtx |\t \t \t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(5),"CHI2/NDF") << std::endl;
+     std::cout << "Y Vtx |\t \t \t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(2),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(3),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(4),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(5),"CHI2/NDF") << std::endl;
+     std::cout << "Z Vtx |\t \t \t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "----------------------------------------------------------------------------------" << std::endl;
+
+    // END CHI-SQUARED ANALYSIS --------------------------------------------------------------------------------------------------------------------------
+
 
     // BEGIN BGR STACKING --------------------------------------------------------------------------------------------------------------------------------
     THStack* StackBgrTrackRange = new THStack("Bgr Track Range","Bgr Track Range");
@@ -657,8 +666,10 @@ void DrawCCInclusive()
     }
 
     // END BGR STACKING ----------------------------------------------------------------------------------------------------------------------------------
-    
-    // BEGIN LEGEND --------------------------------------------------------------------------------------------------------------------------------------
+
+    // BEGIN LEGENDS -------------------------------------------------------------------------------------------------------------------------------------
+
+    // Forward folding with backgrounds legend
     TLegend* Legend = new TLegend(0.48,0.41,0.85,0.85);
     Legend->SetLineStyle ( 0 );
     Legend->SetLineColorAlpha ( 0,0 );
@@ -667,13 +678,10 @@ void DrawCCInclusive()
 //     Legend->SetTextFont ( 43 );
 //     Legend->SetTextSize ( 35 );
     Legend->SetHeader("Normalised to 4.95 #times 10^{19} POT","C");
-    
-    TLegendEntry *header = (TLegendEntry*)Legend->GetListOfPrimitives()->First();
-//     header->SetTextAlign(22);
-//     header->SetTextColor(2);
-    header->SetTextSize(0.05);
-    
-    
+
+    TLegendEntry *Header = (TLegendEntry*)Legend->GetListOfPrimitives()->First();
+    Header->SetTextSize(0.05);
+
     std::vector<std::string> LegendLabel;
     LegendLabel.push_back("Off-Beam Cosmic (Data)");
     LegendLabel.push_back("Cosmic BGR (MC)");
@@ -682,75 +690,74 @@ void DrawCCInclusive()
     LegendLabel.push_back("#bar{#nu}_{#mu} BGR (MC)");
     LegendLabel.push_back("#nu_{e} & #bar{#nu}_{e} BGR (MC)");
     LegendLabel.push_back("#nu_{x} NC BGR events (MC)");
-    LegendLabel.push_back("Selected #nu_{#mu} CC + BGR (MC)");
-    
+
     Legend->AddEntry( SelectionTrackRange.at(0), "On-Beam BNB (Data)","lep" );
-    
-//     Legend->AddEntry( SelectionTrackRange.at(2), "Selected #nu_{#mu} CC signal & bgr","f" );
+    Legend->AddEntry( SelectionTrackRange.at(2), "Selected #nu_{#mu} CC + BGR (MC)","f" );
     for(int bgr_no = LegendLabel.size()-1; bgr_no > 0 ; bgr_no--)
     {
         Legend->AddEntry( BgrTrackRange.at(0).at(bgr_no), (LegendLabel.at(bgr_no)).c_str(),"f" );
     }
     Legend->AddEntry( SelectionTrackRange.at(1), (LegendLabel.front()).c_str(),"f" );
-    
-    // END LEGEND ----------------------------------------------------------------------------------------------------------------------------------------
-//     std::cout << CosmicMomentum.back() << std::endl;
 
-//     TrackRangeBeamSys
-//     CosThetaBeamSys
-//     ThetaBeamSys
-//     PhiBeamSys
-//     MomentumBeamSys
-//     TrackLengthBeamSys
-//     XVtxPositionBeamSys
-//     YVtxPositionBeamSys
-//     ZVtxPositionBeamSys
+    // ------------------------------------------------------------------------------------------------
 
-//     0 SystLabel.push_back("all");
-//     1 SystLabel.push_back("cosmic");
-//     2 SystLabel.push_back("dirt");
-//     3 SystLabel.push_back("outFV");
-//     4 SystLabel.push_back("anti nu_mu");
-//     5 SystLabel.push_back("n_e-like");
-//     6 SystLabel.push_back("nu_NC");
-//     7 SystLabel.push_back("PureSelected");
+    // Legend for different models
+    TLegend* ModelLegend = new TLegend(0.48,0.60,0.85,0.85);
+    ModelLegend->SetLineStyle ( 0 );
+    ModelLegend->SetLineColorAlpha ( 0,0 );
+    ModelLegend->SetFillStyle ( 0 );
+    ModelLegend->SetMargin ( 0.2 );
+    ModelLegend->SetHeader("Normalised to 4.95 #times 10^{19} POT","C");
 
-    TCanvas *C0 = new TCanvas("C0", "C0", 700, 500);
-    SystTrackRange.at(0) -> SetFillColorAlpha(46,0.35);
-    SystTrackRange.at(0) -> GetYaxis() -> SetRangeUser(0,900);
-    SystTrackRange.at(0) -> Draw("E2 SAME");
-    StackBgrTrackRange -> Draw("HIST SAME");
+    TLegendEntry *ModelHeader = (TLegendEntry*)ModelLegend->GetListOfPrimitives()->First();
+    ModelHeader->SetTextSize(0.05);
+
+    std::vector<std::string> ModelLegendLabel;
+    ModelLegendLabel.push_back("MC M_{A} = 0.99 GeV");
+    ModelLegendLabel.push_back("MC M_{A} = 1.35 GeV");
+    ModelLegendLabel.push_back("MC ESF & TEM");
+    ModelLegendLabel.push_back("MC MEC");
+
+    ModelLegend->AddEntry( SelectionTrackRange.at(0), "Data On-Beam BNB","lep" );
+    for(unsigned int bgr_no = 0; bgr_no < ModelLegendLabel.size() ; bgr_no++)
+    {
+        ModelLegend->AddEntry( SelectionTrackRange.at(bgr_no+2), (ModelLegendLabel.at(bgr_no)).c_str(),"lf" );
+    }
+
+    // END LEGENDS ---------------------------------------------------------------------------------------------------------------------------------------
+
+    // BEGIN DRAW FORWARD FOLDING ------------------------------------------------------------------------------------------------------------------------
+
+    TCanvas *C0 = new TCanvas("C0", "C0", 1400, 1000);
+    SelectionTrackRange.at(2) -> GetYaxis() -> SetRangeUser(0,900);
     SelectionTrackRange.at(2) -> Draw("E2 SAME");
+    StackBgrTrackRange -> Draw("HIST SAME");
     SelectionTrackRange.at(0) -> SetLineColor(1);
     SelectionTrackRange.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
     C0->SaveAs("ForwardFoldedTrackRange.pdf");
-    
+
     Legend -> SetX1NDC(0.15);
     Legend -> SetX2NDC(0.52);
 
-    TCanvas *C1 = new TCanvas("C1", "C1", 700, 500);
-    SystCosTheta.at(0) -> SetFillColorAlpha(46,0.35);
-    SystCosTheta.at(0) -> GetYaxis() -> SetRangeUser(0,1400);
-    SystCosTheta.at(0) -> Draw("E2 SAME");
-    StackBgrCosTheta -> Draw("HIST SAME");
+    TCanvas *C1 = new TCanvas("C1", "C1", 1400, 1000);
+    SelectionCosTheta.at(2) -> GetYaxis() -> SetRangeUser(0,1400);
     SelectionCosTheta.at(2) -> Draw("E2 SAME");
+    StackBgrCosTheta -> Draw("HIST SAME");
     SelectionCosTheta.at(0) -> SetLineColor(1);
     SelectionCosTheta.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
     C1->SaveAs("ForwardFoldedCosTheta.pdf");
-    
+
     Legend -> SetX1NDC(0.48);
     Legend -> SetX2NDC(0.85);
 
-    TCanvas *C2 = new TCanvas("C2", "C2", 700, 500);
-    SystTheta.at(0) -> SetFillColorAlpha(46,0.35);
-    SystTheta.at(0) -> GetYaxis() -> SetRangeUser(0,700);
-    SystTheta.at(0) -> Draw("E2 SAME");
-    StackBgrTheta -> Draw("HIST SAME");
+    TCanvas *C2 = new TCanvas("C2", "C2", 1400, 1000);
+    SelectionTheta.at(2) -> GetYaxis() -> SetRangeUser(0,700);
     SelectionTheta.at(2) -> Draw("E2 SAME");
+    StackBgrTheta -> Draw("HIST SAME");
     SelectionTheta.at(0) -> SetLineColor(1);
     SelectionTheta.at(0) -> Draw("SAME");
     Legend -> Draw();
@@ -759,96 +766,316 @@ void DrawCCInclusive()
 
 //     Legend -> SetX1NDC(0.40);
 //     Legend -> SetX2NDC(0.77);
-    
-    TCanvas *C3 = new TCanvas("C3", "C3", 700, 500);
-    SystPhi.at(0) -> SetFillColorAlpha(46,0.35);
-    SystPhi.at(0) -> SetLineColorAlpha(46,0.35);
-    SystPhi.at(0) -> GetYaxis() -> SetRangeUser(0,400);
-    SystPhi.at(0) -> Draw("E2 SAME");
-    StackBgrPhi-> Draw("HIST SAME");
+
+    TCanvas *C3 = new TCanvas("C3", "C3", 1400, 1000);
+    SelectionPhi.at(2) -> GetYaxis() -> SetRangeUser(0,400);
     SelectionPhi.at(2) -> Draw("E2 SAME");
+    StackBgrPhi-> Draw("HIST SAME");
     SelectionPhi.at(0) -> SetLineColor(1);
     SelectionPhi.at(0) -> Draw("SAME");
 //     Legend -> Draw();
     gPad->RedrawAxis();
     C3->SaveAs("ForwardFoldedPhi.pdf");
 
-    TCanvas *C4 = new TCanvas("C4", "C4", 700, 500);
-    SystMomentum.at(0) -> SetFillColorAlpha(46,0.35);
-    SystMomentum.at(0) -> GetYaxis() -> SetRangeUser(0,1400);
-    SystMomentum.at(0) -> Draw("E2 SAME");
-    StackBgrMomentum -> Draw("HIST SAME");
+    TCanvas *C4 = new TCanvas("C4", "C4", 1400, 1000);
+    SelectionMomentum.at(2) -> GetYaxis() -> SetRangeUser(0,1400);
     SelectionMomentum.at(2) -> Draw("E2 SAME");
+    StackBgrMomentum -> Draw("HIST SAME");
     SelectionMomentum.at(0) -> SetLineColor(1);
     SelectionMomentum.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
     C4->SaveAs("ForwardFoldedMomentum.pdf");
 
-    TCanvas *C5 = new TCanvas("C5", "C5", 700, 500);
-    SystTrackLength.at(0) -> SetFillColorAlpha(46,0.35);
-    SystTrackLength.at(0) -> GetYaxis() -> SetRangeUser(0,1000);
-    SystTrackLength.at(0) -> Draw("E2 SAME");
-    StackBgrTrackLength -> Draw("HIST SAME");
+    TCanvas *C5 = new TCanvas("C5", "C5", 1400, 1000);
+    SelectionTrackLength.at(2) -> GetYaxis() -> SetRangeUser(0,1000);
     SelectionTrackLength.at(2) -> Draw("E2 SAME");
+    StackBgrTrackLength -> Draw("HIST SAME");
     SelectionTrackLength.at(0) -> SetLineColor(1);
     SelectionTrackLength.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
     C5->SaveAs("ForwardFoldedTrackLength.pdf");
-    
+
     Legend -> SetNColumns(2);
     Legend -> SetX1NDC(0.13);
     Legend -> SetX2NDC(0.87);
     Legend -> SetY1NDC(0.60);
     Legend -> SetY2NDC(0.85);
-    
-    TCanvas *C6 = new TCanvas("C6", "C6", 700, 500);
-    SystXVtxPosition.at(0) -> SetFillColorAlpha(46,0.35);
-    SystXVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(0,400);
-    SystXVtxPosition.at(0) -> Draw("E2 SAME");
-    StackBgrXVtxPosition -> Draw("HIST SAME");
+
+    TCanvas *C6 = new TCanvas("C6", "C6", 1400, 1000);
+    SelXVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0,400);
     SelXVtxPosition.at(2) -> Draw("E2 SAME");
+    StackBgrXVtxPosition -> Draw("HIST SAME");
     SelXVtxPosition.at(0) -> SetLineColor(1);
     SelXVtxPosition.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
     C6->SaveAs("ForwardFoldedXVtxPosition.pdf");
 
-    TCanvas *C7 = new TCanvas("C7", "C7", 700, 500);
-    SystYVtxPosition.at(0) -> SetFillColorAlpha(46,0.35);
-    SystYVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(0,400);
-    SystYVtxPosition.at(0) -> Draw("E2 SAME");
-    StackBgrYVtxPosition -> Draw("HIST SAME");
+    TCanvas *C7 = new TCanvas("C7", "C7", 1400, 1000);
+    SelYVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0,400);
     SelYVtxPosition.at(2) -> Draw("E2 SAME");
+    StackBgrYVtxPosition -> Draw("HIST SAME");
     SelYVtxPosition.at(0) -> SetLineColor(1);
     SelYVtxPosition.at(0) -> Draw("SAME");
     gPad->RedrawAxis();
     C7->SaveAs("ForwardFoldedYVtxPosition.pdf");
 
-    TCanvas *C8 = new TCanvas("C8", "C8", 700, 500);
-    SystZVtxPosition.at(0) -> SetFillColorAlpha(46,0.35);
-    SystZVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(0,400);
-    SystZVtxPosition.at(0) -> Draw("E2 SAME");
-    StackBgrZVtxPosition -> Draw("HIST SAME");
+    TCanvas *C8 = new TCanvas("C8", "C8", 1400, 1000);
+    SelZVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0,400);
     SelZVtxPosition.at(2) -> Draw("E2 SAME");
+    StackBgrZVtxPosition -> Draw("HIST SAME");
     SelZVtxPosition.at(0) -> SetLineColor(1);
     SelZVtxPosition.at(0) -> Draw("SAME");
     gPad->RedrawAxis();
     C8->SaveAs("ForwardFoldedZVtxPosition.pdf");
 
-    //     SelectionTrackRange.at(0) -> Draw(); // 1200
-//     SelectionCosTheta.at(0) -> Draw(); // 1400
-//     SelectionTheta.at(0) -> Draw(); // 700
-//     SelectionPhi.at(0) -> Draw(); // 400
-//     SelectionMomentum.at(0) -> Draw(); // 1400
-//     SelectionTrackLength.at(0) -> Draw(); // 1000
-//     SelXVtxPosition.at(0) -> Draw(); // 350
-//     SelYVtxPosition.at(0) -> Draw(); // 350
-//     SelZVtxPosition.at(0) -> Draw(); // 350
+    // END DRAW FORWARD FOLDING --------------------------------------------------------------------------------------------------------------------------
 
+    // BEGIN DRAW Models--------- ------------------------------------------------------------------------------------------------------------------------
 
-//     TCanvas *C1 = new TCanvas("C1", "C1", 700, 500);
+    TCanvas *Canvas0 = new TCanvas("Range", "Range", 1400, 1000);
+    Canvas0->cd();
+    SelectionTrackRange.at(2) ->  GetYaxis() -> SetRangeUser(0,900);
+    SelectionTrackRange.at(2) -> SetFillColorAlpha(46,0.3);
+    SelectionTrackRange.at(2) -> Draw("E2 SAME");
+    BgrTrackRange.at(0).back() -> SetLineColor(46);
+    BgrTrackRange.at(0).back() -> Draw("HIST SAME");
+    SelectionTrackRange.at(3) -> SetFillColorAlpha(28,0.3);
+    SelectionTrackRange.at(3) -> SetMarkerColor(28);
+    SelectionTrackRange.at(3) -> Draw("E2 SAME");
+    BgrTrackRange.at(1).back() -> SetLineColor(28);
+    BgrTrackRange.at(1).back() -> Draw("HIST SAME");
+    SelectionTrackRange.at(4) -> SetFillColorAlpha(30,0.3);
+    SelectionTrackRange.at(4) -> Draw("E2 SAME");
+    BgrTrackRange.at(2).back() -> SetLineColor(30);
+    BgrTrackRange.at(2).back() -> Draw("HIST SAME");
+    SelectionTrackRange.at(5) -> SetFillColorAlpha(38,0.3);
+    SelectionTrackRange.at(5) -> Draw("E2 SAME");
+    BgrTrackRange.at(3).back() -> SetLineColor(38);
+    BgrTrackRange.at(3).back() -> Draw("HIST SAME");
+    SelectionTrackRange.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas0->SaveAs("ModelComparisonTrackRange.pdf");
+
+    ModelLegend -> SetX1NDC(0.15);
+    ModelLegend -> SetX2NDC(0.52);
+
+    TCanvas *Canvas1 = new TCanvas("CosTheta", "CosTheta", 1400, 1000);
+    Canvas1->cd();
+    SelectionCosTheta.at(2) ->  GetYaxis() -> SetRangeUser(0,1400);
+    SelectionCosTheta.at(2) -> SetFillColorAlpha(46,0.3);
+    SelectionCosTheta.at(2) -> Draw("E2 SAME");
+    BgrCosTheta.at(0).back() -> SetLineColor(46);
+    BgrCosTheta.at(0).back() -> Draw("HIST SAME");
+    SelectionCosTheta.at(3) -> SetFillColorAlpha(28,0.3);
+    SelectionCosTheta.at(3) -> SetMarkerColor(28);
+    SelectionCosTheta.at(3) -> Draw("E2 SAME");
+    BgrCosTheta.at(1).back() -> SetLineColor(28);
+    BgrCosTheta.at(1).back() -> Draw("HIST SAME");
+    SelectionCosTheta.at(4) -> SetFillColorAlpha(30,0.3);
+    SelectionCosTheta.at(4) -> Draw("E2 SAME");
+    BgrCosTheta.at(2).back() -> SetLineColor(30);
+    BgrCosTheta.at(2).back() -> Draw("HIST SAME");
+    SelectionCosTheta.at(5) -> SetFillColorAlpha(38,0.3);
+    SelectionCosTheta.at(5) -> Draw("E2 SAME");
+    BgrCosTheta.at(3).back() -> SetLineColor(38);
+    BgrCosTheta.at(3).back() -> Draw("HIST SAME");
+    SelectionCosTheta.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas1->SaveAs("ModelComparisonCosTheta.pdf");
+
+    ModelLegend -> SetX1NDC(0.48);
+    ModelLegend -> SetX2NDC(0.85);
+
+    TCanvas *Canvas2 = new TCanvas("Theta", "Theta", 1400, 1000);
+    Canvas2->cd();
+    SelectionTheta.at(2) ->  GetYaxis() -> SetRangeUser(0,700);
+    SelectionTheta.at(2) -> SetFillColorAlpha(46,0.3);
+    SelectionTheta.at(2) -> Draw("E2 SAME");
+    BgrTheta.at(0).back() -> SetLineColor(46);
+    BgrTheta.at(0).back() -> Draw("HIST SAME");
+    SelectionTheta.at(3) -> SetFillColorAlpha(28,0.3);
+    SelectionTheta.at(3) -> SetMarkerColor(28);
+    SelectionTheta.at(3) -> Draw("E2 SAME");
+    BgrTheta.at(1).back() -> SetLineColor(28);
+    BgrTheta.at(1).back() -> Draw("HIST SAME");
+    SelectionTheta.at(4) -> SetFillColorAlpha(30,0.3);
+    SelectionTheta.at(4) -> Draw("E2 SAME");
+    BgrTheta.at(2).back() -> SetLineColor(30);
+    BgrTheta.at(2).back() -> Draw("HIST SAME");
+    SelectionTheta.at(5) -> SetFillColorAlpha(38,0.3);
+    SelectionTheta.at(5) -> Draw("E2 SAME");
+    BgrTheta.at(3).back() -> SetLineColor(38);
+    BgrTheta.at(3).back() -> Draw("HIST SAME");
+    SelectionTheta.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas2->SaveAs("ModelComparisonTheta.pdf");
+
+    ModelLegend -> SetX1NDC(0.38);
+    ModelLegend -> SetX2NDC(0.75);
+
+    TCanvas *Canvas3 = new TCanvas("Phi", "Phi", 1400, 1000);
+    Canvas3->cd();
+    SelectionPhi.at(2) ->  GetYaxis() -> SetRangeUser(0,400);
+    SelectionPhi.at(2) -> SetFillColorAlpha(46,0.3);
+    SelectionPhi.at(2) -> Draw("E2 SAME");
+    BgrPhi.at(0).back() -> SetLineColor(46);
+    BgrPhi.at(0).back() -> Draw("HIST SAME");
+    SelectionPhi.at(3) -> SetFillColorAlpha(28,0.3);
+    SelectionPhi.at(3) -> SetMarkerColor(28);
+    SelectionPhi.at(3) -> Draw("E2 SAME");
+    BgrPhi.at(1).back() -> SetLineColor(28);
+    BgrPhi.at(1).back() -> Draw("HIST SAME");
+    SelectionPhi.at(4) -> SetFillColorAlpha(30,0.3);
+    SelectionPhi.at(4) -> Draw("E2 SAME");
+    BgrPhi.at(2).back() -> SetLineColor(30);
+    BgrPhi.at(2).back() -> Draw("HIST SAME");
+    SelectionPhi.at(5) -> SetFillColorAlpha(38,0.3);
+    SelectionPhi.at(5) -> Draw("E2 SAME");
+    BgrPhi.at(3).back() -> SetLineColor(38);
+    BgrPhi.at(3).back() -> Draw("HIST SAME");
+    SelectionPhi.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas3->SaveAs("ModelComparisonPhi.pdf");
+
+    ModelLegend -> SetX1NDC(0.48);
+    ModelLegend -> SetX2NDC(0.85);
+
+    TCanvas *Canvas4 = new TCanvas("Momentum", "Momentum", 1400, 1000);
+    Canvas4->cd();
+    SelectionMomentum.at(2) ->  GetYaxis() -> SetRangeUser(0,1400);
+    SelectionMomentum.at(2) -> SetFillColorAlpha(46,0.3);
+    SelectionMomentum.at(2) -> Draw("E2 SAME");
+    BgrMomentum.at(0).back() -> SetLineColor(46);
+    BgrMomentum.at(0).back() -> Draw("HIST SAME");
+    SelectionMomentum.at(3) -> SetFillColorAlpha(28,0.3);
+    SelectionMomentum.at(3) -> SetMarkerColor(28);
+    SelectionMomentum.at(3) -> Draw("E2 SAME");
+    BgrMomentum.at(1).back() -> SetLineColor(28);
+    BgrMomentum.at(1).back() -> Draw("HIST SAME");
+    SelectionMomentum.at(4) -> SetFillColorAlpha(30,0.3);
+    SelectionMomentum.at(4) -> Draw("E2 SAME");
+    BgrMomentum.at(2).back() -> SetLineColor(30);
+    BgrMomentum.at(2).back() -> Draw("HIST SAME");
+    SelectionMomentum.at(5) -> SetFillColorAlpha(38,0.3);
+    SelectionMomentum.at(5) -> Draw("E2 SAME");
+    BgrMomentum.at(3).back() -> SetLineColor(38);
+    BgrMomentum.at(3).back() -> Draw("HIST SAME");
+    SelectionMomentum.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas4->SaveAs("ModelComparisonMomentum.pdf");
+
+    TCanvas *Canvas5 = new TCanvas("Length", "Length", 1400, 1000);
+    Canvas5->cd();
+    SelectionTrackLength.at(2) ->  GetYaxis() -> SetRangeUser(0,1000);
+    SelectionTrackLength.at(2) -> SetFillColorAlpha(46,0.3);
+    SelectionTrackLength.at(2) -> Draw("E2 SAME");
+    BgrTrackLength.at(0).back() -> SetLineColor(46);
+    BgrTrackLength.at(0).back() -> Draw("HIST SAME");
+    SelectionTrackLength.at(3) -> SetFillColorAlpha(28,0.3);
+    SelectionTrackLength.at(3) -> SetMarkerColor(28);
+    SelectionTrackLength.at(3) -> Draw("E2 SAME");
+    BgrTrackLength.at(1).back() -> SetLineColor(28);
+    BgrTrackLength.at(1).back() -> Draw("HIST SAME");
+    SelectionTrackLength.at(4) -> SetFillColorAlpha(30,0.3);
+    SelectionTrackLength.at(4) -> Draw("E2 SAME");
+    BgrTrackLength.at(2).back() -> SetLineColor(30);
+    BgrTrackLength.at(2).back() -> Draw("HIST SAME");
+    SelectionTrackLength.at(5) -> SetFillColorAlpha(38,0.3);
+    SelectionTrackLength.at(5) -> Draw("E2 SAME");
+    BgrTrackLength.at(3).back() -> SetLineColor(38);
+    BgrTrackLength.at(3).back() -> Draw("HIST SAME");
+    SelectionTrackLength.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas5->SaveAs("ModelComparisonTrackLength.pdf");
+
+    ModelLegend -> SetX1NDC(0.15);
+    ModelLegend -> SetX2NDC(0.52);
+
+    TCanvas *Canvas6 = new TCanvas("XVtx", "XVtx", 1400, 1000);
+    Canvas6->cd();
+    SelXVtxPosition.at(2) ->  GetYaxis() -> SetRangeUser(0,400);
+    SelXVtxPosition.at(2) -> SetFillColorAlpha(46,0.3);
+    SelXVtxPosition.at(2) -> Draw("E2 SAME");
+    BgrXVtxPosition.at(0).back() -> SetLineColor(46);
+    BgrXVtxPosition.at(0).back() -> Draw("HIST SAME");
+    SelXVtxPosition.at(3) -> SetFillColorAlpha(28,0.3);
+    SelXVtxPosition.at(3) -> SetMarkerColor(28);
+    SelXVtxPosition.at(3) -> Draw("E2 SAME");
+    BgrXVtxPosition.at(1).back() -> SetLineColor(28);
+    BgrXVtxPosition.at(1).back() -> Draw("HIST SAME");
+    SelXVtxPosition.at(4) -> SetFillColorAlpha(30,0.3);
+    SelXVtxPosition.at(4) -> Draw("E2 SAME");
+    BgrXVtxPosition.at(2).back() -> SetLineColor(30);
+    BgrXVtxPosition.at(2).back() -> Draw("HIST SAME");
+    SelXVtxPosition.at(5) -> SetFillColorAlpha(38,0.3);
+    SelXVtxPosition.at(5) -> Draw("E2 SAME");
+    BgrXVtxPosition.at(3).back() -> SetLineColor(38);
+    BgrXVtxPosition.at(3).back() -> Draw("HIST SAME");
+    SelXVtxPosition.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas6->SaveAs("ModelComparisonXVtx.pdf");
+
+    TCanvas *Canvas7 = new TCanvas("YVtx", "YVtx", 1400, 1000);
+    Canvas7->cd();
+    SelYVtxPosition.at(2) ->  GetYaxis() -> SetRangeUser(0,400);
+    SelYVtxPosition.at(2) -> SetFillColorAlpha(46,0.3);
+    SelYVtxPosition.at(2) -> Draw("E2 SAME");
+    BgrYVtxPosition.at(0).back() -> SetLineColor(46);
+    BgrYVtxPosition.at(0).back() -> Draw("HIST SAME");
+    SelYVtxPosition.at(3) -> SetFillColorAlpha(28,0.3);
+    SelYVtxPosition.at(3) -> SetMarkerColor(28);
+    SelYVtxPosition.at(3) -> Draw("E2 SAME");
+    BgrYVtxPosition.at(1).back() -> SetLineColor(28);
+    BgrYVtxPosition.at(1).back() -> Draw("HIST SAME");
+    SelYVtxPosition.at(4) -> SetFillColorAlpha(30,0.3);
+    SelYVtxPosition.at(4) -> Draw("E2 SAME");
+    BgrYVtxPosition.at(2).back() -> SetLineColor(30);
+    BgrYVtxPosition.at(2).back() -> Draw("HIST SAME");
+    SelYVtxPosition.at(5) -> SetFillColorAlpha(38,0.3);
+    SelYVtxPosition.at(5) -> Draw("E2 SAME");
+    BgrYVtxPosition.at(3).back() -> SetLineColor(38);
+    BgrYVtxPosition.at(3).back() -> Draw("HIST SAME");
+    SelYVtxPosition.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas7->SaveAs("ModelComparisonYVtx.pdf");
+
+    TCanvas *Canvas8 = new TCanvas("ZVtx", "ZVtx", 1400, 1000);
+    Canvas8->cd();
+    SelZVtxPosition.at(2) ->  GetYaxis() -> SetRangeUser(0,400);
+    SelZVtxPosition.at(2) -> SetFillColorAlpha(46,0.3);
+    SelZVtxPosition.at(2) -> Draw("E2 SAME");
+    BgrZVtxPosition.at(0).back() -> SetLineColor(46);
+    BgrZVtxPosition.at(0).back() -> Draw("HIST SAME");
+    SelZVtxPosition.at(3) -> SetFillColorAlpha(28,0.3);
+    SelZVtxPosition.at(3) -> SetMarkerColor(28);
+    SelZVtxPosition.at(3) -> Draw("E2 SAME");
+    BgrZVtxPosition.at(1).back() -> SetLineColor(28);
+    BgrZVtxPosition.at(1).back() -> Draw("HIST SAME");
+    SelZVtxPosition.at(4) -> SetFillColorAlpha(30,0.3);
+    SelZVtxPosition.at(4) -> Draw("E2 SAME");
+    BgrZVtxPosition.at(2).back() -> SetLineColor(30);
+    BgrZVtxPosition.at(2).back() -> Draw("HIST SAME");
+    SelZVtxPosition.at(5) -> SetFillColorAlpha(38,0.3);
+    SelZVtxPosition.at(5) -> Draw("E2 SAME");
+    BgrZVtxPosition.at(3).back() -> SetLineColor(38);
+    BgrZVtxPosition.at(3).back() -> Draw("HIST SAME");
+    SelZVtxPosition.at(0)->Draw("SAME");
+    ModelLegend -> Draw();
+    gPad->RedrawAxis();
+    Canvas8->SaveAs("ModelComparisonZVtx.pdf");
+
+//     TCanvas *C1 = new TCanvas("C1", "C1", 1400, 1000);
 //     MomentumBeamSys.at(1).at(0) -> Draw();
 }
 
