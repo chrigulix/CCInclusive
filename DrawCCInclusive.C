@@ -79,7 +79,7 @@ void DrawCCInclusive()
 
     // Fill momentum calculation spline
     MomentumSplinePreparation();
-
+    
     std::string InputFolder = ".";
     std::string OutputFolder = ".";
 
