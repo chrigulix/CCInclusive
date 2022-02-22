@@ -18,10 +18,10 @@ void Scan(TH1F* RawHisto);
 void CalculateSign(TH1F* SignalHist, TH1F* BgrHist);
 void MovingAverage(TH1F* SignalHist, int AverageWidth);
 
-void DrawCutOptimisation()
+void CutHistoProducer()
 {
-//     std::string Folder = "/home/christoph/anatrees/CCInclusiveNote";
-    std::string Folder = "./CCInclFiles";
+    std::string Folder = "/home/christoph/anatrees/CCInclusiveNote";
+//     std::string Folder = "./CCInclFiles";
     
     TFile* InputFile = new TFile((Folder+"/Cut_Optimizer_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root").c_str());
 //     TFile* InputFile = new TFile("rootfiles/Cut_Optimizer_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Mod.root");
@@ -114,7 +114,7 @@ void DrawCutOptimisation()
     YPosLine -> Draw("SAME");
     YPosText -> Draw("SAME");
     gPad->RedrawAxis();
-    C4 -> SaveAs("../images/FirstCCInclusive/CutOptFiducialY.pdf");
+//     C4 -> SaveAs("../images/FirstCCInclusive/CutOptFiducialY.pdf");
     
     TCanvas* C5 = new TCanvas("Vertex Pos Z", "Vertex Pos Z", 1400, 1000);
     C5->cd();
@@ -145,7 +145,7 @@ void DrawCutOptimisation()
     LengthLine -> Draw("SAME");
     LengthText -> Draw("SAME");
     gPad->RedrawAxis();
-    C7 -> SaveAs("../images/FirstCCInclusive/CutOptTrackRange.pdf");
+//     C7 -> SaveAs("../images/FirstCCInclusive/CutOptTrackRange.pdf");
 }
 
 void ReverseScan ( TH1F* RawHisto )
