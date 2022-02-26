@@ -73,13 +73,13 @@ float GetMomentum(float TrackLength);
 void CalcSigEfficiency(std::vector<TH1F*>& HistVector);
 
 // Main Function
-void DrawCCInclusive()
+void DrawKinematicDistributions()
 {
     float NumberOfTargets = (FVx - 2*borderx) * (FVy - 2*bordery) * (FVz - 2*borderz) * Density * Avogadro/ArMass*NoNucleons;
 
     // Fill momentum calculation spline
     MomentumSplinePreparation();
-
+    
     std::string InputFolder = ".";
     std::string OutputFolder = ".";
 
@@ -518,7 +518,7 @@ void DrawCCInclusive()
 //         XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicXVtxPosition.back()->Clone() );
 //         YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicYVtxPosition.back()->Clone() );
 //         ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicZVtxPosition.back()->Clone() );
-
+        
         // First clone cosmic relative variance
         TrackRangeBeamSys.at(file_no).push_front( (TH1F*)BgrTrackRange.at(file_no).at(1)->Clone() );
         CosThetaBeamSys.at(file_no).push_front( (TH1F*)BgrCosTheta.at(file_no).at(1)->Clone() );
@@ -632,10 +632,10 @@ void DrawCCInclusive()
     std::cout << "Theta |\t \t \t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(2),"CHI2/NDF") << "\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(3),"CHI2/NDF") << "\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(4),"CHI2/NDF") << "\t\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(5),"CHI2/NDF") << std::endl;
     std::cout << "Phi |\t \t \t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(2),"CHI2/NDF") << "\t\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(3),"CHI2/NDF") << "\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(4),"CHI2/NDF") << "\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(5),"CHI2/NDF") << std::endl;
     std::cout << "Momentum |\t \t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(2),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(3),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(4),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(5),"CHI2/NDF") << std::endl;
-    std::cout << "Track Length |\t \t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(2),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(3),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(4),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(5),"CHI2/NDF") << std::endl;
-    std::cout << "X Vtx |\t \t \t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(5),"CHI2/NDF") << std::endl;
-    std::cout << "Y Vtx |\t \t \t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(2),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(3),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(4),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(5),"CHI2/NDF") << std::endl;
-    std::cout << "Z Vtx |\t \t \t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(5),"CHI2/NDF") << std::endl;
+     std::cout << "Track Length |\t \t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(2),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(3),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(4),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(5),"CHI2/NDF") << std::endl;
+     std::cout << "X Vtx |\t \t \t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(5),"CHI2/NDF") << std::endl;
+     std::cout << "Y Vtx |\t \t \t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(2),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(3),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(4),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(5),"CHI2/NDF") << std::endl;
+     std::cout << "Z Vtx |\t \t \t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(5),"CHI2/NDF") << std::endl;
     std::cout << "----------------------------------------------------------------------------------" << std::endl;
 
     // END CHI-SQUARED ANALYSIS --------------------------------------------------------------------------------------------------------------------------
@@ -745,57 +745,6 @@ void DrawCCInclusive()
     }
 
     // END LEGENDS ---------------------------------------------------------------------------------------------------------------------------------------
-
-    // BEGIN DRAW COSMIC DISTRIBUTIONS -------------------------------------------------------------------------------------------------------------------
-
-    TCanvas *Cosmic1 = new TCanvas("Cosmic1", "Cosmic1", 1000, 1000);
-    TPad *pad1 = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
-    pad1->SetBottomMargin(0);
-    pad1->Draw();
-    pad1->cd();
-    CosmicCosTheta.at(0) -> GetXaxis() -> SetLabelOffset(999);
-    CosmicCosTheta.at(0) -> GetXaxis() -> SetLabelSize(0);
-    CosmicCosTheta.at(0) -> GetYaxis() -> SetRangeUser(-0.1,4);
-    CosmicCosTheta.at(0) -> GetYaxis() -> SetTitle("PandoraCosmic Tracks per Event");
-    CosmicCosTheta.at(0) -> SetLineColor(9);
-    CosmicCosTheta.at(0) -> Draw("SAME");
-    CosmicCosTheta.at(1) -> SetLineColor(46);
-    CosmicCosTheta.at(1) -> Draw("SAME");
-    Cosmic1->cd();          // Go back to the main canvas before defining pad2
-    
-    TPad *pad2 = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
-    pad2->SetTopMargin(0);
-    pad2->SetBottomMargin(0.2);
-    pad2->Draw();
-    pad2->cd(); 
-    CosmicCosTheta.at(2) -> SetLineColor(13);
-    CosmicCosTheta.at(2) -> SetTitle("");
-    CosmicCosTheta.at(2) -> GetXaxis() -> SetLabelSize(0.1);
-    CosmicCosTheta.at(2) -> GetXaxis() -> SetTitleSize(0.1);
-    CosmicCosTheta.at(2) -> GetYaxis() -> SetTitle("Ratio (Data / MC)");
-    CosmicCosTheta.at(2) -> GetYaxis() -> SetLabelSize(0.1);
-    CosmicCosTheta.at(2) -> GetYaxis() -> SetTitleSize(0.1);
-    CosmicCosTheta.at(2) -> GetYaxis() -> SetTitleOffset(0.5);
-    CosmicCosTheta.at(2) -> Draw("SAME");
-    TLine* Line1CosTheta = new TLine(-1,1,1,1);
-//     Line1CosTheta -> SetLineWidth()
-    Line1CosTheta -> SetLineStyle(7);
-    Line1CosTheta -> Draw("SAME");
-//     Legend -> Draw();
-//     gPad->RedrawAxis();
-    Cosmic1->SaveAs("CosmicTrackRange.pdf");
-
-//     CosmicTrackRange.push_back( (TH1F*) CosmicFile->Get(("Track Range "+Label).c_str()) );
-//     CosmicCosTheta.push_back( (TH1F*) CosmicFile->Get(("cos#theta "+Label).c_str()) );
-//     CosmicTheta.push_back( (TH1F*) CosmicFile->Get(("#theta-Angle "+Label).c_str()) );
-//     CosmicPhi.push_back( (TH1F*) CosmicFile->Get(("#phi-Angle "+Label).c_str()) );
-//     CosmicMomentum.push_back( (TH1F*) CosmicFile->Get(("Momentum "+Label).c_str()) );
-//     CosmicTrackLength.push_back( (TH1F*) CosmicFile->Get(("Track Length "+Label).c_str()) );
-//     CosmicXVtxPosition.push_back( (TH1F*) CosmicFile->Get(("Vertex X position "+Label).c_str()) );
-//     CosmicYVtxPosition.push_back( (TH1F*) CosmicFile->Get(("Vertex Y position "+Label).c_str()) );
-//     CosmicZVtxPosition.push_back( (TH1F*) CosmicFile->Get(("Vertex Z position "+Label).c_str()) );
-
-    // END DRAW COSMIC DISTRIBUTIONS ---------------------------------------------------------------------------------------------------------------------
 
     // BEGIN DRAW FORWARD FOLDING ------------------------------------------------------------------------------------------------------------------------
 

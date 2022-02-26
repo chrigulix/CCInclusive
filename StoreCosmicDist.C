@@ -62,16 +62,21 @@ void CalcSigEfficiency(std::vector<TH1F*>& HistVector);
 // Main function
 void StoreCosmicDist()
 {
-    // 
+    //
     std::string InputFolder = "/home/christoph/anatrees/CCInclusiveNote";
     std::string OutputFolder = ".";
-    
+
     // Reconstructed data product used
-    std::string ProductName = "pandoraNu";
+//     std::string ProductName = "pandoraNu";
+//     std::string ProductName = "pandoraCosmic";
+
+    std::vector<std::string> RecoStream;
+    RecoStream.push_back("pandoraCosmic");
+    RecoStream.push_back("pandoraNu");
 
     // Data input file vector
     std::vector<TChain*> ChainVec;
-    
+
     // Prepare track length -> momentum function
     MomentumSplinePreparation();
 
@@ -134,8 +139,12 @@ void StoreCosmicDist()
     NumberOfEvents.push_back(ChainVec.back() -> GetEntries());
     GenLabel.push_back("In Time Corsika All");
     BeamWindow.push_back(std::make_pair(3.2,4.8));
-    
+
     GenLabel.push_back("Cosmic Systematics All");
+    
+    GenLabel.push_back("Data Off-Beam BNBEXT All PandoraNu");
+    GenLabel.push_back("In Time Corsika All PandoraNu");
+    GenLabel.push_back("Cosmic Systematics All PandoraNu");
 
     for(const auto& Label : GenLabel)
     {
@@ -200,128 +209,154 @@ void StoreCosmicDist()
         SelYVtxPosition.back()->Sumw2();
         SelZVtxPosition.back()->Sumw2();
     }
-    
-    std::vector<unsigned long int> NumberOfTracks;
-    std::vector<unsigned long int> NumberOfVertices;
 
-    // Loop over all files
-    for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
+    unsigned int RecoIndex = 0;
+    
+    // Loop over reco stream pandoraNu pandoraCosmic
+    for(auto ProductName : RecoStream)
     {
-        // Print file information
-        std::cout << "-------------File Progress--------------" << std::endl;
-        std::cout << "File \t \t" << file_no+1 << " of " << ChainVec.size() << std::endl;
+        std::cout << "----------------------------------------" << std::endl;
+        std::cout << "\t \t " << ProductName  << std::endl;
+        std::cout << "----------------------------------------" << std::endl;
+        
+        std::vector<unsigned long int> NumberOfTracks;
+        std::vector<unsigned long int> NumberOfVertices;
+
+        // Loop over all files
+        for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
+        {
+            // Print file information
+            std::cout << "-------------File Progress--------------" << std::endl;
+            std::cout << "File \t \t" << file_no+1 << " of " << ChainVec.size() << std::endl;
+            std::cout << "----------------------------------------" << std::endl;
+
+            // Assign branch addresses to data
+            ChainVec.at(file_no) -> SetBranchAddress(("ntracks_"+ProductName).c_str(),&ntracks_reco);
+            ChainVec.at(file_no) -> SetBranchAddress(("trklen_"+ProductName).c_str(), trklen);
+            ChainVec.at(file_no) -> SetBranchAddress(("trkstartx_"+ProductName).c_str(),trkstartx);
+            ChainVec.at(file_no) -> SetBranchAddress(("trkstarty_"+ProductName).c_str(),trkstarty);
+            ChainVec.at(file_no) -> SetBranchAddress(("trkstartz_"+ProductName).c_str(),trkstartz);
+            ChainVec.at(file_no) -> SetBranchAddress(("trkendx_"+ProductName).c_str(),trkendx);
+            ChainVec.at(file_no) -> SetBranchAddress(("trkendy_"+ProductName).c_str(),trkendy);
+            ChainVec.at(file_no) -> SetBranchAddress(("trkendz_"+ProductName).c_str(),trkendz);
+            ChainVec.at(file_no) -> SetBranchAddress(("trktheta_"+ProductName).c_str(),trktheta);
+            ChainVec.at(file_no) -> SetBranchAddress(("trkphi_"+ProductName).c_str(),trkphi);
+            ChainVec.at(file_no) -> SetBranchAddress(("nvtx_"+ProductName).c_str(), &nvtx);
+            ChainVec.at(file_no) -> SetBranchAddress(("vtxx_"+ProductName).c_str(), vtxx);
+            ChainVec.at(file_no) -> SetBranchAddress(("vtxy_"+ProductName).c_str(), vtxy);
+            ChainVec.at(file_no) -> SetBranchAddress(("vtxz_"+ProductName).c_str(), vtxz);
+
+            NumberOfTracks.push_back(0);
+            NumberOfVertices.push_back(0);
+
+            // Loop over events
+            for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no) -> GetEntries(); tree_index++)
+            {
+                // Progress indicator
+                if(!(tree_index % 1000)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no) -> GetEntries() << std::endl;
+
+                // Get tree entry for this event
+                ChainVec.at(file_no) -> GetEntry(tree_index);
+
+                // Loop over all tracks in an event
+                for(unsigned int track_no = 0; track_no < ntracks_reco; track_no++)
+                {
+                    SelectionTrackRange.at(file_no+RecoIndex) -> Fill(CalcRange(trkstartx[track_no],trkstarty[track_no],trkstartz[track_no],trkendx[track_no],trkendy[track_no],trkendz[track_no]));
+                    SelectionCosTheta.at(file_no+RecoIndex) -> Fill(std::cos(trktheta[track_no]));
+                    SelectionTheta.at(file_no+RecoIndex) -> Fill(trktheta[track_no]/Pi*180);
+                    SelectionPhi.at(file_no+RecoIndex) -> Fill(trkphi[track_no]/Pi*180);
+                    SelectionMomentum.at(file_no+RecoIndex) -> Fill(GetMomentum(trklen[track_no]));
+                    SelectionTrackLength.at(file_no+RecoIndex) -> Fill(trklen[track_no]);
+                } // end track loop
+
+                // Loop over all vertices
+                for(unsigned int vtx_no = 0; vtx_no < nvtx; vtx_no++)
+                {
+                    SelXVtxPosition.at(file_no+RecoIndex) -> Fill(vtxx[vtx_no]);
+                    SelYVtxPosition.at(file_no+RecoIndex) -> Fill(vtxy[vtx_no]);
+                    SelZVtxPosition.at(file_no+RecoIndex) -> Fill(vtxz[vtx_no]);
+                }
+
+                // Fill vertex and track counters
+                NumberOfTracks.back() += ntracks_reco;
+                NumberOfVertices.back() += nvtx;
+            } // end event loop
+
+            // Scale histograms to number of events
+            SelectionTrackRange.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+            SelectionCosTheta.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+            SelectionTheta.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+            SelectionPhi.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+            SelectionMomentum.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+            SelectionTrackLength.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+            SelXVtxPosition.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+            SelYVtxPosition.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+            SelZVtxPosition.at(file_no+RecoIndex) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
+
+            // Reset branch addresses to avoid problems
+            ChainVec.at(file_no) -> ResetBranchAddresses();
+        } // end files loop
+
+        std::cout << "-------Number of Tracks per Event-------" << std::endl;
+        std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/ChainVec.at(0)->GetEntries()  <<  std::endl;
+        std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/ChainVec.at(1)->GetEntries() << std::endl;
+        std::cout << "----------------------------------------" << std::endl;
+        std::cout << "------Number of Vertices per Event------" << std::endl;
+        std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/(double)ChainVec.at(0)->GetEntries()  <<  std::endl;
+        std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/(double)ChainVec.at(1)->GetEntries() << std::endl;
         std::cout << "----------------------------------------" << std::endl;
 
-        // Assign branch addresses to data
-        ChainVec.at(file_no) -> SetBranchAddress(("ntracks_"+ProductName).c_str(),&ntracks_reco);
-        ChainVec.at(file_no) -> SetBranchAddress(("trklen_"+ProductName).c_str(), trklen);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkstartx_"+ProductName).c_str(),trkstartx);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkstarty_"+ProductName).c_str(),trkstarty);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkstartz_"+ProductName).c_str(),trkstartz);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkendx_"+ProductName).c_str(),trkendx);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkendy_"+ProductName).c_str(),trkendy);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkendz_"+ProductName).c_str(),trkendz);
-        ChainVec.at(file_no) -> SetBranchAddress(("trktheta_"+ProductName).c_str(),trktheta);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkphi_"+ProductName).c_str(),trkphi);
-        ChainVec.at(file_no) -> SetBranchAddress(("nvtx_"+ProductName).c_str(), &nvtx);
-        ChainVec.at(file_no) -> SetBranchAddress(("vtxx_"+ProductName).c_str(), vtxx);
-        ChainVec.at(file_no) -> SetBranchAddress(("vtxy_"+ProductName).c_str(), vtxy);
-        ChainVec.at(file_no) -> SetBranchAddress(("vtxz_"+ProductName).c_str(), vtxz);
+        // Fill the relative variance into the bins of the last histogram
+//     for(unsigned int bin_no = 1; bin_no <= NumberOfBins; bin_no++)
+//     {
+//         SelectionTrackRange.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelectionTrackRange.at(0)->GetBinContent(bin_no)/SelectionTrackRange.at(1)->GetBinContent(bin_no) - 1,2));
+//         SelectionCosTheta.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelectionCosTheta.at(0)->GetBinContent(bin_no)/SelectionCosTheta.at(1)->GetBinContent(bin_no) - 1,2));
+//         SelectionTheta.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelectionTheta.at(0)->GetBinContent(bin_no)/SelectionTheta.at(1)->GetBinContent(bin_no) - 1,2));
+//         SelectionPhi.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelectionPhi.at(0)->GetBinContent(bin_no)/SelectionPhi.at(1)->GetBinContent(bin_no) - 1,2));
+//
+//         // Avoid 0 bins
+//         if(SelectionMomentum.at(1)->GetBinContent(bin_no) > 0.0)
+//         {
+//             SelectionMomentum.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelectionMomentum.at(0)->GetBinContent(bin_no)/SelectionMomentum.at(1)->GetBinContent(bin_no) - 1,2));
+//         }
+//         else
+//         {
+//             SelectionMomentum.at(2+RecoIndex)->SetBinContent(bin_no,1.0);
+//         }
+//         if(SelectionTrackLength.at(1)->GetBinContent(bin_no) > 0.0)
+//         {
+//             SelectionTrackLength.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelectionTrackLength.at(0)->GetBinContent(bin_no)/SelectionTrackLength.at(1)->GetBinContent(bin_no) - 1,2));
+//         }
+//         else
+//         {
+//             SelectionTrackLength.at(2+RecoIndex)->SetBinContent(bin_no,1.0);
+//         }
+//
+//         SelXVtxPosition.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelXVtxPosition.at(0)->GetBinContent(bin_no)/SelXVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
+//         SelYVtxPosition.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelYVtxPosition.at(0)->GetBinContent(bin_no)/SelYVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
+//         SelZVtxPosition.at(2+RecoIndex)->SetBinContent(bin_no,std::pow(SelZVtxPosition.at(0)->GetBinContent(bin_no)/SelZVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
+//     }
+
+        SelectionTrackRange.at(2+RecoIndex)->Divide(SelectionTrackRange.at(0+RecoIndex),SelectionTrackRange.at(1+RecoIndex));
+        SelectionCosTheta.at(2+RecoIndex)->Divide(SelectionCosTheta.at(0+RecoIndex),SelectionCosTheta.at(1+RecoIndex));
+        SelectionTheta.at(2+RecoIndex)->Divide(SelectionTheta.at(0+RecoIndex),SelectionTheta.at(1+RecoIndex));
+        SelectionPhi.at(2+RecoIndex)->Divide(SelectionPhi.at(0+RecoIndex),SelectionPhi.at(1+RecoIndex));
+        SelectionMomentum.at(2+RecoIndex)->Divide(SelectionMomentum.at(0+RecoIndex),SelectionMomentum.at(1+RecoIndex));
+        SelectionTrackLength.at(2+RecoIndex)->Divide(SelectionTrackLength.at(0+RecoIndex),SelectionTrackLength.at(1+RecoIndex));
+        SelXVtxPosition.at(2+RecoIndex)->Divide(SelXVtxPosition.at(0+RecoIndex),SelXVtxPosition.at(1+RecoIndex));
+        SelYVtxPosition.at(2+RecoIndex)->Divide(SelYVtxPosition.at(0+RecoIndex),SelYVtxPosition.at(1+RecoIndex));
+        SelZVtxPosition.at(2+RecoIndex)->Divide(SelZVtxPosition.at(0+RecoIndex),SelZVtxPosition.at(1+RecoIndex));
         
-        NumberOfTracks.push_back(0);
-        NumberOfVertices.push_back(0);
+        // RecoIndex+3
+        RecoIndex += 3;
+    } //End loop over data products
 
-        // Loop over events
-        for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no) -> GetEntries(); tree_index++)
-        {
-            // Progress indicator
-            if(!(tree_index % 1000)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no) -> GetEntries() << std::endl;
-
-            // Get tree entry for this event
-            ChainVec.at(file_no) -> GetEntry(tree_index);
-
-            // Loop over all tracks in an event
-            for(unsigned int track_no = 0; track_no < ntracks_reco; track_no++)
-            {
-                SelectionTrackRange.at(file_no) -> Fill(CalcRange(trkstartx[track_no],trkstarty[track_no],trkstartz[track_no],trkendx[track_no],trkendy[track_no],trkendz[track_no]));
-                SelectionCosTheta.at(file_no) -> Fill(std::cos(trktheta[track_no]));
-                SelectionTheta.at(file_no) -> Fill(trktheta[track_no]/Pi*180);
-                SelectionPhi.at(file_no) -> Fill(trkphi[track_no]/Pi*180);
-                SelectionMomentum.at(file_no) -> Fill(GetMomentum(trklen[track_no]));
-                SelectionTrackLength.at(file_no) -> Fill(trklen[track_no]);
-            } // end track loop
-
-            // Loop over all vertices
-            for(unsigned int vtx_no = 0; vtx_no < nvtx; vtx_no++)
-            {
-                SelXVtxPosition.at(file_no) -> Fill(vtxx[vtx_no]);
-                SelYVtxPosition.at(file_no) -> Fill(vtxy[vtx_no]);
-                SelZVtxPosition.at(file_no) -> Fill(vtxz[vtx_no]);
-            }
-            
-            // Fill vertex and track counters
-            NumberOfTracks.back() += ntracks_reco;
-            NumberOfVertices.back() += nvtx;
-        } // end event loop
-
-        // Scale histograms to number of events
-        SelectionTrackRange.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionCosTheta.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionTheta.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionPhi.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionMomentum.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelectionTrackLength.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelXVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelYVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-        SelZVtxPosition.at(file_no) -> Scale(1/(double)ChainVec.at(file_no)->GetEntries());
-    } // end files loop
-    
-    std::cout << "-------Number of Tracks per Event-------" << std::endl;
-    std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/ChainVec.at(0)->GetEntries()  <<  std::endl;
-    std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/ChainVec.at(1)->GetEntries() << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
-    std::cout << "------Number of Vertices per Event------" << std::endl;
-    std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/(double)ChainVec.at(0)->GetEntries()  <<  std::endl;
-    std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/(double)ChainVec.at(1)->GetEntries() << std::endl;    
-    std::cout << "----------------------------------------" << std::endl;
-    
-    // Fill the relative variance into the bins of the last histogram
-    for(unsigned int bin_no = 1; bin_no <= NumberOfBins; bin_no++)
-    {
-        SelectionTrackRange.back()->SetBinContent(bin_no,std::pow(SelectionTrackRange.at(0)->GetBinContent(bin_no)/SelectionTrackRange.at(1)->GetBinContent(bin_no) - 1,2));
-        SelectionCosTheta.back()->SetBinContent(bin_no,std::pow(SelectionCosTheta.at(0)->GetBinContent(bin_no)/SelectionCosTheta.at(1)->GetBinContent(bin_no) - 1,2));
-        SelectionTheta.back()->SetBinContent(bin_no,std::pow(SelectionTheta.at(0)->GetBinContent(bin_no)/SelectionTheta.at(1)->GetBinContent(bin_no) - 1,2));
-        SelectionPhi.back()->SetBinContent(bin_no,std::pow(SelectionPhi.at(0)->GetBinContent(bin_no)/SelectionPhi.at(1)->GetBinContent(bin_no) - 1,2));
-        
-        // Avoid 0 bins
-        if(SelectionMomentum.at(1)->GetBinContent(bin_no) > 0.0)
-        {
-            SelectionMomentum.back()->SetBinContent(bin_no,std::pow(SelectionMomentum.at(0)->GetBinContent(bin_no)/SelectionMomentum.at(1)->GetBinContent(bin_no) - 1,2));
-        }
-        else
-        {
-            SelectionMomentum.back()->SetBinContent(bin_no,1.0);
-        }
-        if(SelectionTrackLength.at(1)->GetBinContent(bin_no) > 0.0)
-        {
-            SelectionTrackLength.back()->SetBinContent(bin_no,std::pow(SelectionTrackLength.at(0)->GetBinContent(bin_no)/SelectionTrackLength.at(1)->GetBinContent(bin_no) - 1,2));
-        }
-        else
-        {
-            SelectionTrackLength.back()->SetBinContent(bin_no,1.0);
-        }
-        
-        SelXVtxPosition.back()->SetBinContent(bin_no,std::pow(SelXVtxPosition.at(0)->GetBinContent(bin_no)/SelXVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
-        SelYVtxPosition.back()->SetBinContent(bin_no,std::pow(SelYVtxPosition.at(0)->GetBinContent(bin_no)/SelYVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
-        SelZVtxPosition.back()->SetBinContent(bin_no,std::pow(SelZVtxPosition.at(0)->GetBinContent(bin_no)/SelZVtxPosition.at(1)->GetBinContent(bin_no) - 1,2));
-    }
-    
     // Open output file
     TFile* OutputFile = new TFile((OutputFolder+"/Cosmic_Distributions_Histograms_Mod.root").c_str(),"RECREATE");
 
     // switch to output file
     OutputFile->cd();
-    
+
     // Loop over all labels/files
     for(unsigned int histo_no = 0; histo_no < GenLabel.size(); histo_no++)
     {
@@ -335,7 +370,7 @@ void StoreCosmicDist()
         OutputFile->WriteObject(SelYVtxPosition.at(histo_no), SelYVtxPosition.at(histo_no)->GetName());
         OutputFile->WriteObject(SelZVtxPosition.at(histo_no), SelZVtxPosition.at(histo_no)->GetName());
     }
-    
+
     // Properly close file
     OutputFile->Close();
 }
