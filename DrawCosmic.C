@@ -237,10 +237,10 @@ void DrawCosmic()
     pad1Phi->SetBottomMargin(0);
     pad1Phi->Draw();
     pad1Phi->cd();
-    CosmicPhi.at(0) -> SetTitle("PandoraCosmic #phi-Angle");
+    CosmicPhi.at(0) -> SetTitle("PandoraCosmic #phi -Angle");
     CosmicPhi.at(0) -> GetXaxis() -> SetLabelOffset(999);
     CosmicPhi.at(0) -> GetXaxis() -> SetLabelSize(0);
-    CosmicPhi.at(0) -> GetYaxis() -> SetRangeUser(-0.1,10);
+    CosmicPhi.at(0) -> GetYaxis() -> SetRangeUser(-0.5,10);
     CosmicPhi.at(0) -> GetYaxis() -> SetTitle("PandoraCosmic tracks per event");
     CosmicPhi.at(0) -> SetLineColor(9);
     CosmicPhi.at(0) -> Draw("SAME");

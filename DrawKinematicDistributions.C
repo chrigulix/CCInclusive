@@ -785,7 +785,7 @@ void DrawKinematicDistributions()
     Smearing3 -> cd();
     TBox* PhiBack = new TBox(-180, -180, 180, 180);
     PhiBack -> SetFillColor(kBlue+3);
-    UMatrixPhi -> SetTitle("#phi-Angle Smearing Matrix");
+    UMatrixPhi -> SetTitle("#phi -Angle Smearing Matrix");
     UMatrixPhi -> Draw("COLZ");
     PhiBack -> Draw("SAME");
     UMatrixPhi -> Draw("COLZ SAME");

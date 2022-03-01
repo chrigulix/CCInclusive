@@ -296,14 +296,20 @@ void StoreCosmicDist()
             // Reset branch addresses to avoid problems
             ChainVec.at(file_no) -> ResetBranchAddresses();
         } // end files loop
-
+        
+        double BNBTrackError = (double)NumberOfTracks.at(0)/(double)ChainVec.at(0)->GetEntries()* std::sqrt(1/(double)NumberOfTracks.at(0)+1/(double)ChainVec.at(0)->GetEntries());
+        double InTimeTrackError = (double)NumberOfTracks.at(1)/(double)ChainVec.at(1)->GetEntries()* std::sqrt(1/(double)NumberOfTracks.at(1)+1/(double)ChainVec.at(1)->GetEntries());
+        
+        double BNBVtxError = (double)NumberOfVertices.at(0)/(double)ChainVec.at(0)->GetEntries()* std::sqrt(1/(double)NumberOfVertices.at(0)+1/(double)ChainVec.at(0)->GetEntries());
+        double InTimeVtxError = (double)NumberOfVertices.at(1)/(double)ChainVec.at(1)->GetEntries()* std::sqrt(1/(double)NumberOfVertices.at(1)+1/(double)ChainVec.at(1)->GetEntries());
+        
         std::cout << "-------Number of Tracks per Event-------" << std::endl;
-        std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/ChainVec.at(0)->GetEntries()  <<  std::endl;
-        std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/ChainVec.at(1)->GetEntries() << std::endl;
+        std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/(double)ChainVec.at(0)->GetEntries() << "\t" << BNBTrackError <<  std::endl;
+        std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/(double)ChainVec.at(1)->GetEntries() << "\t" << InTimeTrackError << std::endl;
         std::cout << "----------------------------------------" << std::endl;
         std::cout << "------Number of Vertices per Event------" << std::endl;
-        std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfTracks.at(0)/(double)ChainVec.at(0)->GetEntries()  <<  std::endl;
-        std::cout << "InTime Corsika  \t" << (double)NumberOfTracks.at(1)/(double)ChainVec.at(1)->GetEntries() << std::endl;
+        std::cout << "Off-Beam BNBEXT \t" << (double)NumberOfVertices.at(0)/(double)ChainVec.at(0)->GetEntries() << "\t" << BNBVtxError <<  std::endl;
+        std::cout << "InTime Corsika  \t" << (double)NumberOfVertices.at(1)/(double)ChainVec.at(1)->GetEntries() << "\t" << InTimeVtxError << std::endl;
         std::cout << "----------------------------------------" << std::endl;
 
         // Fill the relative variance into the bins of the last histogram

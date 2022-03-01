@@ -592,6 +592,11 @@ void StoreHistograms()
         
         // Check cut scheme
         double TrackRangeTest = 10000;
+        
+        // Check momentum binning
+        double LastBin150 = 0.0;
+        double LastBin135 = 0.0;
+        double LastBin120 = 0.0;
 
         // Loop over all events
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no) -> GetEntries(); tree_index++)
@@ -624,6 +629,20 @@ void StoreHistograms()
                 {
                     TrackRangeTest = CalcRange(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]);
                 }
+                
+                if(GetMomentum(TrackLength[TrkID]) > 1.5)
+                {
+                    LastBin150 += HistogramWeight;
+                }
+                if(GetMomentum(TrackLength[TrkID]) > 1.35)
+                {
+                    LastBin135 += HistogramWeight;
+                }
+                if(GetMomentum(TrackLength[TrkID]) > 1.20)
+                {
+                    LastBin120 += HistogramWeight;
+                }
+                
                 
             }
 
@@ -963,6 +982,9 @@ void StoreHistograms()
         } // Event loop
         
         std::cout << "Lowest Track Range: " << TrackRangeTest << " cm" << std::endl;
+        std::cout << "Events above 1.50 GeV: " << LastBin150 << std::endl;
+        std::cout << "Events above 1.35 GeV: " << LastBin135 << std::endl;
+        std::cout << "Events above 1.20 GeV: " << LastBin120 << std::endl;
 
         // Fill purities and scale systematics
         if(file_no > 1 && file_no < 6)

@@ -237,7 +237,7 @@ void DrawCosmicPandoraNu()
     pad1Phi->SetBottomMargin(0);
     pad1Phi->Draw();
     pad1Phi->cd();
-    CosmicPhi.at(0) -> SetTitle("PandoraNu #theta-Angle");
+    CosmicPhi.at(0) -> SetTitle("PandoraNu #phi -Angle");
     CosmicPhi.at(0) -> GetXaxis() -> SetLabelOffset(999);
     CosmicPhi.at(0) -> GetXaxis() -> SetLabelSize(0);
     CosmicPhi.at(0) -> GetYaxis() -> SetRangeUser(-0.05,1.0);
