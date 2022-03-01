@@ -746,6 +746,98 @@ void DrawKinematicDistributions()
 
     // END LEGENDS ---------------------------------------------------------------------------------------------------------------------------------------
 
+    // BEGIN Draw SMEARING MATRICES ----------------------------------------------------------------------------------------------------------------------
+    
+    TCanvas *Smearing0 = new TCanvas("Smearing0", "Smearing0", 1100, 1000);
+    Smearing0 -> cd();
+    TBox* TrackRangeBack = new TBox(0, 0, 700, 700);
+    TrackRangeBack -> SetFillColor(kBlue+3);
+    UMatrixTrackRange -> SetTitle("Track Range Smearing Matrix");
+    UMatrixTrackRange -> Draw("COLZ");
+    TrackRangeBack -> Draw("SAME");
+    UMatrixTrackRange -> Draw("COLZ SAME");
+    gPad->RedrawAxis();
+    Smearing0->SaveAs("SmearingMatrixTrackRange.pdf");
+    
+    TCanvas *Smearing1 = new TCanvas("Smearing1", "Smearing1", 1100, 1000);
+    Smearing1 -> cd();
+    TBox* CosThetaBack = new TBox(-1, -1, 1, 1);
+    CosThetaBack -> SetFillColor(kBlue+3);
+    UMatrixCosTheta -> SetTitle("cos(#theta) Smearing Matrix");
+    UMatrixCosTheta -> Draw("COLZ");
+    CosThetaBack -> Draw("SAME");
+    UMatrixCosTheta -> Draw("COLZ SAME");
+    gPad->RedrawAxis();
+    Smearing1->SaveAs("SmearingMatrixCosTheta.pdf");
+    
+    TCanvas *Smearing2 = new TCanvas("Smearing2", "Smearing2", 1100, 1000);
+    Smearing2 -> cd();
+    TBox* ThetaBack = new TBox(0, 0, 180, 180);
+    ThetaBack -> SetFillColor(kBlue+3);
+    UMatrixTheta -> SetTitle("#theta-Angle Smearing Matrix");
+    UMatrixTheta -> Draw("COLZ");
+    ThetaBack -> Draw("SAME");
+    UMatrixTheta -> Draw("COLZ SAME");
+    gPad->RedrawAxis();
+    Smearing2->SaveAs("SmearingMatrixTheta.pdf");
+    
+    TCanvas *Smearing3 = new TCanvas("Smearing3", "Smearing3", 1100, 1000);
+    Smearing3 -> cd();
+    TBox* PhiBack = new TBox(-180, -180, 180, 180);
+    PhiBack -> SetFillColor(kBlue+3);
+    UMatrixPhi -> SetTitle("#phi-Angle Smearing Matrix");
+    UMatrixPhi -> Draw("COLZ");
+    PhiBack -> Draw("SAME");
+    UMatrixPhi -> Draw("COLZ SAME");
+    gPad->RedrawAxis();
+    Smearing3->SaveAs("SmearingMatrixPhi.pdf");
+    
+    TCanvas *Smearing4 = new TCanvas("Smearing4", "Smearing4", 1100, 1000);
+    Smearing4 -> cd();
+    TBox* MomentumBack = new TBox(0, 0, 3, 3);
+    MomentumBack -> SetFillColor(kBlue+3);
+    UMatrixMomentum -> SetTitle("Momentum Smearing Matrix");
+    UMatrixMomentum -> Draw("COLZ");
+    MomentumBack -> Draw("SAME");
+    UMatrixMomentum -> Draw("COLZ SAME");
+    gPad->RedrawAxis();
+    Smearing4->SaveAs("SmearingMatrixMomentum.pdf");
+    
+    TCanvas *Smearing5 = new TCanvas("Smearing5", "Smearing5", 1100, 1000);
+    Smearing5 -> cd();
+    TBox* XVtxPositionBack = new TBox(0, 0, 256.35, 256.35);
+    XVtxPositionBack -> SetFillColor(kBlue+3);
+    UMatrixXVtxPosition -> SetTitle("X-Vtx Smearing Matrix");
+    UMatrixXVtxPosition -> Draw("COLZ");
+    XVtxPositionBack -> Draw("SAME");
+    UMatrixXVtxPosition -> Draw("COLZ SAME");
+    gPad->RedrawAxis();
+    Smearing5->SaveAs("SmearingMatrixXVtxPosition.pdf");
+    
+    TCanvas *Smearing6 = new TCanvas("Smearing6", "Smearing6", 1100, 1000);
+    Smearing6 -> cd();
+    TBox* YVtxPositionBack = new TBox(-233*0.5, -233*0.5, 233*0.5, 233*0.5);
+    YVtxPositionBack -> SetFillColor(kBlue+3);
+    UMatrixYVtxPosition -> SetTitle("Y-Vtx Smearing Matrix");
+    UMatrixYVtxPosition -> Draw("COLZ");
+    YVtxPositionBack -> Draw("SAME");
+    UMatrixYVtxPosition -> Draw("COLZ SAME");
+    gPad->RedrawAxis();
+    Smearing6->SaveAs("SmearingMatrixYVtxPosition.pdf");
+    
+    TCanvas *Smearing7 = new TCanvas("Smearing7", "Smearing7", 1100, 1000);
+    Smearing7 -> cd();
+    TBox* ZVtxPositionBack = new TBox(0, 0, 1036.8, 1036.8);
+    ZVtxPositionBack -> SetFillColor(kBlue+3);
+    UMatrixZVtxPosition -> SetTitle("Z-Vtx Smearing Matrix");
+    UMatrixZVtxPosition -> Draw("COLZ");
+    ZVtxPositionBack -> Draw("SAME");
+    UMatrixZVtxPosition -> Draw("COLZ SAME");
+    gPad->RedrawAxis();
+    Smearing7->SaveAs("SmearingMatrixZVtxPosition.pdf");
+    
+    // END Draw SMEARING MATRICES ̣------------------------------------------------------------------------------------------------------------------------
+    
     // BEGIN DRAW FORWARD FOLDING ------------------------------------------------------------------------------------------------------------------------
 
     TCanvas *C0 = new TCanvas("C0", "C0", 1400, 1000);
