@@ -116,18 +116,23 @@ void DrawCosmicPandoraNu()
     CosmicTrackRange.at(0) -> GetXaxis() -> SetRangeUser(0,450);
     CosmicTrackRange.at(0) -> GetYaxis() -> SetRangeUser(-0.1,2.5);
     CosmicTrackRange.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicTrackRange.at(0) -> SetMarkerStyle(9);
+    CosmicTrackRange.at(0) -> SetMarkerColor(9);
     CosmicTrackRange.at(0) -> SetLineColor(9);
     CosmicTrackRange.at(0) -> Draw("SAME");
+    CosmicTrackRange.at(1) -> SetMarkerStyle(9);
+    CosmicTrackRange.at(1) -> SetMarkerColor(46);
     CosmicTrackRange.at(1) -> SetLineColor(46);
     CosmicTrackRange.at(1) -> Draw("SAME");
     Legend -> Draw();
     C0->cd();          // Go back to the main canvas before defining pad2
-    
     TPad *pad2TrackRange = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2TrackRange->SetTopMargin(0);
     pad2TrackRange->SetBottomMargin(0.2);
     pad2TrackRange->Draw();
-    pad2TrackRange->cd();
+    pad2TrackRange->cd(); 
+    CosmicTrackRange.at(2) -> SetMarkerStyle(9);
+    CosmicTrackRange.at(2) -> SetMarkerColor(13);
     CosmicTrackRange.at(2) -> SetLineColor(13);
     CosmicTrackRange.at(2) -> SetTitle("");
     CosmicTrackRange.at(2) -> GetXaxis() -> SetLabelSize(0.09);
@@ -138,16 +143,15 @@ void DrawCosmicPandoraNu()
     CosmicTrackRange.at(2) -> GetYaxis() -> SetTitleSize(0.1);
     CosmicTrackRange.at(2) -> GetYaxis() -> SetTitleOffset(0.5);
     CosmicTrackRange.at(2) -> Draw("SAME");
-    TLine* Line1TrackRange = new TLine(0,1,700,1);
+    TLine* Line1TrackRange = new TLine(0,1,450,1);
     Line1TrackRange -> SetLineStyle(7);
     Line1TrackRange -> Draw("SAME");
-
     C0->SaveAs("CosmicTrackRangePandoraNu.pdf");
     
     Legend -> SetX1NDC(0.15);
     Legend -> SetX2NDC(0.50);
-//     Legend -> SetY1NDC(0.10);
-//     Legend -> SetY2NDC(0.25);
+    Legend -> SetY1NDC(0.70);
+    Legend -> SetY2NDC(0.85);
 
     TCanvas *C1 = new TCanvas("C1", "C1", 1000, 1000);
     TPad *pad1CosTheta = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
@@ -159,18 +163,23 @@ void DrawCosmicPandoraNu()
     CosmicCosTheta.at(0) -> GetXaxis() -> SetLabelSize(0);
     CosmicCosTheta.at(0) -> GetYaxis() -> SetRangeUser(-0.05,1);
     CosmicCosTheta.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicCosTheta.at(0) -> SetMarkerStyle(9);
+    CosmicCosTheta.at(0) -> SetMarkerColor(9);
     CosmicCosTheta.at(0) -> SetLineColor(9);
     CosmicCosTheta.at(0) -> Draw("SAME");
+    CosmicCosTheta.at(1) -> SetMarkerStyle(9);
+    CosmicCosTheta.at(1) -> SetMarkerColor(46);
     CosmicCosTheta.at(1) -> SetLineColor(46);
     CosmicCosTheta.at(1) -> Draw("SAME");
     Legend -> Draw();
     C1->cd();          // Go back to the main canvas before defining pad2
-
     TPad *pad2CosTheta = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2CosTheta->SetTopMargin(0);
     pad2CosTheta->SetBottomMargin(0.2);
     pad2CosTheta->Draw();
-    pad2CosTheta->cd(); 
+    pad2CosTheta->cd();
+    CosmicCosTheta.at(2) -> SetMarkerStyle(9);
+    CosmicCosTheta.at(2) -> SetMarkerColor(13);
     CosmicCosTheta.at(2) -> SetLineColor(13);
     CosmicCosTheta.at(2) -> SetTitle("");
 //     CosmicCosTheta.at(2) -> GetYaxis() -> SetRangeUser(0.52,1.15);
@@ -184,7 +193,6 @@ void DrawCosmicPandoraNu()
     TLine* Line1CosTheta = new TLine(-1,1,1,1);
     Line1CosTheta -> SetLineStyle(7);
     Line1CosTheta -> Draw("SAME");
-    
     C1->SaveAs("CosmicCosThetaPandoraNu.pdf");
     
     Legend -> SetX1NDC(0.50);
@@ -204,18 +212,23 @@ void DrawCosmicPandoraNu()
     CosmicTheta.at(0) -> GetXaxis() -> SetLabelSize(0);
     CosmicTheta.at(0) -> GetYaxis() -> SetRangeUser(-0.1,2);
     CosmicTheta.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicTheta.at(0) -> SetMarkerStyle(9);
+    CosmicTheta.at(0) -> SetMarkerColor(9);
     CosmicTheta.at(0) -> SetLineColor(9);
     CosmicTheta.at(0) -> Draw("SAME");
+    CosmicTheta.at(1) -> SetMarkerStyle(9);
+    CosmicTheta.at(1) -> SetMarkerColor(46);
     CosmicTheta.at(1) -> SetLineColor(46);
     CosmicTheta.at(1) -> Draw("SAME");
     Legend -> Draw();
     C2->cd();          // Go back to the main canvas before defining pad2
-
     TPad *pad2Theta = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2Theta->SetTopMargin(0);
     pad2Theta->SetBottomMargin(0.2);
     pad2Theta->Draw();
-    pad2Theta->cd(); 
+    pad2Theta->cd();
+    CosmicTheta.at(2) -> SetMarkerStyle(9);
+    CosmicTheta.at(2) -> SetMarkerColor(13);
     CosmicTheta.at(2) -> SetLineColor(13);
     CosmicTheta.at(2) -> SetTitle("");
 //     CosmicTheta.at(2) -> GetYaxis() -> SetRangeUser(0.25,1.25);
@@ -229,7 +242,6 @@ void DrawCosmicPandoraNu()
     TLine* Line1Theta = new TLine(0,1,180,1);
     Line1Theta -> SetLineStyle(7);
     Line1Theta -> Draw("SAME");
-    
     C2->SaveAs("CosmicThetaPandoraNu.pdf");
     
     TCanvas *C3 = new TCanvas("C3", "C3", 1000, 1000);
@@ -237,23 +249,28 @@ void DrawCosmicPandoraNu()
     pad1Phi->SetBottomMargin(0);
     pad1Phi->Draw();
     pad1Phi->cd();
-    CosmicPhi.at(0) -> SetTitle("PandoraNu #phi -Angle");
+    CosmicPhi.at(0) -> SetTitle("PandoraNu #varphi-Angle");
     CosmicPhi.at(0) -> GetXaxis() -> SetLabelOffset(999);
     CosmicPhi.at(0) -> GetXaxis() -> SetLabelSize(0);
     CosmicPhi.at(0) -> GetYaxis() -> SetRangeUser(-0.05,1.0);
     CosmicPhi.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicPhi.at(0) -> SetMarkerStyle(9);
+    CosmicPhi.at(0) -> SetMarkerColor(9);
     CosmicPhi.at(0) -> SetLineColor(9);
     CosmicPhi.at(0) -> Draw("SAME");
+    CosmicPhi.at(1) -> SetMarkerStyle(9);
+    CosmicPhi.at(1) -> SetMarkerColor(46);
     CosmicPhi.at(1) -> SetLineColor(46);
     CosmicPhi.at(1) -> Draw("SAME");
     Legend -> Draw();
     C3->cd();          // Go back to the main canvas before defining pad2
-
     TPad *pad2Phi = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2Phi->SetTopMargin(0);
     pad2Phi->SetBottomMargin(0.2);
     pad2Phi->Draw();
-    pad2Phi->cd(); 
+    pad2Phi->cd();
+    CosmicPhi.at(2) -> SetMarkerStyle(9);
+    CosmicPhi.at(2) -> SetMarkerColor(13);
     CosmicPhi.at(2) -> SetLineColor(13);
     CosmicPhi.at(2) -> SetTitle("");
 //     CosmicPhi.at(2) -> GetYaxis() -> SetRangeUser(0.25,1.25);
@@ -267,7 +284,6 @@ void DrawCosmicPandoraNu()
     TLine* Line1Phi = new TLine(-180,1,180,1);
     Line1Phi -> SetLineStyle(7);
     Line1Phi -> Draw("SAME");
-    
     C3->SaveAs("CosmicPhiPandoraNu.pdf");
     
     TCanvas *C4 = new TCanvas("C4", "C4", 1000, 1000);
@@ -281,18 +297,23 @@ void DrawCosmicPandoraNu()
     CosmicMomentum.at(0) -> GetXaxis() -> SetRangeUser(0,1.8);
     CosmicMomentum.at(0) -> GetYaxis() -> SetRangeUser(-0.1,2);
     CosmicMomentum.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicMomentum.at(0) -> SetMarkerStyle(9);
+    CosmicMomentum.at(0) -> SetMarkerColor(9);
     CosmicMomentum.at(0) -> SetLineColor(9);
     CosmicMomentum.at(0) -> Draw("SAME");
+    CosmicMomentum.at(1) -> SetMarkerStyle(9);
+    CosmicMomentum.at(1) -> SetMarkerColor(46);
     CosmicMomentum.at(1) -> SetLineColor(46);
     CosmicMomentum.at(1) -> Draw("SAME");
     Legend -> Draw();
     C4->cd();          // Go back to the main canvas before defining pad2
-
     TPad *pad2Momentum = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2Momentum->SetTopMargin(0);
     pad2Momentum->SetBottomMargin(0.2);
     pad2Momentum->Draw();
-    pad2Momentum->cd(); 
+    pad2Momentum->cd();
+    CosmicMomentum.at(2) -> SetMarkerStyle(9);
+    CosmicMomentum.at(2) -> SetMarkerColor(13);
     CosmicMomentum.at(2) -> SetLineColor(13);
     CosmicMomentum.at(2) -> SetTitle("");
 //     CosmicMomentum.at(2) -> GetYaxis() -> SetRangeUser(0.25,1.25);
@@ -307,7 +328,6 @@ void DrawCosmicPandoraNu()
     TLine* Line1Momentum = new TLine(0,1,1.95,1);
     Line1Momentum -> SetLineStyle(7);
     Line1Momentum -> Draw("SAME");
-    
     C4->SaveAs("CosmicMomentumPandoraNu.pdf");
     
     TCanvas *C5 = new TCanvas("C5", "C5", 1000, 1000);
@@ -321,18 +341,23 @@ void DrawCosmicPandoraNu()
     CosmicTrackLength.at(0) -> GetXaxis() -> SetRangeUser(0,500);
     CosmicTrackLength.at(0) -> GetYaxis() -> SetRangeUser(-0.05,2.5);
     CosmicTrackLength.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicTrackLength.at(0) -> SetMarkerStyle(9);
+    CosmicTrackLength.at(0) -> SetMarkerColor(9);
     CosmicTrackLength.at(0) -> SetLineColor(9);
     CosmicTrackLength.at(0) -> Draw("SAME");
+    CosmicTrackLength.at(1) -> SetMarkerStyle(9);
+    CosmicTrackLength.at(1) -> SetMarkerColor(46);
     CosmicTrackLength.at(1) -> SetLineColor(46);
     CosmicTrackLength.at(1) -> Draw("SAME");
     Legend -> Draw();
     C5->cd();          // Go back to the main canvas before defining pad2
-
     TPad *pad2TrackLength = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2TrackLength->SetTopMargin(0);
     pad2TrackLength->SetBottomMargin(0.2);
     pad2TrackLength->Draw();
-    pad2TrackLength->cd(); 
+    pad2TrackLength->cd();
+    CosmicTrackLength.at(2) -> SetMarkerStyle(9);
+    CosmicTrackLength.at(2) -> SetMarkerColor(13);
     CosmicTrackLength.at(2) -> SetLineColor(13);
     CosmicTrackLength.at(2) -> SetTitle("");
 //     CosmicTrackLength.at(2) -> GetYaxis() -> SetRangeUser(0.25,1.25);
@@ -347,7 +372,6 @@ void DrawCosmicPandoraNu()
     TLine* Line1TrackLength = new TLine(0,1,520,1);
     Line1TrackLength -> SetLineStyle(7);
     Line1TrackLength -> Draw("SAME");
-    
     C5->SaveAs("CosmicTrackLengthPandoraNu.pdf");
     
     Legend -> SetX1NDC(0.35);
@@ -366,18 +390,23 @@ void DrawCosmicPandoraNu()
 //     CosmicXVtxPosition.at(0) -> GetXaxis() -> SetRangeUser(0,500);
     CosmicXVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(-0.05,1);
     CosmicXVtxPosition.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicXVtxPosition.at(0) -> SetMarkerStyle(9);
+    CosmicXVtxPosition.at(0) -> SetMarkerColor(9);
     CosmicXVtxPosition.at(0) -> SetLineColor(9);
     CosmicXVtxPosition.at(0) -> Draw("SAME");
+    CosmicXVtxPosition.at(1) -> SetMarkerStyle(9);
+    CosmicXVtxPosition.at(1) -> SetMarkerColor(46);
     CosmicXVtxPosition.at(1) -> SetLineColor(46);
     CosmicXVtxPosition.at(1) -> Draw("SAME");
     Legend -> Draw();
     C6->cd();          // Go back to the main canvas before defining pad2
-
     TPad *pad2XVtxPosition = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2XVtxPosition->SetTopMargin(0);
     pad2XVtxPosition->SetBottomMargin(0.2);
     pad2XVtxPosition->Draw();
-    pad2XVtxPosition->cd(); 
+    pad2XVtxPosition->cd();
+    CosmicXVtxPosition.at(2) -> SetMarkerStyle(9);
+    CosmicXVtxPosition.at(2) -> SetMarkerColor(13);
     CosmicXVtxPosition.at(2) -> SetLineColor(13);
     CosmicXVtxPosition.at(2) -> SetTitle("");
 //     CosmicXVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0.25,1.25);
@@ -392,11 +421,7 @@ void DrawCosmicPandoraNu()
     TLine* Line1XVtxPosition = new TLine(0,1,256,1);
     Line1XVtxPosition -> SetLineStyle(7);
     Line1XVtxPosition -> Draw("SAME");
-    
     C6->SaveAs("CosmicXVtxPositionPandoraNu.pdf");
-    
-    Legend -> SetY1NDC(0.70);
-    Legend -> SetY2NDC(0.85);
     
     TCanvas *C7 = new TCanvas("C7", "C7", 1000, 1000);
     TPad *pad1YVtxPosition = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
@@ -409,18 +434,23 @@ void DrawCosmicPandoraNu()
 //     CosmicYVtxPosition.at(0) -> GetXaxis() -> SetRangeUser(0,500);
     CosmicYVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(-0.1,2);
     CosmicYVtxPosition.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicYVtxPosition.at(0) -> SetMarkerStyle(9);
+    CosmicYVtxPosition.at(0) -> SetMarkerColor(9);
     CosmicYVtxPosition.at(0) -> SetLineColor(9);
     CosmicYVtxPosition.at(0) -> Draw("SAME");
+    CosmicYVtxPosition.at(1) -> SetMarkerStyle(9);
+    CosmicYVtxPosition.at(1) -> SetMarkerColor(46);
     CosmicYVtxPosition.at(1) -> SetLineColor(46);
     CosmicYVtxPosition.at(1) -> Draw("SAME");
     Legend -> Draw();
     C7->cd();          // Go back to the main canvas before defining pad2
-
     TPad *pad2YVtxPosition = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2YVtxPosition->SetTopMargin(0);
     pad2YVtxPosition->SetBottomMargin(0.2);
     pad2YVtxPosition->Draw();
-    pad2YVtxPosition->cd(); 
+    pad2YVtxPosition->cd();
+    CosmicYVtxPosition.at(2) -> SetMarkerStyle(9);
+    CosmicYVtxPosition.at(2) -> SetMarkerColor(13);
     CosmicYVtxPosition.at(2) -> SetLineColor(13);
     CosmicYVtxPosition.at(2) -> SetTitle("");
 //     CosmicYVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0.25,1.25);
@@ -435,11 +465,7 @@ void DrawCosmicPandoraNu()
     TLine* Line1YVtxPosition = new TLine(-233/2,1,233/2,1);
     Line1YVtxPosition -> SetLineStyle(7);
     Line1YVtxPosition -> Draw("SAME");
-    
     C7->SaveAs("CosmicYVtxPositionPandoraNu.pdf");
-    
-    Legend -> SetY1NDC(0.10);
-    Legend -> SetY2NDC(0.25);
     
     TCanvas *C8 = new TCanvas("C8", "C8", 1000, 1000);
     TPad *pad1ZVtxPosition = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
@@ -452,21 +478,26 @@ void DrawCosmicPandoraNu()
 //     CosmicZVtxPosition.at(0) -> GetXaxis() -> SetRangeUser(0,500);
     CosmicZVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(-0.05,1);
     CosmicZVtxPosition.at(0) -> GetYaxis() -> SetTitle("PandoraNu tracks per event");
+    CosmicZVtxPosition.at(0) -> SetMarkerStyle(9);
+    CosmicZVtxPosition.at(0) -> SetMarkerColor(9);
     CosmicZVtxPosition.at(0) -> SetLineColor(9);
     CosmicZVtxPosition.at(0) -> Draw("SAME");
+    CosmicZVtxPosition.at(1) -> SetMarkerStyle(9);
+    CosmicZVtxPosition.at(1) -> SetMarkerColor(46);
     CosmicZVtxPosition.at(1) -> SetLineColor(46);
     CosmicZVtxPosition.at(1) -> Draw("SAME");
     Legend -> Draw();
     C8->cd();          // Go back to the main canvas before defining pad2
-
     TPad *pad2ZVtxPosition = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
     pad2ZVtxPosition->SetTopMargin(0);
     pad2ZVtxPosition->SetBottomMargin(0.2);
     pad2ZVtxPosition->Draw();
-    pad2ZVtxPosition->cd(); 
+    pad2ZVtxPosition->cd();
+    CosmicZVtxPosition.at(2) -> SetMarkerStyle(9);
+    CosmicZVtxPosition.at(2) -> SetMarkerColor(13);
     CosmicZVtxPosition.at(2) -> SetLineColor(13);
     CosmicZVtxPosition.at(2) -> SetTitle("");
-    CosmicZVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0.75,1.45);
+//     CosmicZVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0.75,1.45);
     CosmicZVtxPosition.at(2) -> GetXaxis() -> SetLabelSize(0.09);
     CosmicZVtxPosition.at(2) -> GetXaxis() -> SetTitleSize(0.1);
 //     CosmicZVtxPosition.at(2) -> GetXaxis() -> SetRangeUser(0,500);
@@ -478,7 +509,6 @@ void DrawCosmicPandoraNu()
     TLine* Line1ZVtxPosition = new TLine(0,1,1036,1);
     Line1ZVtxPosition -> SetLineStyle(7);
     Line1ZVtxPosition -> Draw("SAME");
-    
     C8->SaveAs("CosmicZVtxPositionPandoraNu.pdf");
 
     // END DRAW COSMIC DISTRIBUTIONS ---------------------------------------------------------------------------------------------------------------------

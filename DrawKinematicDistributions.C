@@ -79,7 +79,7 @@ void DrawKinematicDistributions()
 
     // Fill momentum calculation spline
     MomentumSplinePreparation();
-    
+
     std::string InputFolder = ".";
     std::string OutputFolder = ".";
 
@@ -518,7 +518,7 @@ void DrawKinematicDistributions()
 //         XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicXVtxPosition.back()->Clone() );
 //         YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicYVtxPosition.back()->Clone() );
 //         ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)CosmicZVtxPosition.back()->Clone() );
-        
+
         // First clone cosmic relative variance
         TrackRangeBeamSys.at(file_no).push_front( (TH1F*)BgrTrackRange.at(file_no).at(1)->Clone() );
         CosThetaBeamSys.at(file_no).push_front( (TH1F*)BgrCosTheta.at(file_no).at(1)->Clone() );
@@ -551,26 +551,26 @@ void DrawKinematicDistributions()
 //         ZVtxPositionBeamSys.at(file_no).front() -> Multiply(BgrZVtxPosition.at(file_no).at(1));
 
         // Add all variances up
-//         TrackRangeBeamSys.at(file_no).push_front( (TH1F*)TrackRangeBeamSys.at(file_no).front()->Clone() );
-//         CosThetaBeamSys.at(file_no).push_front( (TH1F*)CosThetaBeamSys.at(file_no).front()->Clone() );
-//         ThetaBeamSys.at(file_no).push_front( (TH1F*)ThetaBeamSys.at(file_no).front()->Clone() );
-//         PhiBeamSys.at(file_no).push_front( (TH1F*)PhiBeamSys.at(file_no).front()->Clone() );
-//         MomentumBeamSys.at(file_no).push_front( (TH1F*)MomentumBeamSys.at(file_no).front()->Clone() );
-//         TrackLengthBeamSys.at(file_no).push_front( (TH1F*)TrackLengthBeamSys.at(file_no).front()->Clone() );
-//         XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)XVtxPositionBeamSys.at(file_no).front()->Clone() );
-//         YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)YVtxPositionBeamSys.at(file_no).front()->Clone() );
-//         ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)ZVtxPositionBeamSys.at(file_no).front()->Clone() );
+        TrackRangeBeamSys.at(file_no).push_front( (TH1F*)TrackRangeBeamSys.at(file_no).front()->Clone() );
+        CosThetaBeamSys.at(file_no).push_front( (TH1F*)CosThetaBeamSys.at(file_no).front()->Clone() );
+        ThetaBeamSys.at(file_no).push_front( (TH1F*)ThetaBeamSys.at(file_no).front()->Clone() );
+        PhiBeamSys.at(file_no).push_front( (TH1F*)PhiBeamSys.at(file_no).front()->Clone() );
+        MomentumBeamSys.at(file_no).push_front( (TH1F*)MomentumBeamSys.at(file_no).front()->Clone() );
+        TrackLengthBeamSys.at(file_no).push_front( (TH1F*)TrackLengthBeamSys.at(file_no).front()->Clone() );
+        XVtxPositionBeamSys.at(file_no).push_front( (TH1F*)XVtxPositionBeamSys.at(file_no).front()->Clone() );
+        YVtxPositionBeamSys.at(file_no).push_front( (TH1F*)YVtxPositionBeamSys.at(file_no).front()->Clone() );
+        ZVtxPositionBeamSys.at(file_no).push_front( (TH1F*)ZVtxPositionBeamSys.at(file_no).front()->Clone() );
 
         // Create a total systematic entry at the front of the vector
-        TrackRangeBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,700));
-        CosThetaBeamSys.at(file_no).push_front(new TH1F(("Total Systematics cos#theta "+std::to_string(file_no)).c_str(),"cos#theta",NumberOfBins,-1,1));
-        ThetaBeamSys.at(file_no).push_front(new TH1F(("Total Systematics #theta "+std::to_string(file_no)).c_str(),"#theta",NumberOfBins,0,180));
-        PhiBeamSys.at(file_no).push_front(new TH1F(("Total Systematics #phi "+std::to_string(file_no)).c_str(),"#phi",NumberOfBins,-180,180));
-        MomentumBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Momentum "+std::to_string(file_no)).c_str(),"Momentum",NumberOfBins,0,3));
-        TrackLengthBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Length "+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,800));
-        XVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics XVtx "+std::to_string(file_no)).c_str(),"XVtx",NumberOfBins,0,256.35));
-        YVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics YVtx "+std::to_string(file_no)).c_str(),"YVtx",NumberOfBins,-233*0.5,233*0.5));
-        ZVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics ZVtx "+std::to_string(file_no)).c_str(),"ZVtx",NumberOfBins,0,1036.8));
+//         TrackRangeBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Range "+std::to_string(file_no)).c_str(),"Range",NumberOfBins,0,700));
+//         CosThetaBeamSys.at(file_no).push_front(new TH1F(("Total Systematics cos#theta "+std::to_string(file_no)).c_str(),"cos#theta",NumberOfBins,-1,1));
+//         ThetaBeamSys.at(file_no).push_front(new TH1F(("Total Systematics #theta "+std::to_string(file_no)).c_str(),"#theta",NumberOfBins,0,180));
+//         PhiBeamSys.at(file_no).push_front(new TH1F(("Total Systematics #phi "+std::to_string(file_no)).c_str(),"#varphi",NumberOfBins,-180,180));
+//         MomentumBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Momentum "+std::to_string(file_no)).c_str(),"Momentum",NumberOfBins,0,3));
+//         TrackLengthBeamSys.at(file_no).push_front(new TH1F(("Total Systematics Length "+std::to_string(file_no)).c_str(),"Lenght",NumberOfBins,0,800));
+//         XVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics XVtx "+std::to_string(file_no)).c_str(),"XVtx",NumberOfBins,0,256.35));
+//         YVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics YVtx "+std::to_string(file_no)).c_str(),"YVtx",NumberOfBins,-233*0.5,233*0.5));
+//         ZVtxPositionBeamSys.at(file_no).push_front(new TH1F(("Total Systematics ZVtx "+std::to_string(file_no)).c_str(),"ZVtx",NumberOfBins,0,1036.8));
 
         // Add all the variances
         for(unsigned int sys_no = 1; sys_no < TrackRangeBeamSys.size(); sys_no++)
@@ -619,6 +619,20 @@ void DrawKinematicDistributions()
             SelZVtxPosition.at(file_no+2) -> SetBinError (bin_no, std::sqrt( std::pow(SelZVtxPosition.at(file_no+2)->GetBinError(bin_no),2) + ZVtxPositionBeamSys.at(file_no).front()->GetBinContent(bin_no) ) );
         }
     } // end MC-File loop
+    
+    // Test for chi2
+    double MomentumChi2 = 0.0;
+    double NDF = SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(2),"CHI2 UW") / SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(2),"CHI2/NDF UW");
+    
+    for(int bin = 1; bin <= SelectionCosTheta.at(0)->GetNbinsX(); bin++)
+    {
+        MomentumChi2 += std::pow( SelectionCosTheta.at(0)->GetBinContent(bin) - SelectionCosTheta.at(2)->GetBinContent(bin) ,2 ) /  ( std::pow(SelectionCosTheta.at(0)->GetBinError(bin),2) + std::pow(SelectionCosTheta.at(2)->GetBinError(bin),2));
+    }
+    
+    std::cout << "Chi2 " << MomentumChi2 << std::endl;
+    std::cout << "NDF " <<  NDF << std::endl;
+    std::cout << "Chi2/NDF " << MomentumChi2/NDF << std::endl;
+   
 
     // END HISTOGRAM CALCULATIONS ------------------------------------------------------------------------------------------------------------------------
 
@@ -628,14 +642,14 @@ void DrawKinematicDistributions()
     std::cout << " Distribution | \t MA = 0.99 \t MA = 1.35 \t TEM \t \t MEC" << std::endl;
     std::cout << "----------------------------------------------------------------------------------" << std::endl;
     std::cout << "Track Range |\t \t" << SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(2),"CHI2/NDF") << "\t" << SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(3),"CHI2/NDF") << "\t\t" << SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(4),"CHI2/NDF") << "\t" << SelectionTrackRange.at(0)->Chi2Test(SelectionTrackRange.at(5),"CHI2/NDF") << std::endl;
-    std::cout << "Cos Theta |\t \t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(2),"CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(3),"CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(4),"CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "Cos Theta |\t \t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(2),"UW CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(3),"CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(4),"CHI2/NDF") << "\t" << SelectionCosTheta.at(0)->Chi2Test(SelectionCosTheta.at(5),"CHI2/NDF") << std::endl;
     std::cout << "Theta |\t \t \t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(2),"CHI2/NDF") << "\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(3),"CHI2/NDF") << "\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(4),"CHI2/NDF") << "\t\t" << SelectionTheta.at(0)->Chi2Test(SelectionTheta.at(5),"CHI2/NDF") << std::endl;
     std::cout << "Phi |\t \t \t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(2),"CHI2/NDF") << "\t\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(3),"CHI2/NDF") << "\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(4),"CHI2/NDF") << "\t" << SelectionPhi.at(0)->Chi2Test(SelectionPhi.at(5),"CHI2/NDF") << std::endl;
     std::cout << "Momentum |\t \t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(2),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(3),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(4),"CHI2/NDF") << "\t\t" << SelectionMomentum.at(0)->Chi2Test(SelectionMomentum.at(5),"CHI2/NDF") << std::endl;
-     std::cout << "Track Length |\t \t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(2),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(3),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(4),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(5),"CHI2/NDF") << std::endl;
-     std::cout << "X Vtx |\t \t \t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(5),"CHI2/NDF") << std::endl;
-     std::cout << "Y Vtx |\t \t \t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(2),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(3),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(4),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(5),"CHI2/NDF") << std::endl;
-     std::cout << "Z Vtx |\t \t \t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "Track Length |\t \t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(2),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(3),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(4),"CHI2/NDF") << "\t" << SelectionTrackLength.at(0)->Chi2Test(SelectionTrackLength.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "X Vtx |\t \t \t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelXVtxPosition.at(0)->Chi2Test(SelXVtxPosition.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "Y Vtx |\t \t \t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(2),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(3),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(4),"CHI2/NDF") << "\t" << SelYVtxPosition.at(0)->Chi2Test(SelYVtxPosition.at(5),"CHI2/NDF") << std::endl;
+    std::cout << "Z Vtx |\t \t \t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(2),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(3),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(4),"CHI2/NDF") << "\t\t" << SelZVtxPosition.at(0)->Chi2Test(SelZVtxPosition.at(5),"CHI2/NDF") << std::endl;
     std::cout << "----------------------------------------------------------------------------------" << std::endl;
 
     // END CHI-SQUARED ANALYSIS --------------------------------------------------------------------------------------------------------------------------
@@ -707,12 +721,12 @@ void DrawKinematicDistributions()
     LegendLabel.push_back("Cosmic BGR (MC)");
     LegendLabel.push_back("Dirt BGR (MC)");
     LegendLabel.push_back("Out of FV BGR (MC)");
-    LegendLabel.push_back("#bar{#nu}_{#mu} BGR (MC)");
-    LegendLabel.push_back("#nu_{e} & #bar{#nu}_{e} BGR (MC)");
+    LegendLabel.push_back("#bar{#nu}_{#mu} CC BGR (MC)");
+    LegendLabel.push_back("#nu_{e} & #bar{#nu}_{e} CC BGR (MC)");
     LegendLabel.push_back("#nu_{x} NC BGR events (MC)");
 
     Legend->AddEntry( SelectionTrackRange.at(0), "On-Beam BNB (Data)","lep" );
-    Legend->AddEntry( SelectionTrackRange.at(2), "Selected #nu_{#mu} CC + BGR (MC)","f" );
+    Legend->AddEntry( SelectionTrackRange.at(2), "Selected #nu_{#mu} CC + BGR (MC)","lf" );
     for(int bgr_no = LegendLabel.size()-1; bgr_no > 0 ; bgr_no--)
     {
         Legend->AddEntry( BgrTrackRange.at(0).at(bgr_no), (LegendLabel.at(bgr_no)).c_str(),"f" );
@@ -747,7 +761,7 @@ void DrawKinematicDistributions()
     // END LEGENDS ---------------------------------------------------------------------------------------------------------------------------------------
 
     // BEGIN Draw SMEARING MATRICES ----------------------------------------------------------------------------------------------------------------------
-    
+
     TCanvas *Smearing0 = new TCanvas("Smearing0", "Smearing0", 1100, 1000);
     Smearing0 -> cd();
     TBox* TrackRangeBack = new TBox(0, 0, 700, 700);
@@ -758,7 +772,7 @@ void DrawKinematicDistributions()
     UMatrixTrackRange -> Draw("COLZ SAME");
     gPad->RedrawAxis();
     Smearing0->SaveAs("SmearingMatrixTrackRange.pdf");
-    
+
     TCanvas *Smearing1 = new TCanvas("Smearing1", "Smearing1", 1100, 1000);
     Smearing1 -> cd();
     TBox* CosThetaBack = new TBox(-1, -1, 1, 1);
@@ -769,7 +783,7 @@ void DrawKinematicDistributions()
     UMatrixCosTheta -> Draw("COLZ SAME");
     gPad->RedrawAxis();
     Smearing1->SaveAs("SmearingMatrixCosTheta.pdf");
-    
+
     TCanvas *Smearing2 = new TCanvas("Smearing2", "Smearing2", 1100, 1000);
     Smearing2 -> cd();
     TBox* ThetaBack = new TBox(0, 0, 180, 180);
@@ -780,18 +794,18 @@ void DrawKinematicDistributions()
     UMatrixTheta -> Draw("COLZ SAME");
     gPad->RedrawAxis();
     Smearing2->SaveAs("SmearingMatrixTheta.pdf");
-    
+
     TCanvas *Smearing3 = new TCanvas("Smearing3", "Smearing3", 1100, 1000);
     Smearing3 -> cd();
     TBox* PhiBack = new TBox(-180, -180, 180, 180);
     PhiBack -> SetFillColor(kBlue+3);
-    UMatrixPhi -> SetTitle("#phi -Angle Smearing Matrix");
+    UMatrixPhi -> SetTitle("#varphi-Angle Smearing Matrix");
     UMatrixPhi -> Draw("COLZ");
     PhiBack -> Draw("SAME");
     UMatrixPhi -> Draw("COLZ SAME");
     gPad->RedrawAxis();
     Smearing3->SaveAs("SmearingMatrixPhi.pdf");
-    
+
     TCanvas *Smearing4 = new TCanvas("Smearing4", "Smearing4", 1100, 1000);
     Smearing4 -> cd();
     TBox* MomentumBack = new TBox(0, 0, 3, 3);
@@ -802,7 +816,7 @@ void DrawKinematicDistributions()
     UMatrixMomentum -> Draw("COLZ SAME");
     gPad->RedrawAxis();
     Smearing4->SaveAs("SmearingMatrixMomentum.pdf");
-    
+
     TCanvas *Smearing5 = new TCanvas("Smearing5", "Smearing5", 1100, 1000);
     Smearing5 -> cd();
     TBox* XVtxPositionBack = new TBox(0, 0, 256.35, 256.35);
@@ -813,7 +827,7 @@ void DrawKinematicDistributions()
     UMatrixXVtxPosition -> Draw("COLZ SAME");
     gPad->RedrawAxis();
     Smearing5->SaveAs("SmearingMatrixXVtxPosition.pdf");
-    
+
     TCanvas *Smearing6 = new TCanvas("Smearing6", "Smearing6", 1100, 1000);
     Smearing6 -> cd();
     TBox* YVtxPositionBack = new TBox(-233*0.5, -233*0.5, 233*0.5, 233*0.5);
@@ -824,7 +838,7 @@ void DrawKinematicDistributions()
     UMatrixYVtxPosition -> Draw("COLZ SAME");
     gPad->RedrawAxis();
     Smearing6->SaveAs("SmearingMatrixYVtxPosition.pdf");
-    
+
     TCanvas *Smearing7 = new TCanvas("Smearing7", "Smearing7", 1100, 1000);
     Smearing7 -> cd();
     TBox* ZVtxPositionBack = new TBox(0, 0, 1036.8, 1036.8);
@@ -835,111 +849,421 @@ void DrawKinematicDistributions()
     UMatrixZVtxPosition -> Draw("COLZ SAME");
     gPad->RedrawAxis();
     Smearing7->SaveAs("SmearingMatrixZVtxPosition.pdf");
-    
+
     // END Draw SMEARING MATRICES ̣------------------------------------------------------------------------------------------------------------------------
-    
+
     // BEGIN DRAW FORWARD FOLDING ------------------------------------------------------------------------------------------------------------------------
 
-    TCanvas *C0 = new TCanvas("C0", "C0", 1400, 1000);
-    SelectionTrackRange.at(2) -> GetYaxis() -> SetRangeUser(0,900);
+    // Ratios
+    std::vector<TH1F*> RatioTrackRange;
+    std::vector<TH1F*> RatioCosTheta;
+    std::vector<TH1F*> RatioTheta;
+    std::vector<TH1F*> RatioPhi;
+    std::vector<TH1F*> RatioMomentum;
+    std::vector<TH1F*> RatioTrackLength;
+    std::vector<TH1F*> RatioXVtxPosition;
+    std::vector<TH1F*> RatioYVtxPosition;
+    std::vector<TH1F*> RatioZVtxPosition;
+
+    for(unsigned int model_no = 0; model_no < 4; model_no++)
+    {
+        RatioTrackRange.push_back( (TH1F*) SelectionTrackRange.at(0) -> Clone() );
+        RatioTrackRange.back() -> Divide(SelectionTrackRange.at(2+model_no));
+        RatioTrackRange.back() -> SetMarkerStyle(9);
+        RatioTrackRange.back() -> SetMarkerColor(13);
+        RatioTrackRange.back() -> SetLineColor(13);
+
+        RatioCosTheta.push_back( (TH1F*) SelectionCosTheta.at(0) -> Clone() );
+        RatioCosTheta.back() -> Divide(SelectionCosTheta.at(2+model_no));
+        RatioCosTheta.back() -> SetMarkerStyle(9);
+        RatioCosTheta.back() -> SetMarkerColor(13);
+        RatioCosTheta.back() -> SetLineColor(13);
+
+        RatioTheta.push_back( (TH1F*) SelectionTheta.at(0) -> Clone() );
+        RatioTheta.back() -> Divide(SelectionTheta.at(2+model_no));
+        RatioTheta.back() -> SetMarkerStyle(9);
+        RatioTheta.back() -> SetMarkerColor(13);
+        RatioTheta.back() -> SetLineColor(13);
+
+        RatioPhi.push_back( (TH1F*) SelectionPhi.at(0) -> Clone() );
+        RatioPhi.back() -> Divide(SelectionPhi.at(2+model_no));
+        RatioPhi.back() -> SetMarkerStyle(9);
+        RatioPhi.back() -> SetMarkerColor(13);
+        RatioPhi.back() -> SetLineColor(13);
+
+        RatioMomentum.push_back( (TH1F*) SelectionMomentum.at(0) -> Clone() );
+        RatioMomentum.back() -> Divide(SelectionMomentum.at(2+model_no));
+        RatioMomentum.back() -> SetMarkerStyle(9);
+        RatioMomentum.back() -> SetMarkerColor(13);
+        RatioMomentum.back() -> SetLineColor(13);
+
+        RatioTrackLength.push_back( (TH1F*) SelectionTrackLength.at(0) -> Clone() );
+        RatioTrackLength.back() -> Divide(SelectionTrackLength.at(2+model_no));
+        RatioTrackLength.back() -> SetMarkerStyle(9);
+        RatioTrackLength.back() -> SetMarkerColor(13);
+        RatioTrackLength.back() -> SetLineColor(13);
+
+        RatioXVtxPosition.push_back( (TH1F*) SelXVtxPosition.at(0) -> Clone() );
+        RatioXVtxPosition.back() -> Divide(SelXVtxPosition.at(2+model_no));
+        RatioXVtxPosition.back() -> SetMarkerStyle(9);
+        RatioXVtxPosition.back() -> SetMarkerColor(13);
+        RatioXVtxPosition.back() -> SetLineColor(13);
+
+        RatioYVtxPosition.push_back( (TH1F*) SelYVtxPosition.at(0) -> Clone() );
+        RatioYVtxPosition.back() -> Divide(SelYVtxPosition.at(2+model_no));
+        RatioYVtxPosition.back() -> SetMarkerStyle(9);
+        RatioYVtxPosition.back() -> SetMarkerColor(13);
+        RatioYVtxPosition.back() -> SetLineColor(13);
+
+        RatioZVtxPosition.push_back( (TH1F*) SelZVtxPosition.at(0) -> Clone() );
+        RatioZVtxPosition.back() -> Divide(SelZVtxPosition.at(2+model_no));
+        RatioZVtxPosition.back() -> SetMarkerStyle(9);
+        RatioZVtxPosition.back() -> SetMarkerColor(13);
+        RatioZVtxPosition.back() -> SetLineColor(13);
+    }
+
+    TCanvas *C0 = new TCanvas("C0", "C0", 1000, 1000);
+    TPad *pad1TrackRange = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1TrackRange->SetBottomMargin(0);
+    pad1TrackRange->Draw();
+    pad1TrackRange->cd();
+    SelectionTrackRange.at(2) -> GetYaxis() -> SetRangeUser(-20,900);
+    SelectionTrackRange.at(2) -> SetFillColorAlpha(46,0.3);
     SelectionTrackRange.at(2) -> Draw("E2 SAME");
+    BgrTrackRange.at(0).back() -> SetLineColor(46);
+    BgrTrackRange.at(0).back() -> Draw("HIST ][ SAME");
     StackBgrTrackRange -> Draw("HIST SAME");
     SelectionTrackRange.at(0) -> SetLineColor(1);
     SelectionTrackRange.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
+    C0->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2TrackRange = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2TrackRange->SetTopMargin(0);
+    pad2TrackRange->SetBottomMargin(0.2);
+    pad2TrackRange->Draw();
+    pad2TrackRange->cd();
+    RatioTrackRange.at(0) -> SetLineColor(13);
+    RatioTrackRange.at(0) -> SetTitle("");
+    RatioTrackRange.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioTrackRange.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+    RatioTrackRange.at(0) -> GetYaxis() -> SetRangeUser(-0.1,1.7);
+    RatioTrackRange.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioTrackRange.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioTrackRange.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioTrackRange.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioTrackRange.at(0) -> Draw("SAME");
+    TLine* Line1TrackRange = new TLine(0,1,700,1);
+    Line1TrackRange -> SetLineStyle(7);
+    Line1TrackRange -> Draw("SAME");
     C0->SaveAs("ForwardFoldedTrackRange.pdf");
 
     Legend -> SetX1NDC(0.15);
     Legend -> SetX2NDC(0.52);
 
-    TCanvas *C1 = new TCanvas("C1", "C1", 1400, 1000);
-    SelectionCosTheta.at(2) -> GetYaxis() -> SetRangeUser(0,1400);
+    TCanvas *C1 = new TCanvas("C1", "C1", 1000, 1000);
+    TPad *pad1CosTheta = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1CosTheta->SetBottomMargin(0);
+    pad1CosTheta->Draw();
+    pad1CosTheta->cd();
+    SelectionCosTheta.at(2) -> GetYaxis() -> SetRangeUser(-50,1400);
+    SelectionCosTheta.at(2) -> SetFillColorAlpha(46,0.3);
     SelectionCosTheta.at(2) -> Draw("E2 SAME");
+    BgrCosTheta.at(0).back() -> SetLineColor(46);
+    BgrCosTheta.at(0).back() -> Draw("HIST ][ SAME");
     StackBgrCosTheta -> Draw("HIST SAME");
     SelectionCosTheta.at(0) -> SetLineColor(1);
     SelectionCosTheta.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
+    C1->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2CosTheta = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2CosTheta->SetTopMargin(0);
+    pad2CosTheta->SetBottomMargin(0.2);
+    pad2CosTheta->Draw();
+    pad2CosTheta->cd();
+    RatioCosTheta.at(0) -> SetLineColor(13);
+    RatioCosTheta.at(0) -> SetTitle("");
+    RatioCosTheta.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioCosTheta.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+//     RatioCosTheta.at(0) -> GetYaxis() -> SetRangeUser(-0.1,1.7);
+    RatioCosTheta.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioCosTheta.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioCosTheta.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioCosTheta.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioCosTheta.at(0) -> Draw("SAME");
+    TLine* Line1CosTheta = new TLine(-1,1,1,1);
+    Line1CosTheta -> SetLineStyle(7);
+    Line1CosTheta -> Draw("SAME");
     C1->SaveAs("ForwardFoldedCosTheta.pdf");
 
     Legend -> SetX1NDC(0.48);
     Legend -> SetX2NDC(0.85);
 
-    TCanvas *C2 = new TCanvas("C2", "C2", 1400, 1000);
-    SelectionTheta.at(2) -> GetYaxis() -> SetRangeUser(0,700);
+    TCanvas *C2 = new TCanvas("C2", "C2", 1000, 1000);
+    TPad *pad1Theta = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1Theta->SetBottomMargin(0);
+    pad1Theta->Draw();
+    pad1Theta->cd();
+    SelectionTheta.at(2) -> GetYaxis() -> SetRangeUser(-20,700);
+    SelectionTheta.at(2) -> SetFillColorAlpha(46,0.3);
     SelectionTheta.at(2) -> Draw("E2 SAME");
+    BgrTheta.at(0).back() -> SetLineColor(46);
+    BgrTheta.at(0).back() -> Draw("HIST ][ SAME");
     StackBgrTheta -> Draw("HIST SAME");
     SelectionTheta.at(0) -> SetLineColor(1);
     SelectionTheta.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
+    C2->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2Theta = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2Theta->SetTopMargin(0);
+    pad2Theta->SetBottomMargin(0.2);
+    pad2Theta->Draw();
+    pad2Theta->cd();
+    RatioTheta.at(0) -> SetLineColor(13);
+    RatioTheta.at(0) -> SetTitle("");
+    RatioTheta.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioTheta.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+//     RatioTheta.at(0) -> GetYaxis() -> SetRangeUser(-0.1,1.7);
+    RatioTheta.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioTheta.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioTheta.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioTheta.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioTheta.at(0) -> Draw("SAME");
+    TLine* Line1Theta = new TLine(0,1,180,1);
+    Line1Theta -> SetLineStyle(7);
+    Line1Theta -> Draw("SAME");
     C2->SaveAs("ForwardFoldedTheta.pdf");
 
 //     Legend -> SetX1NDC(0.40);
 //     Legend -> SetX2NDC(0.77);
 
-    TCanvas *C3 = new TCanvas("C3", "C3", 1400, 1000);
-    SelectionPhi.at(2) -> GetYaxis() -> SetRangeUser(0,400);
+    TCanvas *C3 = new TCanvas("C3", "C3", 1000, 1000);
+    TPad *pad1Phi = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1Phi->SetBottomMargin(0);
+    pad1Phi->Draw();
+    pad1Phi->cd();
+    SelectionPhi.at(2) -> GetYaxis() -> SetRangeUser(-10,400);
+    SelectionPhi.at(2) -> SetFillColorAlpha(46,0.3);
     SelectionPhi.at(2) -> Draw("E2 SAME");
-    StackBgrPhi-> Draw("HIST SAME");
+    BgrPhi.at(0).back() -> SetLineColor(46);
+    BgrPhi.at(0).back() -> Draw("HIST ][ SAME");
+    StackBgrPhi -> Draw("HIST SAME");
     SelectionPhi.at(0) -> SetLineColor(1);
     SelectionPhi.at(0) -> Draw("SAME");
 //     Legend -> Draw();
     gPad->RedrawAxis();
+    C3->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2Phi = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2Phi->SetTopMargin(0);
+    pad2Phi->SetBottomMargin(0.2);
+    pad2Phi->Draw();
+    pad2Phi->cd();
+    RatioPhi.at(0) -> SetLineColor(13);
+    RatioPhi.at(0) -> SetTitle("");
+    RatioPhi.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioPhi.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+//     RatioPhi.at(0) -> GetYaxis() -> SetRangeUser(-0.1,1.7);
+    RatioPhi.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioPhi.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioPhi.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioPhi.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioPhi.at(0) -> Draw("SAME");
+    TLine* Line1Phi = new TLine(-180,1,180,1);
+    Line1Phi -> SetLineStyle(7);
+    Line1Phi -> Draw("SAME");
+    gPad->RedrawAxis();
     C3->SaveAs("ForwardFoldedPhi.pdf");
 
-    TCanvas *C4 = new TCanvas("C4", "C4", 1400, 1000);
-    SelectionMomentum.at(2) -> GetYaxis() -> SetRangeUser(0,1400);
+    TCanvas *C4 = new TCanvas("C4", "C4", 1000, 1000);
+    TPad *pad1Momentum = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1Momentum->SetBottomMargin(0);
+    pad1Momentum->Draw();
+    pad1Momentum->cd();
+    SelectionMomentum.at(2) -> GetYaxis() -> SetRangeUser(-50,1400);
+    SelectionMomentum.at(2) -> SetFillColorAlpha(46,0.3);
     SelectionMomentum.at(2) -> Draw("E2 SAME");
+    BgrMomentum.at(0).back() -> SetLineColor(46);
+    BgrMomentum.at(0).back() -> Draw("HIST ][ SAME");
     StackBgrMomentum -> Draw("HIST SAME");
     SelectionMomentum.at(0) -> SetLineColor(1);
     SelectionMomentum.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
+    C4->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2Momentum = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2Momentum->SetTopMargin(0);
+    pad2Momentum->SetBottomMargin(0.2);
+    pad2Momentum->Draw();
+    pad2Momentum->cd();
+    RatioMomentum.at(0) -> SetLineColor(13);
+    RatioMomentum.at(0) -> SetTitle("");
+    RatioMomentum.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioMomentum.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+//     RatioMomentum.at(0) -> GetYaxis() -> SetRangeUser(-0.1,1.7);
+    RatioMomentum.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioMomentum.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioMomentum.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioMomentum.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioMomentum.at(0) -> Draw("SAME");
+    TLine* Line1Momentum = new TLine(0,1,3,1);
+    Line1Momentum -> SetLineStyle(7);
+    Line1Momentum -> Draw("SAME");
+    gPad->RedrawAxis();
     C4->SaveAs("ForwardFoldedMomentum.pdf");
 
-    TCanvas *C5 = new TCanvas("C5", "C5", 1400, 1000);
-    SelectionTrackLength.at(2) -> GetYaxis() -> SetRangeUser(0,1000);
+    TCanvas *C5 = new TCanvas("C5", "C5", 1000, 1000);
+    TPad *pad1TrackLength = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1TrackLength->SetBottomMargin(0);
+    pad1TrackLength->Draw();
+    pad1TrackLength->cd();
+    SelectionTrackLength.at(2) -> GetYaxis() -> SetRangeUser(-50,1000);
+    SelectionTrackLength.at(2) -> SetFillColorAlpha(46,0.3);
     SelectionTrackLength.at(2) -> Draw("E2 SAME");
+    BgrTrackLength.at(0).back() -> SetLineColor(46);
+    BgrTrackLength.at(0).back() -> Draw("HIST ][ SAME");
     StackBgrTrackLength -> Draw("HIST SAME");
     SelectionTrackLength.at(0) -> SetLineColor(1);
     SelectionTrackLength.at(0) -> Draw("SAME");
     Legend -> Draw();
+    gPad->RedrawAxis();
+    C5->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2TrackLength = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2TrackLength->SetTopMargin(0);
+    pad2TrackLength->SetBottomMargin(0.2);
+    pad2TrackLength->Draw();
+    pad2TrackLength->cd();
+    RatioTrackLength.at(0) -> SetLineColor(13);
+    RatioTrackLength.at(0) -> SetTitle("");
+    RatioTrackLength.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioTrackLength.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+//     RatioTrackLength.at(0) -> GetYaxis() -> SetRangeUser(-0.1,1.7);
+    RatioTrackLength.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioTrackLength.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioTrackLength.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioTrackLength.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioTrackLength.at(0) -> Draw("SAME");
+    TLine* Line1TrackLength = new TLine(0,1,800,1);
+    Line1TrackLength -> SetLineStyle(7);
+    Line1TrackLength -> Draw("SAME");
     gPad->RedrawAxis();
     C5->SaveAs("ForwardFoldedTrackLength.pdf");
 
     Legend -> SetNColumns(2);
     Legend -> SetX1NDC(0.13);
     Legend -> SetX2NDC(0.87);
-    Legend -> SetY1NDC(0.60);
-    Legend -> SetY2NDC(0.85);
+    Legend -> SetY1NDC(0.62);
+    Legend -> SetY2NDC(0.87);
 
-    TCanvas *C6 = new TCanvas("C6", "C6", 1400, 1000);
-    SelXVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0,400);
+    TCanvas *C6 = new TCanvas("C6", "C6", 1000, 1000);
+    TPad *pad1XVtxPosition = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1XVtxPosition->SetBottomMargin(0);
+    pad1XVtxPosition->Draw();
+    pad1XVtxPosition->cd();
+    SelXVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(-10,400);
+    SelXVtxPosition.at(2) -> SetFillColorAlpha(46,0.3);
     SelXVtxPosition.at(2) -> Draw("E2 SAME");
+    BgrXVtxPosition.at(0).back() -> SetLineColor(46);
+    BgrXVtxPosition.at(0).back() -> Draw("HIST ][ SAME");
     StackBgrXVtxPosition -> Draw("HIST SAME");
     SelXVtxPosition.at(0) -> SetLineColor(1);
     SelXVtxPosition.at(0) -> Draw("SAME");
     Legend -> Draw();
     gPad->RedrawAxis();
+    C6->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2XVtxPosition = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2XVtxPosition->SetTopMargin(0);
+    pad2XVtxPosition->SetBottomMargin(0.2);
+    pad2XVtxPosition->Draw();
+    pad2XVtxPosition->cd();
+    RatioXVtxPosition.at(0) -> SetLineColor(13);
+    RatioXVtxPosition.at(0) -> SetTitle("");
+    RatioXVtxPosition.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioXVtxPosition.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+//     RatioXVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(-0.1,1.7);
+    RatioXVtxPosition.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioXVtxPosition.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioXVtxPosition.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioXVtxPosition.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioXVtxPosition.at(0) -> Draw("SAME");
+    TLine* Line1XVtxPosition = new TLine(0,1,256.35,1);
+    Line1XVtxPosition -> SetLineStyle(7);
+    Line1XVtxPosition -> Draw("SAME");
+    gPad->RedrawAxis();
     C6->SaveAs("ForwardFoldedXVtxPosition.pdf");
 
-    TCanvas *C7 = new TCanvas("C7", "C7", 1400, 1000);
-    SelYVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0,400);
+    TCanvas *C7 = new TCanvas("C7", "C7", 1000, 1000);
+    TPad *pad1YVtxPosition = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1YVtxPosition->SetBottomMargin(0);
+    pad1YVtxPosition->Draw();
+    pad1YVtxPosition->cd();
+    SelYVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(-10,400);
+    SelYVtxPosition.at(2) -> SetFillColorAlpha(46,0.3);
     SelYVtxPosition.at(2) -> Draw("E2 SAME");
+    BgrYVtxPosition.at(0).back() -> SetLineColor(46);
+    BgrYVtxPosition.at(0).back() -> Draw("HIST ][ SAME");
     StackBgrYVtxPosition -> Draw("HIST SAME");
     SelYVtxPosition.at(0) -> SetLineColor(1);
     SelYVtxPosition.at(0) -> Draw("SAME");
+    Legend -> Draw();
+    gPad->RedrawAxis();
+    C7->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2YVtxPosition = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2YVtxPosition->SetTopMargin(0);
+    pad2YVtxPosition->SetBottomMargin(0.2);
+    pad2YVtxPosition->Draw();
+    pad2YVtxPosition->cd();
+    RatioYVtxPosition.at(0) -> SetLineColor(13);
+    RatioYVtxPosition.at(0) -> SetTitle("");
+    RatioYVtxPosition.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioYVtxPosition.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+    RatioYVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(0.7,1.45);
+    RatioYVtxPosition.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioYVtxPosition.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioYVtxPosition.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioYVtxPosition.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioYVtxPosition.at(0) -> Draw("SAME");
+    TLine* Line1YVtxPosition = new TLine(-233/2,1,233/2,1);
+    Line1YVtxPosition -> SetLineStyle(7);
+    Line1YVtxPosition -> Draw("SAME");
     gPad->RedrawAxis();
     C7->SaveAs("ForwardFoldedYVtxPosition.pdf");
 
-    TCanvas *C8 = new TCanvas("C8", "C8", 1400, 1000);
-    SelZVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(0,400);
+    TCanvas *C8 = new TCanvas("C8", "C8", 1000, 1000);
+    TPad *pad1ZVtxPosition = new TPad("pad1", "pad1", 0.0, 0.30, 1.0, 1.0);
+    pad1ZVtxPosition->SetBottomMargin(0);
+    pad1ZVtxPosition->Draw();
+    pad1ZVtxPosition->cd();
+    SelZVtxPosition.at(2) -> GetYaxis() -> SetRangeUser(-10,420);
+    SelZVtxPosition.at(2) -> SetFillColorAlpha(46,0.3);
     SelZVtxPosition.at(2) -> Draw("E2 SAME");
+    BgrZVtxPosition.at(0).back() -> SetLineColor(46);
+    BgrZVtxPosition.at(0).back() -> Draw("HIST ][ SAME");
     StackBgrZVtxPosition -> Draw("HIST SAME");
     SelZVtxPosition.at(0) -> SetLineColor(1);
     SelZVtxPosition.at(0) -> Draw("SAME");
+    Legend -> Draw();
+    gPad->RedrawAxis();
+    C8->cd();          // Go back to the main canvas before defining pad2
+    TPad *pad2ZVtxPosition = new TPad("pad2", "pad2", 0, 0, 1, 0.30);
+    pad2ZVtxPosition->SetTopMargin(0);
+    pad2ZVtxPosition->SetBottomMargin(0.2);
+    pad2ZVtxPosition->Draw();
+    pad2ZVtxPosition->cd();
+    RatioZVtxPosition.at(0) -> SetLineColor(13);
+    RatioZVtxPosition.at(0) -> SetTitle("");
+    RatioZVtxPosition.at(0) -> GetXaxis() -> SetLabelSize(0.09);
+    RatioZVtxPosition.at(0) -> GetXaxis() -> SetTitleSize(0.1);
+//     RatioZVtxPosition.at(0) -> GetYaxis() -> SetRangeUser(-0.1,1.7);
+    RatioZVtxPosition.at(0) -> GetYaxis() -> SetTitle("OnBeam/(MC + BGR)");
+    RatioZVtxPosition.at(0) -> GetYaxis() -> SetLabelSize(0.09);
+    RatioZVtxPosition.at(0) -> GetYaxis() -> SetTitleSize(0.1);
+    RatioZVtxPosition.at(0) -> GetYaxis() -> SetTitleOffset(0.5);
+    RatioZVtxPosition.at(0) -> Draw("SAME");
+    TLine* Line1ZVtxPosition = new TLine(0,1,1036.8,1);
+    Line1ZVtxPosition -> SetLineStyle(7);
+    Line1ZVtxPosition -> Draw("SAME");
     gPad->RedrawAxis();
     C8->SaveAs("ForwardFoldedZVtxPosition.pdf");
 
@@ -1357,3 +1681,4 @@ void CalcSigEfficiency (std::vector<TH1F*>& HistVector)
         HistVector.at(3)->SetBinContent(bin_no,Efficiency);
     }
 }
+
